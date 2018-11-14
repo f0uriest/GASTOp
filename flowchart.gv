@@ -1,0 +1,15 @@
+ digraph graphname {
+     main -> makeNewChromosome;
+     main -> selector;
+     selector -> mutate;
+     selector -> crossover;
+     selector -> makeNewChromosome;
+     selector -> fitnessFunction;
+     fitnessFunction -> structAnalysis;
+     structAnalysis -> interferences;
+     structAnalysis -> mass;
+     main -> plotter;
+     main -> progressMonitor;
+     
+     
+ }

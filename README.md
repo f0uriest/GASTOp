@@ -304,3 +304,25 @@ Find 2D structural analysis code (Cristian)
 
 
 <!-- GD2md-html version 1.0β13 -->
+
+
+
+![Alt text](https://g.gravizo.com/svg?
+   digraph graphname {
+     main -> makeNewChromosome;
+     main -> selector;
+     selector -> mutate;
+     selector -> crossover;
+     selector -> makeNewChromosome;
+     selector -> fitnessFunction;
+     fitnessFunction -> structAnalysis;
+     structAnalysis -> interferences;
+     structAnalysis -> mass;
+     main -> plotter;
+     main -> progressMonitor;
+     
+     
+ }
+)
+
+
