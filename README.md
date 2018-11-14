@@ -1,23 +1,8 @@
-<!----- Conversion time: 2.094 seconds.
+# APC 524 Final Project
 
+**Overview:** Implement genetic algorithm for topological optimization of structures
 
-Using this Markdown file:
-
-1. Cut and paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* GD2md-html version 1.0β13
-* Tue Nov 13 2018 16:16:50 GMT-0800 (PST)
-* Source doc: https://docs.google.com/open?id=1g0me5MhVhH0BrnZtYyu4_-fo4UKtilzCmW2_JjDGbHU
-* This is a partial selection. Check to make sure intra-doc links work.
------>
-
-
-Overview: Implement genetic algorithm for topological optimization of structures
+## Outline
 
 **Data Type: chromosome [10%]**
 
@@ -240,15 +225,15 @@ Options:
 
 		Graphs of fitness vs time
 
-**Documentation**
+## Documentation
 
-**Presentation**
+## Presentation
 
-**Project Timeline:**
+## Project Timeline:
 
-Nov 7 is the deadline to email Gabe with a group and a rough sketch of the idea (3-6 people)
+**Nov 7** is the deadline to email Gabe with a group and a rough sketch of the idea (3-6 people)
 
-Nov 12-17 meeting with AI to discuss scope (20 mins)
+**Nov 12-17** meeting with AI to discuss scope (20 mins)
 
 **Late Nov **- design document submission & in class design review
 
@@ -260,20 +245,18 @@ Nov 12-17 meeting with AI to discuss scope (20 mins)
 
 **Jan 15 **ish - submission deadline
 
+## Meeting Notes
+
 **11/12 Meeting**
 
 Decided to solve 2D structural, can up to 3D if we have time
 
 First generation options:
 
-
-
 *   User input
 *   Randomly 
 
 How to reproduce:
-
-
 
 *   Direct Passover: just keep good ones
 *   Mutation: randomly alter some of them
@@ -287,9 +270,7 @@ Have selector know about population diversity?
 
 Who does testing?
 
-Ways to make it easier if it's harder than expected:
-
-
+**Ways to make it easier if it's harder than expected:**
 
 *   No interior restricted area & convex domain (removes the interference code)
 *   Only use one method to create next generation
@@ -303,8 +284,7 @@ Make flowchart (Susan/Rory)
 Find 2D structural analysis code (Cristian) 
 
 
-<!-- GD2md-html version 1.0β13 -->
 
-
+## Flowchart
 ![Pretty nifty, eh?](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Ff0uriest%2FAPC524_FinalProject%2Fmaster%2Fflowchart.gv)
 
