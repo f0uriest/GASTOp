@@ -1,15 +1,16 @@
  digraph graphname {
-     main -> makeNewChromosome;
-     main -> selector;
-     selector -> mutate;
-     selector -> crossover;
+     user -> main [label = "Envelope Dims, Min and Max nodes, BC, Forces, Interference Regions, Material Properties, Generational Pop Size, Tolerances"];
+     main -> makeNewChromosome [label = "# nodes, # members, range of nodes, BC, material dictionary, stat var for each area"];
+     main -> selector [label = "Chromosomes from current gen, chromosome fitness values, ratio of mutation*"];
+     selector -> mutate [label = "Parent chromosome, mutation parameters, parameter limits"];
+     selector -> crossover [label = "parent chromosome 1 & 2, crossover criteria*"];
      selector -> makeNewChromosome;
-     selector -> fitnessFunction;
-     fitnessFunction -> structAnalysis;
-     structAnalysis -> interferences;
+     selector -> fitnessFunction [label = "Current get chromosome, call other functions to get SF, m, int, etc"];
+     fitnessFunction -> structAnalysis [label = "chromosome object, applied loads, BC*"];
+     structAnalysis -> interferences [label = "chromosome, areas where interferences matter"];
      structAnalysis -> mass [label="Length, Material"];
-     main -> plotter;
-     main -> progressMonitor;
+     main -> plotter [label = "chromosome, bounding dims, loads, BC, displacements"];
+     main -> progressMonitor [label = "chromosomes, fitness scores"];
 
 
  }
