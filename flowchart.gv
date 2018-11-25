@@ -7,9 +7,9 @@
      selector -> fitnessFunction;
      fitnessFunction -> structAnalysis;
      structAnalysis -> interferences;
-     structAnalysis -> mass;
+     structAnalysis -> mass [label="Length, Material"];
      main -> plotter;
      main -> progressMonitor;
-     
-     
+
+
  }
