@@ -58,7 +58,7 @@ Inputs:
 
 		Fixed nodes
 
-		Dictionary for matl properties
+		Dictionary for material properties
 
 	Output:
 
