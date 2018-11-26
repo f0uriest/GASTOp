@@ -58,7 +58,7 @@ Inputs:
 
 		Fixed nodes
 
-		Dictionary for matl properties
+		Dictionary for material properties
 
 	Output:
 
@@ -122,7 +122,7 @@ Should make parameters
 
 Inputs:
 
-	Current gen chromosome
+	Current generation chromosome
 
 	Acquires these from calling other functions:
 
