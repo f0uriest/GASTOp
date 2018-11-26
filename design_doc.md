@@ -1,6 +1,6 @@
 # APC 524 Final Project
 
-**Group Members:** Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amlan Sinha
+**Group Members:** Rory Conlin (MAE), Paul Kaneelil (MAE), Cristian Lacey (MAE), Susan Redmond (MAE), Dan Shaw (MAE), Amlan Sinha (MAE)
 
 ## Introduction
 
@@ -57,7 +57,7 @@ The user will be able to input boundary conditions such as locations of fixed su
 
 **Function: Make a new chromosome** - makes a random structure given certain parameters (envelope dimensions, number of nodes, etc).
 
-Inputs:
+	Inputs:
 
 		Number of nodes
 
@@ -87,14 +87,13 @@ Inputs:
 
 **Function: Structural analysis** - Evaluate each structure under applied loads to determine deflections, factor of safety, etc.
 
-
-	Inputs
+	Inputs:
 
 		Chromosome object
 
 		Applied Loads/Boundary conditions
 
-	Outputs
+	Outputs:
 
 		Factor of safety
 
@@ -102,19 +101,19 @@ Inputs:
 
 **Function: mass** - Determine mass of structure based on number and location of nodes and connections
 
-	Inputs
+	Inputs:
 
 		Structure geometry
 
 		Material Reference File
 
-	Outputs
+	Outputs:
 
 		Mass of structure
 
 **Function: Interferences** - (stretch goal) Checks that no structural members are passing through certain areas, using ray tracing techniques. ie, if you're designing a car, you need to make sure there's room for the engine and the passengers.
 
-	Inputs
+	Inputs:
 	
 		Chromosome
 
@@ -129,7 +128,7 @@ Inputs:
 
 **Function: Selector**  - Based on fitness scores for each chromosome, chooses which from current generation get passed on. Calls the mutation, crossover, makenew gene functions. Stretch goal: Check for population diversity and change the next generation accordingly, more options for doing selection (tournament, roulette, weighted random, etc).
 
-Inputs:
+	Inputs:
 
 		Chromosomes from current generation (list of chromosome objects)
 
@@ -144,7 +143,7 @@ Inputs:
 
 **Function: crossover** - Take two "parent" chromosomes and make a "child" chromosome by a linear combination of the parents. Stretch goal: offer more ways of doing crossover (ie, one point split, multipoint split, random comb etc).
 
-	Inputs
+	Inputs:
 
 		Parent chromosome 1
 
@@ -152,7 +151,7 @@ Inputs:
 
 		Crossover criteria (ie, where to split, which half to take, etc)
 
-	Output
+	Output:
 
 		Child chromosome object
 
@@ -175,27 +174,29 @@ Inputs:
 
 **Function: plotter** - Displays a 3D rendering of a structure and its deformations under the applied loads.
 
-	Inputs
+	Inputs:
 	
 		Chromosome
 
-	Outputs
+	Outputs:
 
 		Graphic of structure
 
 **Function: progress monitor** - After each generation is evaluated, display statistics of population, and calculate population diversity (ie, are all the chromosomes the same? If they are, the next generation should have more randomness to prevent "inbreeding").
 
-	Inputs
+	Inputs:
 
 		Chromosomes
 
 		Fitness scores
 
-	Outputs
+	Outputs:
 
 		Graphs of fitness vs time
 		
 		Population diversity score
+
+![Flowchart](flowchart.png)
 
 ## Tools used
 
