@@ -1,4 +1,4 @@
-# APC 524 Final Project
+# GASTOp:  Genetic Algorithm for Structural Design and Topological Optimization
 
 **Group Members:** Rory Conlin (MAE), Paul Kaneelil (MAE), Cristian Lacey (MAE), Susan Redmond (MAE), Dan Shaw (MAE), Amlan Sinha (MAE)
 
