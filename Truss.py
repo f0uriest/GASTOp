@@ -1,5 +1,5 @@
 
-class truss(object):
+class Truss():
     #
     # nodes: np array nx3 matrix (xi,yi,zi)
     # edges: np array mx2 array (starting node #,ending node #)
@@ -12,15 +12,15 @@ class truss(object):
     # fitness_score: double
 
     def __init__(self, nodes, edges, materials):
-        self._nodes = nodes
-        self._edges = edges
-        self._materials = materials
-        self._fos = None
-        self._deflection = None
-        self._mass = None
-        self._cost = None
-        self._num_joints = None
-        self._fitness_score = None
+        self.nodes = nodes
+        self.edges = edges
+        self.materials = materials
+        self.fos = None
+        self.deflection = None
+        self.mass = None
+        self.cost = None
+        self.num_joints = None
+        self.fitness_score = None
 
     def sort(self):
         pass

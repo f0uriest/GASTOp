@@ -1,4 +1,4 @@
-class fitness_function(object):
+class FitnessFunction():
     # equation: string flag to denote which hard-coded method to use
     # weights: numpy array
 
