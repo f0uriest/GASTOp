@@ -1,20 +1,21 @@
+import matplotlib.pyplot as plt
 
 class Truss():
     #
-    # nodes: np array nx3 matrix (xi,yi,zi)
-    # edges: np array mx2 array (starting node #,ending node #)
-    # material: np array
-    # fos: double
-    # deflection: np array
+    # nodes: np array num_rand_nodesx3 matrix (xi,yi,zi)
+    # edges: np array num_edgesx2 array (starting node #,ending node #)
+    # properties: np array num_edgesx1 includes material and cross section
+    # fos: np array num_edgesx1
+    # deflection: np array num_all_nodesx6 where num_all_nodes = num_rand_nodes+num_user_spec_nodes
     # mass: double
     # cost: double
     # num_joints: int
     # fitness_score: double
 
-    def __init__(self, nodes, edges, materials):
+    def __init__(self, nodes, edges, properties):
         self.nodes = nodes
         self.edges = edges
-        self.materials = materials
+        self.properties = properties
         self.fos = None
         self.deflection = None
         self.mass = None
