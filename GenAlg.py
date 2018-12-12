@@ -137,8 +137,8 @@ class GenAlg():
         percent_mutation = self.ga_params['percent_mutation']
         num_elite = self.ga_params['num_elite']
 
-        # Sort population by fitness score
-        population.sort(key=lambda x: x.fitness_score, reverse=True)
+        # Sort population by fitness score (lowest score = most fit)
+        population.sort(key=lambda x: x.fitness_score)
 
         # Calculate parents needed for crossover, ensure even number
         num_crossover = round(pop_size*percent_crossover)
@@ -165,7 +165,7 @@ class GenAlg():
 
         # Perform crossover, update portion of new population formed by crossover
         pop_crossover = []
-        for i in range(0,len(crossover_parents/2),2):
+        for i in range(0,len(crossover_parents),2):
             parentindex1 = crossover_parents[i]
             parentindex2 = crossover_parents[i+1]
             parent1 = population[parentindex1]
