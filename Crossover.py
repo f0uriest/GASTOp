@@ -78,12 +78,12 @@ class Crossover():
 
     def __call__(self,truss_1,truss_2):
 
-        node_method = getattr(self,self.params['node_crossover'])
-        edge_method = getattr(self,self.params['edge_crossover'])
-        property_method = getattr(self,self.params['property_crossover'])
+        node_method = getattr(self,self.params['node_crossover_method'])
+        edge_method = getattr(self,self.params['edge_crossover_method'])
+        property_method = getattr(self,self.params['property_crossover_method'])
 
-        truss.nodes = node_method(truss_1.nodes,truss_2.nodes,self.params['nodes'])
-        truss.edges = edge_method(truss_1.edges,truss_2.edges,self.params['edges'])
-        truss.properties = property_method(truss_1.properties,truss_2.properties,self.params['properties'])
+        truss_1.nodes, truss_2.nodes = node_method(truss_1.nodes,truss_2.nodes,self.params['node_crossover_params'])
+        truss_1.edges, truss_2.edges = edge_method(truss_1.edges,truss_2.edges,self.params['edge_crossover_params'])
+        truss_1.properties, truss_2.properties = property_method(truss_1.properties,truss_2.properties,self.params['property_crossover_params'])
 
-        return truss
+        return truss_1, truss_2

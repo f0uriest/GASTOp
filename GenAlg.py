@@ -31,7 +31,7 @@ class GenAlg():
     def __init__(self,ga_params,mutate_params,random_params,crossover_params,selector_params,
                  evaluator, fitness_function, properties_df):
         # ********
-        self.ga_params = ga_params
+        self.ga_params = ga_params #
         self.mutate_params = mutate_params
         self.random_params = random_params
         self.crossover_params = crossover_params
@@ -41,37 +41,6 @@ class GenAlg():
         self.fitness_function = fitness_function
         # ********
 
-        # to go in dictionary:
-        # ga_params
-        #self.pop_size = None
-        #self.num_elite = num_elite #int, ~10 (the whole truss that get passed)
-        #self.percent_crossover= percent_crossover # double between 0 and 1
-        #self.percent_mutation = percent_mutation # double between 0 and 1
-        #Random
-        #self.num_rand_nodes = num_rand_nodes # int
-        #self.num_rand_edges = num_rand_edges # int
-        #self.domain = domain # np array 2x3 [[xmin,ymin,zmin],[xmax,ymax,zmax]]
-        #self.boundaries = boundaries
-        #self.num_material_options
-
-
-        # Crossover - different crossovers for edges, nodes, properties
-        # *** Will end up in the crossover_params ***
-        #Edge_crossover_fraction = edge_crossover_fraction # double between 0 and 1
-        #Edge_split_method = edge_split_method # string
-        #Node_crossover_fraction = node_crossover_fraction
-        #Node_split_method = node_split_method
-        #Materials_crossover_fraction = materials_crossover_fraction
-        #Materials_split_method = materials_split_method
-
-        #Mutation
-        #self.stat_stdev_nodes = stat_stdev_nodes # double
-        #self.stat_stdev_edges = stat_stdev_edges # double
-        #self.stat_stdev_matl = stat_stdev_matl # double
-        #self.pseudo_bit_flip_prob_nodes = pseudo_bit_flip_prob_nodes # double between 0 and 1
-        #self.pseudo_bit_flip_prob_edges = pseudo_bit_flip_prob_edges # double between 0 and 1
-        #self.pseudo_bit_flip_prob_matl = pseudo_bit_flip_prob_matl # double between 0 and 1
-
         # progress monitor stuff
         self.pop_progress = [] #initialize as empty array
         #self.progress_display = progress_display #type of progress display
@@ -80,28 +49,32 @@ class GenAlg():
 
     def generate_random(self): # Dan
         # Generates new random chromosomes with uniform distribution
-
+        num_rand_nodes = self.random_params['num_rand_nodes']
+        num_rand_edges = self.random_params['num_rand_edges']
+        num_user_spec_nodes = self.random_params['num_user_spec_nodes']
+        domain = self.random_params['domain']
         # First, generate the new nodes:
-        new_nodes = np.ones([self.num_rand_nodes,3])
+        new_nodes = np.random.rand(num_rand_nodes,3)
 
-        Ranges = self.domain[1]-self.domain[0]
+        Ranges = domain[1]-domain[0]
         for j in range(3):
-            new_nodes[:,j] = np.random.rand(self.num_rand_nodes,j)*Ranges[j] + self.domain[0][j]
+            new_nodes[:,j] = new_nodes[:,j]*Ranges[j] + domain[0][j]*np.ones(num_rand_nodes)
+            #np.random.rand(self.random_params['num_rand_nodes'],3)*Ranges[j] + \
 
 
         # 2nd, generate the new edges between the nodes:
-        new_edges = np.random.randint(self.num_rand_nodes + self.boundaries.user_spec_nodes.shape[0],
-                                        size = (self.num_rand_edges,2))
+        new_edges = np.random.randint(num_rand_nodes + num_user_spec_nodes,
+                                        size = (num_rand_edges,2))
 
-        for j in range(self.num_rand_edges):
+        for j in range(num_rand_edges):
             if new_edges[j][0] == new_edges[j][1]: # Check that the indexs are not the same:
                 new_edges[j][0] = -1
                 new_edges[j][1] = -1
 
-        new_materials = np.random.randint(self.num_rand_nodes + self.boundaries.user_spec_nodes.shape[0],
-                                        size = (self.num_material_options,1))
+        new_properties = np.random.randint(num_rand_nodes + num_user_spec_nodes,
+                                        size = (self.random_params['num_material_options'],1))
 
-        return new_nodes, new_edges, new_materials
+        return Truss.Truss(new_nodes,new_edges,new_properties)
 
         """
         # Check to see if any nodes are unused: - Decided to move this to the solver if needed
@@ -111,11 +84,13 @@ class GenAlg():
             check_array[new_edges[i][1]] = 1
         for j in range(len(check_array)):
         """
-    def initialize_population(self,pop_size):
-        self.population = [self.generate_random for i in range(pop_size)]
-        self.pop_size = pop_size
 
-    def run(num_generations,progress_diplay):
+    def initialize_population(self,pop_size):
+        self.ga_params['pop_size'] = pop_size
+        self.population = [self.generate_random() for i in range(pop_size)]
+
+
+    def run(self,num_generations,progress_display):
         if progress_display == 2: #check if figure method of progress monitoring is requested
             # initialize plot:
             fig = plt.figure()
@@ -125,10 +100,10 @@ class GenAlg():
         #
 
         for current_gen in range(num_generations): # Loop over all generations:
-            self.progress_monitor(current_gen,progress_display,ax1)
-            for current_truss in range(self.pop_size): # Loop over all trusses -> PARALLELIZE. Later
-                self.evaluator(self.population[current_truss]) # Run evaluator method. Will store results in Truss Object
+            for current_truss in range(self.ga_params['pop_size']): # Loop over all trusses -> PARALLELIZE. Later
+                #self.evaluator(self.population(current_truss)) # Run evaluator method. Will store results in Truss Object
                 self.fitness_function(self.population[current_truss]) # Assigns numerical score to each truss
+            self.progress_monitor(current_gen,progress_display,ax1)
             self.population = self.update_population(self.population) # Determine which members to
         if progress_display == 2:
             plt.show() #sfr, keep plot from closing right after this completes, terminal will hang until this is closed
@@ -137,13 +112,13 @@ class GenAlg():
     def progress_monitor(self,current_gen,progress_display,ax1): #Susan
         # three options: plot, progress bar ish thing, no output just append
         # calc population diversity and plot stuff or show current results
-        fos = [i.fos for i in self.population] #extract factor of safety from each truss object in population
+        fitscore = [i.fitness_score for i in self.population] #extract factor of safety from each truss object in population
         self.pop_progress.append(self.population) #append to history
 
         if progress_display == 1:
-            print(current_gen,min(fos))
+            print(current_gen,min(fitscore))
         elif progress_display == 2:
-            ax1.scatter(current_gen,min(fos),c=[0,0,0]) #plot minimum FOS for current gen in black
+            ax1.scatter(current_gen,min(fitscore),c=[0,0,0]) #plot minimum FOS for current gen in black
             plt.pause(0.0001) #pause for 0.0001s to allow plot to update, can potentially remove this
 
         #could make population a numpy structured array
@@ -188,7 +163,7 @@ class GenAlg():
         # Instantiate objects
         selector = Selector.Selector(self.selector_params)
         crossover = Crossover.Crossover(self.crossover_params)
-        mutator = Mutator.Mutator(self.mutator_params)
+        mutator = Mutator.Mutator(self.mutate_params)
 
         # Select parents as indices in current population
         crossover_parents = selector(num_crossover, population)
@@ -199,17 +174,17 @@ class GenAlg():
 
         # Perform crossover, update portion of new population formed by crossover
         pop_crossover = []
-        for i in range(0,len(crossover_parents),2):
+        for i in range(0,num_crossover,2):
             parentindex1 = crossover_parents[i]
             parentindex2 = crossover_parents[i+1]
             parent1 = population[parentindex1]
             parent2 = population[parentindex2]
             child1,child2 = crossover(parent1, parent2)
-            pop_crossover.append(child1,child2)
+            pop_crossover.extend([child1,child2])
 
         # Perform mutation, update portion of new population formed by mutation
         pop_mutation = []
-        for i in range(mutation_parents):
+        for i in range(num_mutation):
             parentindex = mutation_parents[i]
             parent = population[parentindex]
             child = mutator(parent)
