@@ -13,9 +13,8 @@ class TestCrossoverPaul(unittest.TestCase):
         my_uniform_crossover = Crossover.Crossover([])
         result = my_uniform_crossover.uniform_crossover(truss_1, truss_2)
 
-        self.assert_array_equal(result[0], truss_1)
-        self.assert_array_equal(result[1], truss_2)
-
+        np.testing.assert_array_equal(result[0], truss_1)
+        np.testing.assert_array_equal(result[1], truss_2)
         
 if __name__ == "__main__":
     unittest.main()
