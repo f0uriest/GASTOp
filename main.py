@@ -80,8 +80,8 @@ mutate_params = {
 #num_rand_node = 50
 #snum_rand_edges =
 #domain = np.array([[0,0],[1,1]])
-crossover_fraction = 0.5 # Default - already in function call.
-split_method = None # Default - already in function call.
+#crossover_fraction = 0.5 # Default - already in function call.
+#split_method = None # Default - already in function call.
 #stat_var_nodes = ,stat_var_edges = ,stat_var_matlself =
 #num_elite = ,percent_crossover = ,percent_mutation =
 boundaries = Boundaries(#Input here);
