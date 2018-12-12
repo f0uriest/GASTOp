@@ -77,7 +77,7 @@ class GenAlg():
 
         Ranges = self.domain[1]-self.domain[0]
         for j in range(3):
-            new_nodes[:,j] = np.random.rand(self.num_rand_nodes,j)*Ranges[j]
+            new_nodes[:,j] = np.random.rand(self.num_rand_nodes,j)*Ranges[j] + self.domain[0][j]
 
 
         # 2nd, generate the new edges between the nodes:
