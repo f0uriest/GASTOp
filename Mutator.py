@@ -32,24 +32,18 @@ class Mutator():
         # bit_flip_params may be a dictionary, in which case, you need to change the following
         # For now, assume it's an numpy array.
         # e.g. [[xmin, ymin, zmin],[xmax,ymax,zmax]]
-        bounds = bit_flip_params
+        bounds = bit_flip_params['bounds']
 
         prob_mat = np.zeros(array.shape)
-        
-        for col in range(array_col):
-            lower_bound, upper_bound = array[:,col].min(), array[:,col].max()
-            prob_mat[:,col] = np.random.uniform(lower_bound,upper_bound,len(array[:,col]))
 
         for j in range(array_col):
-            lower_bound = bounds[0,j]
-            upper_bound = bounds[1,j]
+            lower_bound, upper_bound = bounds[0,j], bounds[1,j]
+            prob_mat[:,j] = np.random.uniform(lower_bound,upper_bound,len(array[:,j]))
             for i in range(array_row):
                 if prob_mat[i,j]>array[i,j]:
                     array[i,j] = np.random.uniform(lower_bound,upper_bound)
 
         return array
-
-
 
     def __call__(self,truss):
         node_method = getattr(self,self.params['node_mutator'])
