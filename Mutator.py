@@ -18,12 +18,12 @@ class Mutator():
         nn = np.shape(array)
         # makes an array of the same size as the one given with random values\
         # pulled from a normal distribution with mean 0 and std given
-        gauss_val = np.random.normal(0, self.gaussian_params['std'], nn)
+        gauss_val = np.random.normal(0, gaussian_params['std'], nn)
         
         # creates the new mutated array with values mutated at all indices
         new_array = array + gauss_val
 
-        bounds = self.gaussian_params['boundaries']
+        bounds = gaussian_params['boundaries']
         # clips the numbers that are out of bounds and brings it to the boundary
         for i in range(nn[1]):
             new_array[:,i] = np.clip(new_array[:,i], bounds[i,0], bounds[i,1])
