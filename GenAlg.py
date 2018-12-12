@@ -50,6 +50,7 @@ class GenAlg():
         self.num_rand_edges = num_rand_edges # int
         self.domain = domain # np array 2x3 [[xmin,ymin,zmin],[xmax,ymax,zmax]]
         self.boundaries = boundaries
+        self.num_material_options
 
 
         # Crossover - different crossovers for edges, nodes, properties
@@ -97,6 +98,10 @@ class GenAlg():
                 new_edges[j][0] = -1
                 new_edges[j][1] = -1
 
+        new_materials = np.random.randint(self.num_rand_nodes + self.boundaries.user_spec_nodes.shape[0],
+                                        size = (self.num_material_options,1))
+
+        return new_nodes, new_edges, new_materials
 
         """
         # Check to see if any nodes are unused: - Decided to move this to the solver if needed
