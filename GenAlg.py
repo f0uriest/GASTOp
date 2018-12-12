@@ -128,10 +128,10 @@ class GenAlg():
         return self.population[0], self.pop_progress
 
     def progress_monitor(self,population,current_gen,ax1): #Susan
+        # three options: plot, progress bar ish thing, no output just append
         # calc population diversity and plot stuff or show current results
-
-        self.pop_progress.append(population) #append to history
         fos = [i.fos for i in population] #extract factor of safety from each truss object in population
+        self.pop_progress.append(population) #append to history
         ax1.scatter(current_gen,min(fos),c=[0,0,0]) #plot minimum FOS for current gen in black
         plt.pause(0.0001) #pause for 0.0001s to allow plot to update, can potentially remove this
 
