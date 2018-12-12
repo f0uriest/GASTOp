@@ -18,10 +18,7 @@ class TestGenAlg_Dan(unittest.TestCase):
         ga.initialize_population(pop_size)
 
         for i in range(ga.pop_size):
-<<<<<<< HEAD
 
-=======
->>>>>>> 949e048455d8e5996d973108a7fcaf6aed0e32d3
             self.assertTrue()
 
 
@@ -46,7 +43,7 @@ class TestGenAlg_SFR(unittest.TestCase):
         population.sort(key=lambda x: x.fos)
                 # print([x.fitness_score for x in population])
 
-        GA = GenAlg.GenAlg(0,0,0,0,0,0,0)#put zeros in here
+        GA = GenAlg.GenAlg(0,0,0,0,0,0,0,0)#put zeros in here
 
         GA.population = population
         progress_display = 2
