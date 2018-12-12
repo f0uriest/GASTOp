@@ -19,3 +19,6 @@ class TestMutator_pseudo_bit_flip(unittest.TestCase):
         bit_flip_params = [[0,0,0],[10,10,10]]
         myMutator = Mutator.Mutator([])
         child_1 = myMutator.pseudo_bit_flip(array,bit_flip_params)
+
+if __name__ == '__main__':
+    unittest.main()
