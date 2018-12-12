@@ -14,21 +14,19 @@ class Mutator():
         in the array. If it is mutated to outside the boundary, move it
         back to the boundary. (use variables specified above) Round the number
         to the nearest integer
-        '''        
+        '''
+        nn = np.shape(array)
         # makes an array of the same size as the one given with random values\
         # pulled from a normal distribution with mean 0 and std given
-        gauss_val = np.random.normal(0, self.gaussian_params['std'], len(array))
-
-        # making a random array of values 0 to 1 which will serve as the random\
-        # mutation probability for each value in the array
-        rand = np.random.random_sample(size=len(array))
-
-        # creates the new mutated array with values mutated at the indices where\
-        #the mutation probability was greater than the randomly generated probability (rand)
-        new_array = array + gauss_val*(rand < self.gaussian_params['mutation_probability'])
+        gauss_val = np.random.normal(0, self.gaussian_params['std'], nn)
         
+        # creates the new mutated array with values mutated at all indices
+        new_array = array + gauss_val
+
+        bounds = self.gaussian_params['boundaries']
         # clips the numbers that are out of bounds and brings it to the boundary
-        new_array = np.clip(new_array, self.gaussian_params['boundaries'])
+        for i in range(nn[1]):
+            new_array[:,i] = np.clip(new_array[:,i], bounds[i,0], bounds[i,1])
         
         return new_array
 

@@ -6,7 +6,7 @@ class Crossover():
 
     def __init__(self,crossover_params):
         self.params = crossover_params
-#
+
     def uniform_crossover(self, truss_1, truss_2 ,uniform_crossover_params=None): #Paul "gosh dog" kaneelil
         ''' (aka uniform crossover)
         For each array, generate another array of 0s and 1s. If its a 0, take
@@ -18,15 +18,23 @@ class Crossover():
         To make the evil kid, do the opposite.
         Output 2 children
         '''
-        unos_and_zeros = np.random.randint(2, size=len(truss_1))
-        unos = np.ones(len(truss_1), dtype=int)
+        # find the shape of the parents
+        nn = np.shape(truss_1)
+
+        # making an array of ones and zeros
+        unos_and_zeros = np.random.randint(2, size=nn)
+
+        # creating an array of all ones to later create the complementary array
+        unos = np.ones(nn, dtype=int)
+
+        # creating the complementary array
         unos_and_zeros_c = unos - unos_and_zeros
 
+        # making kids ;)
         child1 = (unos_and_zeros * truss_2) + (unos_and_zeros_c * truss_2)
         child2 = (unos_and_zeros_c * truss_2) + (unos_and_zeros * truss_2)
 
         return child1, child2
-
 
     def single_point_split(self, array_1, array_2, single_point_split_params=None): #Amlan
         '''
@@ -59,11 +67,10 @@ class Crossover():
         '''
 
         (array_row,array_col) = array_1.shape
-        point = 5 #np.random.randint(0, array_row)
+        point = np.random.randint(0, array_row)
 
         child_1 = np.concatenate((array_1[:point],array_2[point:]),axis=0)
         child_2 = np.concatenate((array_2[:point],array_1[point:]),axis=0)
-
 
         return child_1, child_2
 
