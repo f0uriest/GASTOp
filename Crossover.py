@@ -17,10 +17,19 @@ Crossover() object takes in two parents and returns two children
         To make the evil kid, do the opposite.
         Output 2 children
         '''
-        unos_and_zeros = np.random.randint(2, size=len(truss_1))
-        unos = np.ones(len(truss_1), dtype=int)
+        # find the shape of the parents
+        nn = np.shape(truss_1)
+        
+        # making an array of ones and zeros
+        unos_and_zeros = np.random.randint(2, size=nn)
+
+        # creating an array of all ones to later create the complementary array
+        unos = np.ones(nn, dtype=int)
+
+        # creating the complementary array
         unos_and_zeros_c = unos - unos_and_zeros
 
+        # making kids ;)
         child1 = (unos_and_zeros * truss_2) + (unos_and_zeros_c * truss_2)
         child2 = (unos_and_zeros_c * truss_2) + (unos_and_zeros * truss_2)
         
