@@ -37,6 +37,7 @@ class GenAlg():
         self.fitness_function = fitness_function
         # ********
 
+        # ga_params
         self.pop_size = None
         self.num_elite = num_elite #int, ~10 (the whole truss that get passed)
         self.percent_crossover= percent_crossover # double between 0 and 1
@@ -124,11 +125,60 @@ class GenAlg():
         '''
         First do elitism
         create selector object from population and method
-        call selector to get list of parents parent selection
+        call selector to get list of parents for parent selection
         for loop for crossover
         for loop for mutation
         return population
         '''
 
-        # Calls the selector, mutation, crosssover, etc.
-        pass
+        population.sort(key=lambda x: x.fitness_score, reverse=True)
+
+        # Calculate parents needed for crossover, ensure even number
+        num_crossover = round(self.ga_params['pop_size']*\
+                            self.ga_params['percent_crossover'])
+        if num_crossover%2 != 0: # If odd, increment by 1
+            num_crossover += 1
+        # Calculate parents needed for mutation
+        num_mutation = round(self.ga_params['pop_size']*\
+                            self.ga_params['percent_mutation'])
+        num_random = self.ga_params['pop_size'] - self.ga_params['num_elite']\
+                        - num_crossover - num_mutation
+        if num_random < 0: # Raise exception if input params are impossible
+            raise RuntimeError('Invalid GenAlg params.')
+
+        # Instantiate objects
+        selector = Selector.Selector(self.selector_params)
+        crossover = Crossover.Crossover(self.crossover_params)
+        mutator = Mutator.Mutator(self.mutator_params)
+
+        # Select parents as indices in current population
+        crossover_parents = selector(num_crossover, population)
+        mutation_parents = selector(num_mutation, population)
+
+        # Save top performing trusses as elites
+        pop_elite = population[:self.ga_params['num_elite']]
+
+        # Perform crossover, update portion of new population formed by crossover
+        pop_crossover = []
+        for i in range(0,len(crossover_parents/2),2):
+            parentindex1 = crossover_parents[i]
+            parentindex2 = crossover_parents[i+1]
+            parent1 = population[parentindex1]
+            parent2 = population[parentindex2]
+            child1,child2 = crossover(parent1, parent2)
+            pop_crossover.append(child1,child2)
+
+        # Perform crossover, update portion of new population formed by crossover
+        pop_mutation = []
+        for i in range(mutation_parents):
+            parentindex = mutation_parents[i]
+            parent = population[parentindex]
+            child = mutator(parent)
+            pop_mutation.append(child)
+
+        # Create new random trusses with remaining spots in generation
+        pop_random = [self.generate_random() for i in range(num_random)]
+
+        # Append separate lists to form new generation
+        population = pop_elite + pop_crossover + pop_mutation + pop_random
+        return population

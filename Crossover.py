@@ -6,7 +6,7 @@ Crossover() object takes in two parents and returns two children
     def __init__(self,crossover_params):
         self.params = crossover_params
 #
-    def uniform_crossover(self, truss_1, truss_2 ,uniform_crossover_params): #Paul "gosh dog" kaneelil
+    def uniform_crossover(self, truss_1, truss_2 ,uniform_crossover_params=None): #Paul "gosh dog" kaneelil
         ''' (aka uniform crossover)
         For each array, generate another array of 0s and 1s. If its a 0, take
         data from one parent and if its a 1, take data from the other parent.
@@ -17,7 +17,15 @@ Crossover() object takes in two parents and returns two children
         To make the evil kid, do the opposite.
         Output 2 children
         '''
-        pass
+        unos_and_zeros = np.random.randint(2, size=len(truss_1))
+        unos = np.ones(len(truss_1), dtype=int)
+        unos_and_zeros_c = unos - unos_and_zeros
+
+        child1 = (unos_and_zeros * truss_2) + (unos_and_zeros_c * truss_2)
+        child2 = (unos_and_zeros_c * truss_2) + (unos_and_zeros * truss_2)
+        
+        return child1, child2
+    
 
     def single_point_split(self, truss_1, truss_2, single_point_split_params): #Amlan
         '''
