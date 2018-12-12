@@ -94,8 +94,8 @@ class GenAlg():
 
         for j in range(self.num_rand_edges):
             if new_edges[j][0] == new_edges[j][1]: # Check that the indexs are not the same:
-                new_edges[j][0] = np.nan
-                new_edges[j][1] = np.nan
+                new_edges[j][0] = -1
+                new_edges[j][1] = -1
 
 
         """
