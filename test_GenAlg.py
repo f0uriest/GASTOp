@@ -18,7 +18,10 @@ class TestGenAlg_Dan(unittest.TestCase):
         ga.initialize_population(pop_size)
 
         for i in range(ga.pop_size):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 949e048455d8e5996d973108a7fcaf6aed0e32d3
             self.assertTrue()
 
 

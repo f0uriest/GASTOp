@@ -28,11 +28,12 @@ class GenAlg():
     # stat_stdev_matl: float (0->1) chance that a new material is assigned
 
 
-    def __init__(self,ga_params,mutate_params,crossover_params,selector_params,
+    def __init__(self,ga_params,mutate_params,random_params,crossover_params,selector_params,
                  evaluator, fitness_function, properties_df):
         # ********
         self.ga_params = ga_params
         self.mutate_params = mutate_params
+        self.random_params = random_params
         self.crossover_params = crossover_params
         self.selector_params = selector_params
         self.population = None
@@ -170,8 +171,8 @@ class GenAlg():
         percent_mutation = self.ga_params['percent_mutation']
         num_elite = self.ga_params['num_elite']
 
-        # Sort population by fitness score
-        population.sort(key=lambda x: x.fitness_score, reverse=True)
+        # Sort population by fitness score (lowest score = most fit)
+        population.sort(key=lambda x: x.fitness_score)
 
         # Calculate parents needed for crossover, ensure even number
         num_crossover = round(pop_size*percent_crossover)
@@ -198,7 +199,7 @@ class GenAlg():
 
         # Perform crossover, update portion of new population formed by crossover
         pop_crossover = []
-        for i in range(0,len(crossover_parents/2),2):
+        for i in range(0,len(crossover_parents),2):
             parentindex1 = crossover_parents[i]
             parentindex2 = crossover_parents[i+1]
             parent1 = population[parentindex1]
