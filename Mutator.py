@@ -1,7 +1,8 @@
+import numpy as np
+
 class Mutator():
-'''
-Mutator() object does this...
-'''
+# Mutator() object does this...
+
 
     def __init__(self,mutator_params):
         self.params = mutator_params
@@ -22,12 +23,33 @@ Mutator() object does this...
         You have a user specified probability that each of the components in the
         truss (nodes, edges, material) will be 'mutated'. Generate a random
         array of numbers which has the same dimensions as the array you are
-        working (for example, x, y and z in nodes). If the current number is
+        working with (for example, x, y and z in nodes). If the current number is
         less than user specified probablity for that component, then the number
-        gets by a random number in domain specified by the user [xmin, xmax,
-        ymin, ymax, zmin, zmax]
+        gets flipped by a random number in the user specified domain [for
+        example: xmin, xmax, ymin, ymax, zmin, zmax]
         '''
-        pass
+        (array_row,array_col) = array.shape
+        # bit_flip_params may be a dictionary, in which case, you need to change the following
+        # For now, assume it's an numpy array.
+        # e.g. [[xmin, ymin, zmin],[xmax,ymax,zmax]]
+        bounds = bit_flip_params
+
+        prob_mat = np.zeros(array.shape)
+        
+        for col in range(array_col):
+            lower_bound, upper_bound = array[:,col].min(), array[:,col].max()
+            prob_mat[:,col] = np.random.uniform(lower_bound,upper_bound,len(array[:,col]))
+
+        for j in range(array_col):
+            lower_bound = bounds[0,j]
+            upper_bound = bounds[1,j]
+            for i in range(array_row):
+                if prob_mat[i,j]>array[i,j]:
+                    array[i,j] = np.random.uniform(lower_bound,upper_bound)
+
+        return array
+
+
 
     def __call__(self,truss):
         node_method = getattr(self,self.params['node_mutator'])
