@@ -14,9 +14,23 @@ class Mutator():
         in the array. If it is mutated to outside the boundary, move it
         back to the boundary. (use variables specified above) Round the number
         to the nearest integer
-        '''
+        '''        
+        # makes an array of the same size as the one given with random values\
+        # pulled from a normal distribution with mean 0 and std given
+        gauss_val = np.random.normal(0, self.gaussian_params['std'], len(array))
 
-        pass
+        # making a random array of values 0 to 1 which will serve as the random\
+        # mutation probability for each value in the array
+        rand = np.random.random_sample(size=len(array))
+
+        # creates the new mutated array with values mutated at the indices where\
+        #the mutation probability was greater than the randomly generated probability (rand)
+        new_array = array + gauss_val*(rand < self.gaussian_params['mutation_probability'])
+        
+        # clips the numbers that are out of bounds and brings it to the boundary
+        new_array = np.clip(new_array, self.gaussian_params['boundaries'])
+        
+        return new_array
 
     def pseudo_bit_flip(self,array, bit_flip_params): #Amlan
         '''

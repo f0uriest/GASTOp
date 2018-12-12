@@ -2,3 +2,4 @@
 *~
 *.png
 *.xlsx
+__pycache__/
