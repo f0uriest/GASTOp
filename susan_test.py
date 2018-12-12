@@ -47,3 +47,4 @@ def progress(i,y,ax1):
 
 
 y = counter(10)
+print(y)

@@ -1,5 +1,4 @@
-import math
-import random
+import numpy as np
 
 class Selector(): # Cristian
     '''
@@ -13,32 +12,29 @@ class Selector(): # Cristian
 
     def inverse_square_rank_probability(self,num_parents,population):
         '''
-        First, sorts population by fitness_score.
-        Creates a list, with each entry 1/sqrt(N) for N = 1, ...
-        Random values are then produced between the largest and smallest
-        elements of the list. The index of this reference list that the
-        random value falls between is the index of the chosen parent.
-        In this way, the most probable parents are those with the highest
-        fitness scores.
+        Creates a cdf, with each entry the cumulative sum of 1/sqrt(N)
+        for N = 1, ... Random values are then produced between the largest and
+        smallest elements of the list. Each parent is chosen as the index in the
+        cdf that the corresponding random value falls. In this way, the most
+        probable parents are those with the highest fitness scores.
         '''
 
         pop_size = len(population)
-        reference_list = [1/math.sqrt(n) for n in range(1,pop_size+1)]
-        # print(reference_list)
 
-        # Initialize a list of zeros for the parent indices. For each requested
-        # parent, randomly generate a number between the bounds of the reference
-        # list. Find the index in the reference list where the random value
-        # falls. For example, if the random value were 0.6, the corresponding
-        # index would be 1 since 0.6 lies between 1/sqrt(2) and 1/sqrt(3).
-        parents = [0]*num_parents
-        for i in range(num_parents):
-            rand_val = random.uniform(1/math.sqrt(pop_size+2),1)
-            for j,val in enumerate(reference_list):
-                if rand_val < val:
-                    parents[i] = j
-                else:
-                    break
+        # Build cdf (cumulative distribution function)
+        a = np.array(range(1,pop_size+1))
+        pdf = 1/np.sqrt(a)
+        cdf = np.cumsum(pdf)
+        cdf_upperbound = cdf[-1]
+
+        # Initialize an array of random floats between 1 and the largest entry
+        # in the cdf. Find the indices in the cdf array that the random values
+        # would fall. For example, if one random value were 1.9, the corresponding
+        # index would be 1 since 1.9 lies between 1+1/sqrt(2) and
+        # 1+1/sqrt(2)+1/sqrt(3).
+        rand_vals = np.random.uniform(0,cdf_upperbound,num_parents)
+        parents = np.searchsorted(cdf,rand_vals,side='left')
+        parents = parents.astype(int)
 
         return parents
 

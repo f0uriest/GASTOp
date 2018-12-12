@@ -3,7 +3,6 @@
 import unittest
 import numpy as np
 import random
-import math
 
 import Selector
 import Truss
@@ -15,29 +14,34 @@ class TestSelector(unittest.TestCase): # Cristian
         edges = np.array([[0,1]])
         properties = np.array([[0,3]])
 
-        pop_size = 10
+        pop_size = int(1e1)
         population = [Truss.Truss(nodes,edges,properties) for i in range(pop_size)]
         for truss in population:
             truss.fitness_score = random.random()
 
-        population.sort(key=lambda x: x.fitness_score, reverse=True)
+        population.sort(key=lambda x: x.fitness_score)
         # print([x.fitness_score for x in population])
 
         sel_params = {'method': 'inverse_square_rank_probability'}
         selector = Selector.Selector(sel_params)
 
-        num_parents = int(1e4)
+        num_parents = int(1e7)
         parents = selector(num_parents,population)
 
-        distribution = [parents.count(x)/num_parents for x in range(pop_size)]
-        print(distribution)
+        unique, counts = np.unique(parents, return_counts=True)
+        distribution = counts/num_parents
+        # print(distribution)
 
-        # inv_sqr_distribution = [1/math.sqrt(i) for i in range(1,pop_size+1)]
-        # sum_inv = sum(inv_sqr_distribution)
-        # normalized = [x/sum_inv for x in inv_sqr_distribution]
-        # print(normalized,sum(normalized))
-        # print(inv_sqr_distribution)
-        # self.assertAlmostEqual(distribution,inv_sqr_distribution)
+        true_distribution = 1/np.sqrt(np.array(range(1,pop_size+1)))
+        true_sum = np.sum(true_distribution)
+        true_distribution = true_distribution/true_sum
+        # print(true_distribution)
+
+        error = true_distribution - distribution
+        max_err = np.amax(error)
+        # print(max_err)
+
+        self.assertAlmostEqual(max_err/pop_size, 0, places=3)
         self.assertEqual(num_parents, len(parents))
 
 if __name__ == "__main__":
