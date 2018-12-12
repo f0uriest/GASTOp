@@ -28,11 +28,12 @@ class GenAlg():
     # stat_stdev_matl: float (0->1) chance that a new material is assigned
 
 
-    def __init__(self,ga_params,mutate_params,crossover_params,selector_params,
+    def __init__(self,ga_params,mutate_params,random_params,crossover_params,selector_params,
                  evaluator, fitness_function, properties_df, progress_display):
         # ********
         self.ga_params = ga_params
         self.mutate_params = mutate_params
+        self.random_params = random_params
         self.crossover_params = crossover_params
         self.selector_params = selector_params
         self.population = None
