@@ -29,7 +29,7 @@ class GenAlg():
 
 
     def __init__(self,ga_params,mutate_params,crossover_params,selector_params,
-                 evaluator, fitness_function, properties_df):
+                 evaluator, fitness_function, properties_df, progress_display):
         # ********
         self.ga_params = ga_params
         self.mutate_params = mutate_params
@@ -72,11 +72,9 @@ class GenAlg():
 
         # progress monitor stuff
         self.pop_progress = [] #initialize as empty array
-        #figure this out:
-        #fig = plt.figure()
-        #ax1 = fig.add_subplot(1,1,1)
-        #plt.ylabel('convergence')
-        #plt.xlabel('iteration')
+        self.progress_display = progress_display #type of progress display
+        # [0,1,2] = [no display, terminal display, plot display]
+
 
     def generate_random(self): # Dan
         # Generates new random chromosomes with uniform distribution
@@ -116,29 +114,35 @@ class GenAlg():
         self.pop_size = pop_size
 
     def run(num_generations):
-        # initialize plot:
-        fig = plt.figure()
-        ax1 = fig.add_subplot(1,1,1)
-        plt.ylabel('fos')
-        plt.xlabel('iteration')
+        if self.progress_display = 2:
+            # initialize plot:
+            fig = plt.figure()
+            ax1 = fig.add_subplot(1,1,1)
+            plt.ylabel('fos')
+            plt.xlabel('iteration')
         #
 
         for current_gen in range(num_generations): # Loop over all generations:
-            self.progress_monitor(self.population,current_gen,ax1)
+            self.progress_monitor(current_gen,display,ax1)
             for current_truss in range(self.pop_size): # Loop over all trusses -> PARALLELIZE. Later
                 self.evaluator(self.population[current_truss]) # Run evaluator method. Will store results in Truss Object
                 self.fitness_function(self.population[current_truss]) # Assigns numerical score to each truss
             self.population = self.update_population(self.population) # Determine which members to
-        plt.show() #sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+        if self.progress_display = 2:
+            plt.show() #sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         return self.population[0], self.pop_progress
 
-    def progress_monitor(self,population,current_gen,ax1): #Susan
+    def progress_monitor(self,current_gen,display,ax1): #Susan
         # three options: plot, progress bar ish thing, no output just append
         # calc population diversity and plot stuff or show current results
-        fos = [i.fos for i in population] #extract factor of safety from each truss object in population
-        self.pop_progress.append(population) #append to history
-        ax1.scatter(current_gen,min(fos),c=[0,0,0]) #plot minimum FOS for current gen in black
-        plt.pause(0.0001) #pause for 0.0001s to allow plot to update, can potentially remove this
+        fos = [i.fos for i in self.population] #extract factor of safety from each truss object in population
+        self.pop_progress.append(self.population) #append to history
+
+        if self.progress_display = 1:
+            print(current_gen,min(fos))
+        elif self.progress_display = 2:
+            ax1.scatter(current_gen,min(fos),c=[0,0,0]) #plot minimum FOS for current gen in black
+            plt.pause(0.0001) #pause for 0.0001s to allow plot to update, can potentially remove this
 
         #could make population a numpy structured array
         # fitness = population(:).fos
@@ -147,7 +151,7 @@ class GenAlg():
         #plt.xlabel('iteration')
         #plt.show()
 
-        pass
+        #pass
 
     def update_population(self,population): #Cristian
         '''
