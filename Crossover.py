@@ -7,11 +7,7 @@ class Crossover():
     def __init__(self,crossover_params):
         self.params = crossover_params
 #
-<<<<<<< HEAD
-    def uniform_crossover(self, truss_1, truss_2, uniform_crossover_params): #Paul "gosh dog" kaneelil
-=======
     def uniform_crossover(self, truss_1, truss_2 ,uniform_crossover_params=None): #Paul "gosh dog" kaneelil
->>>>>>> bc9a5cfafbe543473bdb667e5f3d138bbbe16bfa
         ''' (aka uniform crossover)
         For each array, generate another array of 0s and 1s. If its a 0, take
         data from one parent and if its a 1, take data from the other parent.
@@ -28,9 +24,9 @@ class Crossover():
 
         child1 = (unos_and_zeros * truss_2) + (unos_and_zeros_c * truss_2)
         child2 = (unos_and_zeros_c * truss_2) + (unos_and_zeros * truss_2)
-        
+
         return child1, child2
-    
+
 
     def single_point_split(self, array_1, array_2, single_point_split_params=None): #Amlan
         '''
@@ -63,7 +59,7 @@ class Crossover():
         '''
 
         (array_row,array_col) = array_1.shape
-        point = np.random.randint(0, array_row)
+        point = 5 #np.random.randint(0, array_row)
 
         child_1 = np.concatenate((array_1[:point],array_2[point:]),axis=0)
         child_2 = np.concatenate((array_2[:point],array_1[point:]),axis=0)
