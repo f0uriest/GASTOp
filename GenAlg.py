@@ -1,9 +1,12 @@
 import matplotlib.pyplot as plt
+from matplotlib import style
 import numpy as np
 import Truss
 import Mutator
 import Crossover
 import Selector
+##plt.ion() #look into multithreading this
+style.use('fivethirtyeight')
 
 class GenAlg():
     # Attributes:
@@ -26,7 +29,7 @@ class GenAlg():
 
 
     def __init__(self,ga_params,mutate_params,crossover_params,selector_params,
-                 evaluator, fitness_function, properties_df):
+                 evaluator, fitness_function, properties_df, progress_display):
         # ********
         self.ga_params = ga_params
         self.mutate_params = mutate_params
@@ -47,6 +50,7 @@ class GenAlg():
         self.num_rand_edges = num_rand_edges # int
         self.domain = domain # np array 2x3 [[xmin,ymin,zmin],[xmax,ymax,zmax]]
         self.boundaries = boundaries
+        self.num_material_options
 
 
         # Crossover - different crossovers for edges, nodes, properties
@@ -67,7 +71,10 @@ class GenAlg():
         self.pseudo_bit_flip_prob_matl = pseudo_bit_flip_prob_matl # double between 0 and 1
 
         # progress monitor stuff
-        self.pop_progress = None
+        self.pop_progress = [] #initialize as empty array
+        self.progress_display = progress_display #type of progress display
+        # [0,1,2] = [no display, terminal display, plot display]
+
 
     def generate_random(self): # Dan
         # Generates new random chromosomes with uniform distribution
@@ -77,7 +84,7 @@ class GenAlg():
 
         Ranges = self.domain[1]-self.domain[0]
         for j in range(3):
-            new_nodes[:,j] = np.random.rand(self.num_rand_nodes,j)*Ranges[j]
+            new_nodes[:,j] = np.random.rand(self.num_rand_nodes,j)*Ranges[j] + self.domain[0][j]
 
 
         # 2nd, generate the new edges between the nodes:
@@ -86,9 +93,13 @@ class GenAlg():
 
         for j in range(self.num_rand_edges):
             if new_edges[j][0] == new_edges[j][1]: # Check that the indexs are not the same:
-                new_edges[j][0] = np.nan
-                new_edges[j][1] = np.nan
+                new_edges[j][0] = -1
+                new_edges[j][1] = -1
 
+        new_materials = np.random.randint(self.num_rand_nodes + self.boundaries.user_spec_nodes.shape[0],
+                                        size = (self.num_material_options,1))
+
+        return new_nodes, new_edges, new_materials
 
         """
         # Check to see if any nodes are unused: - Decided to move this to the solver if needed
@@ -103,23 +114,44 @@ class GenAlg():
         self.pop_size = pop_size
 
     def run(num_generations):
+        if self.progress_display = 2:
+            # initialize plot:
+            fig = plt.figure()
+            ax1 = fig.add_subplot(1,1,1)
+            plt.ylabel('fos')
+            plt.xlabel('iteration')
+        #
+
         for current_gen in range(num_generations): # Loop over all generations:
-            self.progress_monitor(self.population,current_gen)
+            self.progress_monitor(current_gen,display,ax1)
             for current_truss in range(self.pop_size): # Loop over all trusses -> PARALLELIZE. Later
                 self.evaluator(self.population[current_truss]) # Run evaluator method. Will store results in Truss Object
                 self.fitness_function(self.population[current_truss]) # Assigns numerical score to each truss
             self.population = self.update_population(self.population) # Determine which members to
+        if self.progress_display = 2:
+            plt.show() #sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         return self.population[0], self.pop_progress
 
-    def progress_monitor(self,population,current_gen): #Susan
+    def progress_monitor(self,current_gen,display,ax1): #Susan
+        # three options: plot, progress bar ish thing, no output just append
         # calc population diversity and plot stuff or show current results
-        #self.pop_progress[current_gen] = population
-        #plt.plot(it,div)
+        fos = [i.fos for i in self.population] #extract factor of safety from each truss object in population
+        self.pop_progress.append(self.population) #append to history
+
+        if self.progress_display = 1:
+            print(current_gen,min(fos))
+        elif self.progress_display = 2:
+            ax1.scatter(current_gen,min(fos),c=[0,0,0]) #plot minimum FOS for current gen in black
+            plt.pause(0.0001) #pause for 0.0001s to allow plot to update, can potentially remove this
+
+        #could make population a numpy structured array
+        # fitness = population(:).fos
+        #plt.plot(it,fitness)
         #plt.ylabel('convergence')
         #plt.xlabel('iteration')
         #plt.show()
 
-        pass
+        #pass
 
     def update_population(self,population): #Cristian
         '''
