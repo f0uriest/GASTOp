@@ -22,9 +22,6 @@ class Selector(): # Cristian
         fitness scores.
         '''
 
-        population.sort(key=lambda x: x.fitness_score, reverse=True)
-        # print([x.fitness_score for x in population])
-
         pop_size = len(population)
         reference_list = [1/math.sqrt(n) for n in range(1,pop_size+1)]
         # print(reference_list)

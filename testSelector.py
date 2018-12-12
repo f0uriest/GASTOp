@@ -20,6 +20,9 @@ class TestSelector(unittest.TestCase): # Cristian
         for truss in population:
             truss.fitness_score = random.random()
 
+        population.sort(key=lambda x: x.fitness_score, reverse=True)
+        # print([x.fitness_score for x in population])
+
         sel_params = {'method': 'inverse_square_rank_probability'}
         selector = Selector.Selector(sel_params)
 

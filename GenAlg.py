@@ -131,20 +131,25 @@ class GenAlg():
         return population
         '''
 
+        # Store parameters for readability
+        pop_size = self.ga_params['pop_size']
+        percent_crossover = self.ga_params['percent_crossover']
+        percent_mutation = self.ga_params['percent_mutation']
+        num_elite = self.ga_params['num_elite']
+
+        # Sort population by fitness score
         population.sort(key=lambda x: x.fitness_score, reverse=True)
 
         # Calculate parents needed for crossover, ensure even number
-        num_crossover = round(self.ga_params['pop_size']*\
-                            self.ga_params['percent_crossover'])
-        if num_crossover%2 != 0: # If odd, increment by 1
+        num_crossover = round(pop_size*percent_crossover)
+        if (num_crossover % 2) != 0: # If odd, increment by 1
             num_crossover += 1
         # Calculate parents needed for mutation
-        num_mutation = round(self.ga_params['pop_size']*\
-                            self.ga_params['percent_mutation'])
-        num_random = self.ga_params['pop_size'] - self.ga_params['num_elite']\
-                        - num_crossover - num_mutation
-        if num_random < 0: # Raise exception if input params are impossible
-            raise RuntimeError('Invalid GenAlg params.')
+        num_mutation = round(pop_size*percent_mutation)
+        # Calculate remaining number of trusses in next population
+        num_random = pop_size - num_elite - num_crossover - num_mutation
+        if num_random < 0: # Raise exception if input params are unreasonable
+            raise RuntimeError('Invalid GenAlg parameters.')
 
         # Instantiate objects
         selector = Selector.Selector(self.selector_params)
@@ -155,8 +160,8 @@ class GenAlg():
         crossover_parents = selector(num_crossover, population)
         mutation_parents = selector(num_mutation, population)
 
-        # Save top performing trusses as elites
-        pop_elite = population[:self.ga_params['num_elite']]
+        # Save most fit trusses as elites
+        pop_elite = population[:num_elite]
 
         # Perform crossover, update portion of new population formed by crossover
         pop_crossover = []
@@ -168,7 +173,7 @@ class GenAlg():
             child1,child2 = crossover(parent1, parent2)
             pop_crossover.append(child1,child2)
 
-        # Perform crossover, update portion of new population formed by crossover
+        # Perform mutation, update portion of new population formed by mutation
         pop_mutation = []
         for i in range(mutation_parents):
             parentindex = mutation_parents[i]
