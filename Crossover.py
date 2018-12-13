@@ -1,4 +1,5 @@
 import numpy as np
+import Truss
 
 class Crossover():
 
@@ -82,8 +83,10 @@ class Crossover():
         edge_method = getattr(self,self.params['edge_crossover_method'])
         property_method = getattr(self,self.params['property_crossover_method'])
 
-        truss_1.nodes, truss_2.nodes = node_method(truss_1.nodes,truss_2.nodes,self.params['node_crossover_params'])
-        truss_1.edges, truss_2.edges = edge_method(truss_1.edges,truss_2.edges,self.params['edge_crossover_params'])
-        truss_1.properties, truss_2.properties = property_method(truss_1.properties,truss_2.properties,self.params['property_crossover_params'])
+        child_1 = Truss.Truss(0,0,0)
+        child_2 = Truss.Truss(0,0,0)
+        child_1.nodes, child_2.nodes = node_method(truss_1.nodes,truss_2.nodes,self.params['node_crossover_params'])
+        child_1.edges, child_2.edges = edge_method(truss_1.edges,truss_2.edges,self.params['edge_crossover_params'])
+        child_1.properties, child_2.properties = property_method(truss_1.properties,truss_2.properties,self.params['property_crossover_params'])
 
-        return truss_1, truss_2
+        return child_1, child_2

@@ -100,9 +100,9 @@ class GenAlg():
         #
 
         for current_gen in range(num_generations): # Loop over all generations:
-            for current_truss in range(self.ga_params['pop_size']): # Loop over all trusses -> PARALLELIZE. Later
+            for current_truss in self.population: # Loop over all trusses -> PARALLELIZE. Later
                 #self.evaluator(self.population(current_truss)) # Run evaluator method. Will store results in Truss Object
-                self.fitness_function(self.population[current_truss]) # Assigns numerical score to each truss
+                self.fitness_function(current_truss) # Assigns numerical score to each truss
             self.progress_monitor(current_gen,progress_display,ax1)
             self.population = self.update_population(self.population) # Determine which members to
         if progress_display == 2:

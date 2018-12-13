@@ -1,4 +1,5 @@
 import numpy as np
+import Truss
 
 class Mutator():
 # Mutator() object does this...
@@ -61,8 +62,8 @@ class Mutator():
         node_method = getattr(self,self.params['node_mutator_method'])
         edge_method = getattr(self,self.params['edge_mutator_method'])
         property_method = getattr(self,self.params['property_mutator_method'])
-
-        truss.nodes = node_method(truss.nodes,self.params['node_mutator_params'])
-        truss.edges = edge_method(truss.edges,self.params['edge_mutator_params'])
-        truss.properties = property_method(truss.properties, self.params['property_mutator_params'])
-        return truss
+        child = Truss.Truss(0,0,0)
+        child.nodes = node_method(truss.nodes,self.params['node_mutator_params'])
+        child.edges = edge_method(truss.edges,self.params['edge_mutator_params'])
+        child.properties = property_method(truss.properties, self.params['property_mutator_params'])
+        return child
