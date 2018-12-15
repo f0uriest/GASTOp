@@ -1,0 +1,5 @@
+beam,material,OD (m),ID (m),elastic_modulus (Pa),shear_modulus (Pa),yield_strength (Pa)
+0,steel,0.025,0.02,2.00E+11,7.90E+10,2.50E+08
+1,steel,0.012,0.01,2.00E+11,7.90E+10,2.50E+08
+2,aluminum,0.025,0.02,6.90E+10,2.70E+10,9.50E+07
+3,aluminum,0.012,0.01,6.90E+10,2.70E+10,9.50E+07

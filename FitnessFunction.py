@@ -3,12 +3,18 @@ import numpy as np
 
 
 class FitnessFunction():  # Rory
-    # equation: string flag to denote which hard-coded method to use
-    # weights: numpy array
 
     def __init__(self, equation, parameters):
-        self.equation = equation  # function handle
-        self.parameters = parameters  # list
+        self.equation = equation  # string function handle
+        self.parameters = parameters  # dictionary
+
+    def weighted_sum(self, truss):
+        '''Computes the fitness score using a weighted sum of mass and factor of safety error'''
+
+        minfos = truss.fos.min()
+        fs = np.maximum(self.parameters['goal_fos'] - minfos, 0)
+        f = self.parameters['w_mass']*truss.mass + self.parameters['w_fs']*fs
+        return f
 
     def sphere(self, truss):
         '''sum of squares of node array elements. ie, sphere function
