@@ -26,12 +26,13 @@ class Eval():
     def mat_struct_analysis_DSM(self, truss):
         '''Calculates deflections and stresses using direct stiffness method'''
         # NOT FINISHED
+        # make local copies of arrays in case something breaks
         nodes = np.concatenate(
-            (boundary_conditions.user_spec_nodes, truss.nodes))
+            (boundary_conditions.user_spec_nodes.copy(), truss.nodes.copy()))
         # mark self connected nodes
         truss.edges[truss.edges[:, 1] == truss.edges[:2]] = -1
-        con = truss.edges
-        matl = truss.properties
+        con = truss.edges.copy()
+        matl = truss.properties.copy()
 
         # remove self connected edges
         matl = matl[(con[:, 0]) >= 0]
@@ -41,6 +42,7 @@ class Eval():
 
         num_nodes = nodes.shape[0]
         num_con = con.shape[0]
+        num_loads = boundary_conditions.loads.shape[2]
 
         # get material properties etc
         E = beam_dict['elastic_modulus'][matl]
@@ -60,7 +62,7 @@ class Eval():
         Kglob = np.zeros((6*n, 6*num_nodes))  # global stiffness matrix
         Q = np.zeros((num_con, 12))  # end forces on members
         Ei = np.zeros((num_con, 12))  # local to global matrix indices
-        V = np.zeros((6, num_nodes))
+        V = np.zeros((num_nodes, 6, num_loads))  # displacements
         r = np.zeros((3, 3, num_con))  # member rotation matrices
         # local to global transformation matrix
         T = np.zeros((12, 12, num_con))
@@ -68,6 +70,7 @@ class Eval():
         k2 = np.zeros((3, 3, num_con))  # stiffness matrix components
         k3 = np.zeros((3, 3, num_con))  # stiffness matrix components
         k4 = np.zeros((3, 3, num_con))  # stiffness matrix components
+        FoS = np.zeros((num_con, num_loads))
 
         # calculate vectors of members in global coords
         edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]
@@ -118,22 +121,54 @@ class Eval():
         kr4 = np.concatenate((k2t, k4, -k2t, k3), axis=1)
         Kloc = np.concatenate((kr1, kr2, kr3, kr4), axis=0)
 
-        for i in range(num_con):
+        for ii in range(num_con):
             # get member indices to global stiffness matrix
-            e = np.concatenate((np.arange(
-                6*Con[i, 0], 6*Con[i, 0]+6), np.arange(6*Con[i, 1], 6*Con[i, 1]+6)), axis=0)
+            e = np.concatenate((np.arange(6*Con[ii, 0], 6*Con[ii, 0]+6),
+                                np.arange(6*Con[ii, 1], 6*Con[ii, 1]+6)), axis=0)
             # transform from local to global coords
-            KlocT[:, :, i] = np.matmul(Kloc[:, :, i], T[:, :, i])
+            KlocT[:, :, ii] = np.matmul(Kloc[:, :, ii], T[:, :, ii])
             # form global stiffness matrix
-            Kglob[e, e] = Kglob[e, e] + np.matmul(T[:, :, i].T, KlocT[:, :, i])
-            Ei[i, :] = e
+            Kglob[e, e] = Kglob[e, e] + \
+                np.matmul(T[:, :, ii].T, KlocT[:, :, ii])
+            Ei[ii, :] = e
 
-        # need to parse loads / fixtures
-        # calculate deflections
-        # calculate member forces
-        # calculate stresses / FS
+        # calculate displacements
+        for j in range(num_loads):
+            # linear indices of free nodes
+            f = np.nonzero(1-np.ravel(DoF[:, :, j]))
+            # solve for displacements of free nodes
+            try:
+                np.ravel(V[:, :, j])[f] = np.linalg.solve(
+                    Kglob[f, f], np.ravel(Load[:, :, j])[f])
+            # if matrix is singular, stop, FoS still all zeros
+            except LinAlgError:
+                return FoS, V
 
-    def mass_basic(self, truss):
+            # calculate forces and stresses
+            for i in range(num_con):
+                # end forces
+                Q[i, :] = np.matmul(
+                    KlocT[:, :, i], np.ravel(V[:, :, i])[Ei[i, :]])
+
+                # moments
+                M = np.sqrt(Q[i, 4]**2 + Q[i, 5]**2)
+                # axial stress
+                sigmaXbending = M*OD[i]/(2*Iz[i])
+                sigmaXaxial = np.abs(Q[i, 0]/A[i])
+                # torsion
+                tauTorsion = Q[i, 3]*OD[i]/J[i]
+                # shear
+                tauXY = 2*np.sqrt(Q[i, 1]**2 + Q[i, 2]**2)/A[i]
+                # determine von mises stress
+                sigmaVM = np.amax((np.sqrt((sigmaXbending+sigmaXaxial)**2 +
+                                  3*tauTorsion**2), np.sqrt(sigmaXaxial**2 + 3*tauXY**2)))
+                # factor of safety in each beam under each loading condition
+                FoS[i, j] = YS[i]/sigmaVM
+        return FoS, V
+
+
+
+   def mass_basic(self, truss):
         '''Calculates mass of structure'''
         # NOT TESTED
 
@@ -159,7 +194,7 @@ class Eval():
         A = self.beam_dict['area'][matl]
         dens = self.beam_dict['density'][matl]
         mass = A*L*dens
-        truss.mass = mass
+        return mass
 
     def interferences_ray_tracing(self, truss):
         pass
@@ -167,5 +202,8 @@ class Eval():
     def __call__(self, truss):
         struct_solver = getattr(self, self.struct_solver)
         mass_solver = getattr(self, self.mass_solver)
-        struct_solver(truss)
-        mass_solver(truss)
+        fos, deflection = struct_solver(truss)
+        mass = mass_solver(truss)
+        truss.fos = fos
+        truss.deflection = deflection
+        truss.mass = mass

@@ -16,7 +16,7 @@ class FitnessFunction():  # Rory
         '''
         x = truss.nodes.flatten()
         f = np.sum(x**2)
-        truss.fitness_score = f
+        return f
 
     def rosenbrock(self, truss):
         '''n dimensional rosenbrock function using N/2 formulation
@@ -30,7 +30,7 @@ class FitnessFunction():  # Rory
         f = 0
         for i in range(int(N/2)):
             f += 100*(x[2*i]**2 - x[2*i+1])**2 + (x[2*i] - 1)**2
-        truss.fitness_score = f
+        return f
 
     def rastrigin(self, truss):
         '''n-dimensional Restrigin function
@@ -45,8 +45,9 @@ class FitnessFunction():  # Rory
         x2 = x**2
         cosx = np.cos(2*np.pi*x)
         f = A*n + np.sum(x2-A*cosx)
-        truss.fitness_score = f
+        return f
 
     def __call__(self, truss):
         equation = getattr(self, self.equation)
-        equation(truss)
+        f = equation(truss)
+        truss.fitness_score = f
