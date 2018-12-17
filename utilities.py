@@ -68,5 +68,5 @@ def cart2sph(x, y, z):
     #     (x.size, 1)), np.zeros((x.size, 1))
     r = np.sqrt(x**2+y**2+z**2)  # .reshape(x.size, 1)
     phi = np.arctan2(y, x)  # .reshape(x.size, 1)
-    theta = np.arccos(z/r)  # .reshape(x.size, 1)
+    theta = np.pi/2 - np.arccos(z/r)  # .reshape(x.size, 1)
     return r, theta, phi

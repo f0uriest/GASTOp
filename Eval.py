@@ -152,7 +152,6 @@ class Eval():
                 # end forces
                 Q[i, :] = np.matmul(
                     KlocT[:, :, i], np.ravel(V[:, :, i])[Ei[i, :].astype(int)])
-                print(Q[i, :])
                 # moments
                 M = np.sqrt(Q[i, 4]**2 + Q[i, 5]**2)
                 # axial stress
