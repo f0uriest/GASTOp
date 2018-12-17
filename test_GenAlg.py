@@ -17,7 +17,7 @@ class TestGenAlg_Dan(unittest.TestCase):
 
         ga.initialize_population(pop_size)
 
-        for i in range(ga.pop_size):
+        for truss in ga.population:
 
             self.assertTrue()
 
