@@ -58,13 +58,15 @@ def cart2sph(x, y, z):
     '''Converts cartesian coordinates to spherical coordinates
     inputs: x,y,z array like
     ouputs r, theta, phi arrays of same length as x,y,z
+    returns 2d arrays (column vectors)
     angles in radians
     '''
     x = np.array(x)
     y = np.array(y)
     z = np.array(z)
-    r, phi, theta = np.zeros(x.size), np.zeros(x.size), np.zeros(x.size)
-    r = np.sqrt(x**2+y**2+z**2)
-    phi = np.arctan2(y, x)
-    theta = np.arccos(z/r)
+    # r, phi, theta = np.zeros((x.size, 1)), np.zeros(
+    #     (x.size, 1)), np.zeros((x.size, 1))
+    r = np.sqrt(x**2+y**2+z**2)  # .reshape(x.size, 1)
+    phi = np.arctan2(y, x)  # .reshape(x.size, 1)
+    theta = np.arccos(z/r)  # .reshape(x.size, 1)
     return r, theta, phi

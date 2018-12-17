@@ -28,9 +28,9 @@ class Eval():
         # NOT FINISHED
         # make local copies of arrays in case something breaks
         nodes = np.concatenate(
-            (boundary_conditions.user_spec_nodes.copy(), truss.nodes.copy()))
+            (self.boundary_conditions.user_spec_nodes.copy(), truss.nodes.copy()))
         # mark self connected nodes
-        truss.edges[truss.edges[:, 1] == truss.edges[:2]] = -1
+        truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
         con = truss.edges.copy()
         matl = truss.properties.copy()
 
@@ -39,27 +39,27 @@ class Eval():
         matl = matl[(con[:, 1]) >= 0]
         con = con[(con[:, 0]) >= 0]
         con = con[(con[:, 1]) >= 0]
-
         num_nodes = nodes.shape[0]
         num_con = con.shape[0]
-        num_loads = boundary_conditions.loads.shape[2]
+        num_loads = self.boundary_conditions.loads.shape[2]
 
         # get material properties etc
-        E = beam_dict['elastic_modulus'][matl]
-        G = beam_dict['shear_modulus'][matl]
-        YS = beam_dict['yield_strength'][matl]
-        A = beam_dict['x_section_area'][matl]
-        Iz = beam_dict['moment_inertia_z'][matl]
-        Iy = beam_dict['moment_inertia_y'][matl]
-        J = beam_dict['polar_moment_inertia'][matl]
-        OD = beam_dict['outer_diameter'][matl]
+        E = self.beam_dict['elastic_modulus'][matl]  # .reshape(num_con, 1)
+        G = self.beam_dict['shear_modulus'][matl]  # .reshape(num_con, 1)
+        YS = self.beam_dict['yield_strength'][matl]  # .reshape(num_con, 1)
+        A = self.beam_dict['x_section_area'][matl]  # .reshape(num_con, 1)
+        Iz = self.beam_dict['moment_inertia_z'][matl]  # .reshape(num_con, 1)
+        Iy = self.beam_dict['moment_inertia_y'][matl]  # .reshape(num_con, 1)
+        # .reshape(num_con, 1)
+        J = self.beam_dict['polar_moment_inertia'][matl]
+        OD = self.beam_dict['outer_diameter'][matl]  # .reshape(num_con, 1)
 
         # initialize empty matrices
         # member stiffness matrices in local coords
         Kloc = np.zeros((12, 12, num_con))
         # member stiffness matrices in global coords
         KlocT = np.zeros((12, 12, num_con))
-        Kglob = np.zeros((6*n, 6*num_nodes))  # global stiffness matrix
+        Kglob = np.zeros((6*num_nodes, 6*num_nodes))  # global stiffness matrix
         Q = np.zeros((num_con, 12))  # end forces on members
         Ei = np.zeros((num_con, 12))  # local to global matrix indices
         V = np.zeros((num_nodes, 6, num_loads))  # displacements
@@ -96,10 +96,10 @@ class Eval():
         T[9:12, 9:12, :] = r
 
         # stiffness matrix elements in x,y,z,theta
-        co = np.array([12*np.ones((num_con, 1)), 6*L, 4*L**2, 2*L**2])
+        co = np.stack((12*np.ones(num_con), 6*L, 4*L**2, 2*L**2), axis=1)
         x = (E*A)/L
-        y = ((E*Iy)/(L**3))*co
-        z = ((E*Iz)/(L**3))*co
+        y = (((E*Iy)/(L**3))*co.T).T
+        z = (((E*Iz)/(L**3))*co.T).T
         g = G*J/L
 
         # form stacked local stiffness matrices
@@ -123,33 +123,36 @@ class Eval():
 
         for ii in range(num_con):
             # get member indices to global stiffness matrix
-            e = np.concatenate((np.arange(6*Con[ii, 0], 6*Con[ii, 0]+6),
-                                np.arange(6*Con[ii, 1], 6*Con[ii, 1]+6)), axis=0)
+            e = np.concatenate((np.arange(6*con[ii, 0], 6*con[ii, 0]+6),
+                                np.arange(6*con[ii, 1], 6*con[ii, 1]+6)), axis=0)
             # transform from local to global coords
             KlocT[:, :, ii] = np.matmul(Kloc[:, :, ii], T[:, :, ii])
             # form global stiffness matrix
-            Kglob[e, e] = Kglob[e, e] + \
-                np.matmul(T[:, :, ii].T, KlocT[:, :, ii])
+            Kglob[np.ix_(e, e)] = (Kglob[np.ix_(e, e)] +
+                                   np.matmul(T[:, :, ii].T, KlocT[:, :, ii]))
             Ei[ii, :] = e
 
         # calculate displacements
         for j in range(num_loads):
             # linear indices of free nodes
-            f = np.nonzero(1-np.ravel(DoF[:, :, j]))
+            f = np.nonzero(
+                1-np.ravel(self.boundary_conditions.fixed_points[:, :, j]))
+            f = f[0]  # get array out of tuple
+
             # solve for displacements of free nodes
             try:
                 np.ravel(V[:, :, j])[f] = np.linalg.solve(
-                    Kglob[f, f], np.ravel(Load[:, :, j])[f])
+                    Kglob[np.ix_(f, f)], np.ravel(self.boundary_conditions.loads[:, :, j])[f])
             # if matrix is singular, stop, FoS still all zeros
-            except LinAlgError:
+            except np.linalg.LinAlgError:
                 return FoS, V
 
             # calculate forces and stresses
             for i in range(num_con):
                 # end forces
                 Q[i, :] = np.matmul(
-                    KlocT[:, :, i], np.ravel(V[:, :, i])[Ei[i, :]])
-
+                    KlocT[:, :, i], np.ravel(V[:, :, i])[Ei[i, :].astype(int)])
+                print(Q[i, :])
                 # moments
                 M = np.sqrt(Q[i, 4]**2 + Q[i, 5]**2)
                 # axial stress
@@ -161,37 +164,34 @@ class Eval():
                 tauXY = 2*np.sqrt(Q[i, 1]**2 + Q[i, 2]**2)/A[i]
                 # determine von mises stress
                 sigmaVM = np.amax((np.sqrt((sigmaXbending+sigmaXaxial)**2 +
-                                  3*tauTorsion**2), np.sqrt(sigmaXaxial**2 + 3*tauXY**2)))
+                                           3*tauTorsion**2), np.sqrt(sigmaXaxial**2 + 3*tauXY**2)))
                 # factor of safety in each beam under each loading condition
                 FoS[i, j] = YS[i]/sigmaVM
         return FoS, V
 
-
-
-   def mass_basic(self, truss):
+    def mass_basic(self, truss):
         '''Calculates mass of structure'''
         # NOT TESTED
 
         nodes = np.concatenate(
-            (boundary_conditions.user_spec_nodes, truss.nodes))
+            (self.boundary_conditions.user_spec_nodes.copy(), truss.nodes.copy()))
         # mark self connected nodes
-        truss.edges[truss.edges[:, 1] == truss.edges[:2]] = -1
-        con = truss.edges
-        matl = truss.properties
+        truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
+        con = truss.edges.copy()
+        matl = truss.properties.copy()
 
         # remove self connected edges
         matl = matl[(con[:, 0]) >= 0]
         matl = matl[(con[:, 1]) >= 0]
         con = con[(con[:, 0]) >= 0]
         con = con[(con[:, 1]) >= 0]
-
         # calculate member lengths
         edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]
         L = np.sqrt(
             edge_vec[:, 0]**2 +
             edge_vec[:, 1]**2 +
-            truss.nodes[:, 2]**2)
-        A = self.beam_dict['area'][matl]
+            edge_vec[:, 2]**2)
+        A = self.beam_dict['x_section_area'][matl]
         dens = self.beam_dict['density'][matl]
         mass = A*L*dens
         return mass
