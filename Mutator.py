@@ -26,9 +26,22 @@ class Mutator():
 
         bounds = gaussian_params['boundaries']
         # clips the numbers that are out of bounds and brings it to the boundary
-        for i in range(nn[1]):
-            new_array[:,i] = np.clip(new_array[:,i], bounds[i,0], bounds[i,1])
+        #for i in range(nn[1]):
+        #    new_array[:,i] = np.clip(new_array[:,i], bounds[i,0], bounds[i,1])
 
+        # checks for flag that specifies whether output should be an integer and rounds the \
+        # output arrays
+        if (gaussian_params['int_flag']==True):
+            new_array = (np.rint(new_array)).astype(int)
+
+        # new method to handle out of bounds problem: loop around on other side
+        for j in range(nn[1]):
+            for i in range(nn[0]):
+                if (new_array[i,j] < bounds[j,0]):
+                    new_array[i,j] = bounds[j,1] - (new_array[i,j] % bounds[j,0])
+                elif (new_array[i,j] > bounds[j,1]):
+                    new_array[i,j] = bounds[j,0] + (new_array[i,j] % bounds[j,1])
+        
         return new_array
 
     def pseudo_bit_flip(self,array, bit_flip_params): #Amlan
