@@ -102,9 +102,9 @@ class TestGenAlg_SFR(unittest.TestCase):
         population = [Truss.Truss(nodes,edges,properties) for i in range(pop_size)]
 
         for truss in population:
-            truss.fos = np.random.random()
+            truss.fitness_score = np.random.random()
 
-        population.sort(key=lambda x: x.fos)
+        population.sort(key=lambda x: x.fitness_score)
                 # print([x.fitness_score for x in population])
 
         GA = GenAlg.GenAlg(0,0,0,0,0,0,0,0)#put zeros in here
@@ -114,7 +114,7 @@ class TestGenAlg_SFR(unittest.TestCase):
         #dumb GA run
         fig = plt.figure()
         ax1 = fig.add_subplot(1,1,1)
-        plt.ylabel('fos')
+        plt.ylabel('fitscore')
         plt.xlabel('iteration')
         #
         num_generations = 20
@@ -122,7 +122,7 @@ class TestGenAlg_SFR(unittest.TestCase):
             GA.progress_monitor(current_gen,progress_display,ax1)
             for truss in GA.population:
                 #truss.fos = np.random.random()
-                truss.fos = truss.fos + 5.0
+                truss.fitness_score = truss.fitness_score + 5.0
         plt.show() #sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         return GA.population[0], GA.pop_progress
 
