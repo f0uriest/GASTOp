@@ -134,6 +134,12 @@ class Eval():
 
         # calculate displacements
         for j in range(num_loads):
+            # set unconnected nodes to fixed
+            unconnected = np.setdiff1d(range(num_nodes), con.flatten())
+            self.boundary_conditions.fixed_points[unconnected] = 1
+            # make sure loaded nodes are not fixed
+            self.boundary_conditions.fixed_points[:, :, j][self.boundary_conditions.loads[:, :, j].any(
+                axis=1)] = 0
             # linear indices of free nodes
             f = np.nonzero(
                 1-np.ravel(self.boundary_conditions.fixed_points[:, :, j]))
@@ -158,7 +164,7 @@ class Eval():
                 sigmaXbending = M*OD[i]/(2*Iz[i])
                 sigmaXaxial = np.abs(Q[i, 0]/A[i])
                 # torsion
-                tauTorsion = Q[i, 3]*OD[i]/J[i]
+                tauTorsion = Q[i, 3]*OD[i]/(2*J[i])
                 # shear
                 tauXY = 2*np.sqrt(Q[i, 1]**2 + Q[i, 2]**2)/A[i]
                 # determine von mises stress

@@ -4,3 +4,4 @@
 *.xlsx
 __pycache__/
 *#
+.coverage
