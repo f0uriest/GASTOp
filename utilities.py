@@ -55,18 +55,26 @@ def init_file_parser(init_file_path):
 
 
 def cart2sph(x, y, z):
-    '''Converts cartesian coordinates to spherical coordinates
-    inputs: x,y,z array like
-    ouputs r, theta, phi arrays of same length as x,y,z
-    returns 2d arrays (column vectors)
-    angles in radians
-    '''
+    """Converts cartesian coordinates to spherical coordinates
+
+    Args:
+        x,y,z (array like): cartesian coordinates
+
+    Returns:
+        r (ndarray): radial coordinate, L2 norm of x,y,z vector.
+        theta (ndarray): elevation angle, in radians. Ranges from pi/2 to -pi/2
+            theta = 0 corresponds to a vector in the x-y plane, theta = pi/2 
+            along positive z axis.
+        phi (ndarray): azimuthal angle, in radians. Ranges from 0 to 2pi.
+            phi = 0 along positive x axis.
+    """
+
     x = np.array(x)
     y = np.array(y)
     z = np.array(z)
-    # r, phi, theta = np.zeros((x.size, 1)), np.zeros(
-    #     (x.size, 1)), np.zeros((x.size, 1))
-    r = np.sqrt(x**2+y**2+z**2)  # .reshape(x.size, 1)
-    phi = np.arctan2(y, x)  # .reshape(x.size, 1)
-    theta = np.pi/2 - np.arccos(z/r)  # .reshape(x.size, 1)
+
+    r = np.sqrt(x**2+y**2+z**2)
+    phi = np.arctan2(y, x)
+    theta = np.pi/2 - np.arccos(z/r)
+
     return r, theta, phi
