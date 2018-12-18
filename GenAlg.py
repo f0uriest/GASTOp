@@ -114,11 +114,11 @@ class GenAlg():
         # calc population diversity and plot stuff or show current results
         fitscore = [i.fitness_score for i in self.population] #extract factor of safety from each truss object in population
         self.pop_progress.append(self.population) #append to history
-
         if progress_display == 1:
             print(current_gen,min(fitscore))
         elif progress_display == 2:
-            ax1.scatter(current_gen,min(fitscore),c=[0,0,0]) #plot minimum FOS for current gen in black
+            #print(current_gen,min(fitscore))
+            ax1.scatter(current_gen,min(fitscore),c=[0,0,0]) #plot minimum fitscore for current gen in black
             plt.pause(0.0001) #pause for 0.0001s to allow plot to update, can potentially remove this
 
         #could make population a numpy structured array
