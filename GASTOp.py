@@ -29,8 +29,8 @@ crossover_params = {
     'node_crossover_method': 'uniform_crossover',
     'edge_crossover_method': 'uniform_crossover',
     'property_crossover_method': 'single_point_split',
-    'node_crossover_params' : None,
-    'edge_crossover_params': None,
+    'node_crossover_params' : {},
+    'edge_crossover_params': {},
     'property_crossover_params': {},
     }
 

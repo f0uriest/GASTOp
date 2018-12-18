@@ -37,7 +37,7 @@ class Crossover():
 
         # checks for flag that specifies whether output should be an integer and rounds the \
         # output arrays
-        if uniform_crossover_params is not None:
+        if uniform_crossover_params:
             if (uniform_crossover_params['int_flag']==True):
                 child1 = (np.rint(child1)).astype(int)
                 child2 = (np.rint(child2)).astype(int)
