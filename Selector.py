@@ -51,7 +51,14 @@ class Selector(): # Cristian
     def tournament(self,num_parents,population):
         ''' Selects parents according to tournament method.
 
-        Explain...
+        (ASSUMES POPULATION IS SORTED BY FITNESS) Randomly selects truss
+        indices from population in groups called tournaments according to
+        "tourn_size." Each tournament is then sorted by index (lower means
+        more fit) in ascending order and a single index from each tournament
+        is selected. The selection from each tournament is chosen
+        probabilistically, assigning the first, most fit, index with probability
+        p = tourn_prob, and then subsequent indices by p*(1-p)^n. The winners
+        of each tournament are then returned as the parents array.
 
         Args:
             num_parents (int): The number of parents to select.
@@ -62,9 +69,32 @@ class Selector(): # Cristian
             parents (ndarray): Numpy array of indices in population
                 corresponding to selected parents.
         '''
-        
 
-        pass
+        tourn_size = self.sel_params['tourn_size']
+        tourn_prob = self.sel_params['tourn_prob']
+        pop_size = len(population)
+
+        # Build ndarray of randomly selected parent indices. Each row in the
+        # array corresponds to a tournament, one tournament for each parent.
+        rand_dimen = (num_parents,tourn_size)
+        rand_vals = np.random.randint(0,pop_size,rand_dimen)
+        rand_vals.sort(axis=1)
+
+        # Build probability array
+        a = np.ones(tourn_size)*tourn_prob
+        b = np.fromiter(((1-tourn_prob)**x for x in range(tourn_size)),float)
+        c = a*b
+        tourn_distribution = c/np.sum(c) # normalize probabilities
+
+        # Randomly select indices from each row of rand_vals assigning the
+        # corresponding probability in tourn_distribution to each element in
+        # the row.
+        select_ids = np.random.choice(tourn_size,pop_size,p=tourn_distribution)
+
+        # Build parents array, selecting an element from each row of rand_vals
+        parents = np.choose(select_ids,rand_vals.T)
+
+        return parents
 
     def __call__(self,num_parents,population):
         method = getattr(self,self.sel_params['method'])
