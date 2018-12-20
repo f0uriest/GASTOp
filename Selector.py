@@ -6,6 +6,16 @@ class Selector(): # Cristian
     When creating a new Selector() obejct, must be initialized with dictionary
     sel_params (containing selection method). Object can then be used as a
     function that selects parents according to the specified method.
+
+    Attributes:
+        sel_params(dict of str: ): Dictionary of parameters required by selector
+                                    objects.
+        sel_params['method'](str): Name of chosen selection methodself.
+        sel_params['tourn_size'](int): Number of indices in each tournament.
+                                    Only needed for tournament method.
+        sel_params['tourn_prob'](int): Probability of selecting first inde in
+                                    each tournament. Only needed for tournament
+                                    method.
     '''
     def __init__(self,sel_params):
         self.sel_params = sel_params
@@ -81,10 +91,9 @@ class Selector(): # Cristian
         rand_vals.sort(axis=1)
 
         # Build probability array
-        a = np.ones(tourn_size)*tourn_prob
-        b = np.fromiter(((1-tourn_prob)**x for x in range(tourn_size)),float)
-        c = a*b
-        tourn_distribution = c/np.sum(c) # normalize probabilities
+        generator = (tourn_prob*(1-tourn_prob)**x for x in range(tourn_size))
+        a = np.fromiter(generator,float)
+        tourn_distribution = a/np.sum(a) # normalize probabilities
 
         # Randomly select indices from each row of rand_vals assigning the
         # corresponding probability in tourn_distribution to each element in
