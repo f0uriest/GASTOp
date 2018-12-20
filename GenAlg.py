@@ -131,13 +131,21 @@ class GenAlg():
         #pass
 
     def update_population(self,population): #Cristian
-        '''
-        First do elitism
-        create selector object from population and method
-        call selector to get list of parents for parent selection
-        for loop for crossover
-        for loop for mutation
-        return population
+        ''' Creates new population by performing crossover and mutation, as well
+        as taking elites and randomly generating trusses.
+
+        First sorts the population by fitness score, from most fit to least fit.
+        Creates selector object from population and method. Calls selector to
+        get list of parents for crossover and mutation. Performs crossover and
+        mutation.
+
+        Args:
+            population (list): List of Truss objects that constitutes the
+                current generation.
+
+        Returns:
+            population (list): List of Truss objects that constitutes the
+                current generation.
         '''
 
         # Store parameters for readability
@@ -172,7 +180,7 @@ class GenAlg():
         # Save most fit trusses as elites
         pop_elite = population[:num_elite]
 
-        # Perform crossover, update portion of new population formed by crossover
+        # Portion of new population formed by crossover
         pop_crossover = []
         for i in range(0,num_crossover,2):
             parentindex1 = crossover_parents[i]
@@ -182,7 +190,7 @@ class GenAlg():
             child1,child2 = crossover(parent1, parent2)
             pop_crossover.extend([child1,child2])
 
-        # Perform mutation, update portion of new population formed by mutation
+        # Portion of new population formed by mutation
         pop_mutation = []
         for i in range(num_mutation):
             parentindex = mutation_parents[i]
