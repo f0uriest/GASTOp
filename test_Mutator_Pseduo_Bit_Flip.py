@@ -3,22 +3,21 @@ import numpy as np
 
 import Mutator
 
-'''
-# pseudo test code
-array = np.arange(1,11,1).reshape((10,1))
-bit_flip_params = {'bounds' : np.array([[0],[10]])}
-myMutator = Mutator.Mutator([])
-new_array = myMutator.pseudo_bit_flip(array,bit_flip_params)
-
-print(new_array)
-'''
-
 class TestMutator_pseudo_bit_flip(unittest.TestCase):
-    def testBasic(self):
-        array = np.arange(1,31,1).reshape((10,3))
-        bit_flip_params = [[0,0,0],[10,10,10]]
+
+    def test_basic(self):
+        array = np.ones((10,3))
+        bit_flip_params = {'boundaries' : np.array([[0,0,0],[10,10,10]]), 'proportions' : 0.5, 'int_flag' : False}
         myMutator = Mutator.Mutator([])
-        child_1 = myMutator.pseudo_bit_flip(array,bit_flip_params)
+        child = myMutator.pseudo_bit_flip(array,bit_flip_params)
+
+    def test_datatype(self):
+        array = np.ones((10,3))
+        bit_flip_params = {'boundaries' : np.array([[0,0,0],[10,10,10]]), 'proportions' : 0.5, 'int_flag' : True}
+        myMutator = Mutator.Mutator([])
+        child = myMutator.pseudo_bit_flip(array,bit_flip_params)
+
+        np.testing.assert_string_equal(str(child.dtype), 'int64')
 
 if __name__ == '__main__':
     unittest.main()

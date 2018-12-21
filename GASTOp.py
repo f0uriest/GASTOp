@@ -39,9 +39,9 @@ mutate_params = {
     'edge_mutator_method': 'pseudo_bit_flip',
     'property_mutator_method': 'gaussian',
 
-    'node_mutator_params' : {'boundaries': np.array([[-5,5],[-5,5],[-5,5]]),'std':0.2},
-    'edge_mutator_params' : {'bounds': np.array([[-1,-1],[10,10]])},
-    'property_mutator_params' : {'boundaries': np.array([[-1,10],[-1,10]]), 'std': 2}
+    'node_mutator_params' : {'boundaries': np.array([[-5,5],[-5,5],[-5,5]]),'std':0.2, 'int_flag':False},
+    'edge_mutator_params' : {'boundaries': np.array([[-1,-1],[10,10]]), 'proportions' : 0.5, 'int_flag' : False},
+    'property_mutator_params' : {'boundaries': np.array([[-1,10],[-1,10]]), 'std': 2, 'int_flag':False}
     }
 
 selector_params = {'method': 'inverse_square_rank_probability'}
