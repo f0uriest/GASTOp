@@ -248,6 +248,10 @@ class Eval():
     def interferences_ray_tracing(self, truss):
         pass
 
+    def blank_test(self, truss):
+        """Blank function used for testing GA when no evaluation needed"""
+        pass
+
     def __call__(self, truss):
         struct_solver = getattr(self, self.struct_solver)
         mass_solver = getattr(self, self.mass_solver)

@@ -8,14 +8,14 @@ class FitnessFunction():
         self.equation = equation  # string function handle
         self.parameters = parameters  # dictionary
 
-    def weighted_sum(self, truss):
+    def weighted_sum(self, truss, parameters):
         """Computes fitness score using a weighted sum of mass and fos
 
         Args:
             truss (Truss object): truss to be scored. Must have mass
                 fos attributes defined (for example, by using evaluator).
             parameters (dict): Dictionary with the following entries:
-                'goal_fos' (float > 0) : desired factor of safety. Trusses with
+                'goal_fos' (float >= 0) : desired factor of safety. Trusses with
                     a smaller fos will be penalized according to 'w_fos'
                 'w_fos' (float >= 0): penalty weight for low fos. Only applied
                     if fos < goal_fos
@@ -96,7 +96,7 @@ class FitnessFunction():
 
         Returns:
             f (float): fitness score. Computed as
-                f(x) = An + Sum(x_i^2 -Acos(2pi*x_i)) for i=1 to n
+                f(x) = A*n + Sum(x_i^2 -A*cos(2*pi*x_i)) for i=1 to n
                 n determined from size of nodes array
                 x_i are entries of node array
         """

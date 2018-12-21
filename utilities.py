@@ -58,7 +58,7 @@ def cart2sph(x, y, z):
     """Converts cartesian coordinates to spherical coordinates
 
     Args:
-        x,y,z (array like): cartesian coordinates
+        x,y,z (array like): cartesian coordinates. Arrays must all have same shape
 
     Returns:
         r (ndarray): radial coordinate, L2 norm of x,y,z vector.
