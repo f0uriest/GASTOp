@@ -49,7 +49,7 @@ def beam_file_parser(filename):
     return beam_dict
 
 
-def init_file_parser(init_file_path):
+def init_file_parser(init_file_path): # Cristian
     # Gets all of the inputs from the file
     pass
 
@@ -63,7 +63,7 @@ def cart2sph(x, y, z):
     Returns:
         r (ndarray): radial coordinate, L2 norm of x,y,z vector.
         theta (ndarray): elevation angle, in radians. Ranges from pi/2 to -pi/2
-            theta = 0 corresponds to a vector in the x-y plane, theta = pi/2 
+            theta = 0 corresponds to a vector in the x-y plane, theta = pi/2
             along positive z axis.
         phi (ndarray): azimuthal angle, in radians. Ranges from 0 to 2pi.
             phi = 0 along positive x axis.

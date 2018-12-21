@@ -137,6 +137,12 @@ class GenAlg():
 
         # pass
 
+    def save_state(self,population): # Cristian
+        pass
+
+    def load_state(self): # Cristian
+        pass
+
     def update_population(self, population):  # Cristian
         ''' Creates new population by performing crossover and mutation, as well
         as taking elites and randomly generating trusses.

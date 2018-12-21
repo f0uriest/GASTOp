@@ -67,6 +67,16 @@ num_gens = 100
 # Create a Fitness Function Object
 fitness_function = FitnessFunction.FitnessFunction('rastrigin',0)
 
+class TestGenAlg_Cristian(unittest.TestCase):
+    def testUpdatePopulation(self):
+        pass
+        
+    def testSaveState(self):
+        pass
+
+    def testLoadState(self):
+        pass
+
 class TestGenAlg_Dan(unittest.TestCase):
     def test_nodes_in_domain(self):
 
@@ -83,12 +93,6 @@ class TestGenAlg_Dan(unittest.TestCase):
                 self.assertTrue(node[1] < random_params['domain'][1,1])
                 self.assertTrue(node[2] > random_params['domain'][0,2])
                 self.assertTrue(node[2] < random_params['domain'][1,2])
-
-
-
-
-
-
 
 class TestGenAlg_SFR(unittest.TestCase):
 
