@@ -3,21 +3,33 @@ import Truss
 
 class Crossover():
 
-# Crossover() object takes in two parents and returns two children
+    '''
+    Crossover methods takes in two parents and returns two children after performing
+    either a uniform crossover or a single point split.
+    '''
 
     def __init__(self,crossover_params):
         self.params = crossover_params
 
     def uniform_crossover(self, truss_1, truss_2 ,uniform_crossover_params=None): #Paul
-        '''
-        For each array, generate another array of 0s and 1s. If its a 0, take
-        data from one parent and if its a 1, take data from the other parent.
-        Let's say parent one corresponds to 0 and parent two to 1:
-        To make normal child, multiply array of 0s and 1s with parent two array
-        and the complement of that 0s and 1s array with parent one array and
-        add the two resulting arrays together.
-        To make the evil kid, do the opposite.
-        Output 2 children
+        '''Performs a uniform crossover on the two parents
+
+        The uniform crossover method creates two child arrays by randomly mixing together
+        information taken from two parent arrays. To do this, the method creates two arrays
+        of ones and zeros -one being the complement of the other- with the same shape as
+        the parent arrays. The first array is multiplied with parent1 and the complementary
+        array is multiplied with parent2 before adding the results together to make child1. 
+        The exact opposite multiplication is done to make child2.
+
+        Args:
+            truss_1 (array): Numpy array containing information for parent 1
+            truss_2 (array): Numpy array containing information for parent 2
+            uniform_crossover_params (dictionary): parameters containing any information
+                needed for the method.
+        
+        Returns:
+            child1 (array): Numpy array containing information for child 1
+            child2 (array): Numpy array containing information for child 2
         '''
         # find the shape of the parents
         nn = np.shape(truss_1)
@@ -32,8 +44,8 @@ class Crossover():
         unos_and_zeros_c = unos - unos_and_zeros
 
         # making kids ;)
-        child1 = (unos_and_zeros * truss_2) + (unos_and_zeros_c * truss_2)
-        child2 = (unos_and_zeros_c * truss_2) + (unos_and_zeros * truss_2)
+        child1 = (unos_and_zeros * truss_1) + (unos_and_zeros_c * truss_2)
+        child2 = (unos_and_zeros_c * truss_1) + (unos_and_zeros * truss_2)
 
         # checks for flag that specifies whether output should be an integer and rounds the \
         # output arrays

@@ -3,18 +3,32 @@ import Truss
 
 class Mutator():
 # Mutator() object does this...
-
+    '''
+    Mutator take in a parent array and mutates it according to either a gaussian
+    or psuedo bit flip method before returning a child.
+    '''
 
     def __init__(self,mutator_params):
         self.params = mutator_params
 
     def gaussian(self,array,gaussian_params): #Paul
-        '''
-        Given an array of data, adding a gaussian number (normal distribution,
-        bell curve) with mean 0 and some standard deviation to each number
-        in the array. If it is mutated to outside the boundary, move it
-        back to the boundary. (use variables specified above) Round the number
-        to the nearest integer
+        '''Performs a gaussian mutation on the given parent array
+
+        The gaussian mutator method creates a child array by mutating the given parent
+        array. The mutation is done by adding a random value from the gaussian distribution
+        with a user specified standard deviation to each of the elements in the parent
+        array. Since values need to be within a specified boundary, any elements that are
+        mutated out of bounds on one side are looped inside the other side by the same 
+        amount, assuming a periodic boundary.
+
+        Args:
+            array (array): Numpy array containing the information for the parent array that
+                  is being mutated.
+            gaussian_params (dictionary): parameters containing information needed for
+                  the method.
+
+        Returns:
+            new_array (array): Numpy array containing information for the mutated child
         '''
         nn = np.shape(array)
         # makes an array of the same size as the one given with random values\
