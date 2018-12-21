@@ -10,3 +10,5 @@ script:
   - pytest
 notifications:
     slack: princetonmae:MyikIXs3nE7eGCiIODO5VDxK
+      on_failure: always
+      on_success: change
