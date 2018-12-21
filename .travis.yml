@@ -5,11 +5,12 @@ python:
 install:
   - pip install numpy
   - pip install matplotlib
+  - pip install configobj
 # command to run tests
 script:
   - pytest
 notifications:
-    slack: 
+    slack:
       rooms:
         - princetonmae:MyikIXs3nE7eGCiIODO5VDxK
       on_failure: always
