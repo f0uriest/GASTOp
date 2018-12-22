@@ -105,7 +105,7 @@ class Mutator():
 
         # Checking for flag to force integer output
         if (bit_flip_params['int_flag'] == True):
-            array = (np.rint(array)).astype(int)
+            array = (np.floor(array)).astype(int)
 
         return array
 

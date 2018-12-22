@@ -6,12 +6,12 @@ import Truss
 class Eval():
     # wrapper for structural analysis,
     #
-    def __init__(self, struct_solver, mass_solver, interferences_solver, boundary_conditions, beam_dict):
+    def __init__(self, struct_solver, mass_solver, interferences_solver, boundary_conditions, properties_dict):
         self.struct_solver = getattr(self, struct_solver)
         self.mass_solver = getattr(self, mass_solver)
         self.interferences_solver = getattr(self, interferences_solver)
         self.boundary_conditions = boundary_conditions
-        self.beam_dict = beam_dict
+        self.properties_dict = properties_dict
 
         # df.at[0,'A']
         # t2 = df.iloc[[4,4,3,4],[1]]
@@ -64,8 +64,8 @@ class Eval():
 
         # remove self connected edges
         matl = matl[(con[:, 0]) >= 0]
-        matl = matl[(con[:, 1]) >= 0]
         con = con[(con[:, 0]) >= 0]
+        matl = matl[(con[:, 1]) >= 0]
         con = con[(con[:, 1]) >= 0]
 
         num_nodes = nodes.shape[0]
@@ -73,14 +73,14 @@ class Eval():
         num_loads = loads.shape[2]
 
         # get material properties etc
-        E = self.beam_dict['elastic_modulus'][matl]
-        G = self.beam_dict['shear_modulus'][matl]
-        YS = self.beam_dict['yield_strength'][matl]
-        A = self.beam_dict['x_section_area'][matl]
-        Iz = self.beam_dict['moment_inertia_z'][matl]
-        Iy = self.beam_dict['moment_inertia_y'][matl]
-        J = self.beam_dict['polar_moment_inertia'][matl]
-        OD = self.beam_dict['outer_diameter'][matl]
+        E = self.properties_dict['elastic_modulus'][matl]
+        G = self.properties_dict['shear_modulus'][matl]
+        YS = self.properties_dict['yield_strength'][matl]
+        A = self.properties_dict['x_section_area'][matl]
+        Iz = self.properties_dict['moment_inertia_z'][matl]
+        Iy = self.properties_dict['moment_inertia_y'][matl]
+        J = self.properties_dict['polar_moment_inertia'][matl]
+        OD = self.properties_dict['outer_diameter'][matl]
 
         # initialize empty matrices
         # member stiffness matrices in local coords
@@ -185,7 +185,7 @@ class Eval():
             for i in range(num_con):
                 # end forces
                 Q[i, :] = np.matmul(
-                    KlocT[:, :, i], np.ravel(V[:, :, i])[Ei[i, :].astype(int)])
+                    KlocT[:, :, i], np.ravel(V[:, :, j])[Ei[i, :].astype(int)])
                 # combined moment about y, z
                 M = np.sqrt(Q[i, 4]**2 + Q[i, 5]**2)
                 # axial stress due to bending moment
@@ -200,7 +200,10 @@ class Eval():
                 sigmaVM = np.amax((np.sqrt((sigmaXbending+sigmaXaxial)**2 +
                                            3*tauTorsion**2), np.sqrt(sigmaXaxial**2 + 3*tauXY**2)))
                 # factor of safety in each beam under each loading condition
-                FoS[i, j] = YS[i]/sigmaVM
+                if sigmaVM > 1e-6:
+                    FoS[i, j] = YS[i]/sigmaVM
+                else:
+                    FoS[i, j] = 1e6
 
         return FoS, V
 
@@ -228,8 +231,8 @@ class Eval():
 
         # remove self connected edges
         matl = matl[(con[:, 0]) >= 0]
-        matl = matl[(con[:, 1]) >= 0]
         con = con[(con[:, 0]) >= 0]
+        matl = matl[(con[:, 1]) >= 0]
         con = con[(con[:, 1]) >= 0]
 
         # calculate member lengths
@@ -240,9 +243,9 @@ class Eval():
             edge_vec[:, 2]**2)
 
         # get material properties
-        A = self.beam_dict['x_section_area'][matl]
-        dens = self.beam_dict['density'][matl]
-        mass = A*L*dens
+        A = self.properties_dict['x_section_area'][matl]
+        dens = self.properties_dict['density'][matl]
+        mass = np.sum(A*L*dens)
 
         return mass
 

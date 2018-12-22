@@ -75,8 +75,8 @@ class GenAlg():
                 new_edges[j][0] = -1
                 new_edges[j][1] = -1
 
-        new_properties = np.random.randint(num_rand_nodes + num_user_spec_nodes,
-                                           size=(self.random_params['num_material_options'], 1))
+        new_properties = np.random.randint(self.random_params['num_material_options'],
+                                           size=(num_rand_edges))
 
         return Truss.Truss(user_spec_nodes, new_nodes, new_edges, new_properties)
 
@@ -124,11 +124,11 @@ class GenAlg():
         fitscore = [i.fitness_score for i in self.population]
         self.pop_progress.append(self.population)  # append to history
         if progress_display == 1:
-            print(current_gen, min(fitscore))
+            print(current_gen, np.amin(fitscore))
         elif progress_display == 2:
             # print(current_gen,min(fitscore))
             # plot minimum fitscore for current gen in black
-            ax1.scatter(current_gen, min(fitscore), c=[0, 0, 0])
+            ax1.scatter(current_gen, np.amin(fitscore), c=[0, 0, 0])
             # pause for 0.0001s to allow plot to update, can potentially remove this
             plt.pause(0.0001)
 

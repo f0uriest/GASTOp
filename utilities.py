@@ -100,6 +100,82 @@ def init_file_parser(init_file_path):  # Cristian
     # transform function.
     config.walk(transform)
 
+    properties_dict = beam_file_parser(config['general']['properties_path'])
+    user_spec_nodes = config['general']['user_spec_nodes']
+    num_user_nodes = user_spec_nodes.shape[0]
+    num_rand_nodes = config['general']['num_rand_nodes']
+    num_nodes = num_user_nodes + num_rand_nodes
+    num_edges = config['general']['num_rand_edges']
+    num_matl = properties_dict['elastic_modulus'].shape[0]
+    loads = config['general']['loads']
+    fixtures = config['general']['fixtures']
+    if loads.ndim < 3:
+        loads = np.reshape(loads, (*loads.shape, 1))
+    if fixtures.ndim < 3:
+        fixtures = np.reshape(fixtures, (*fixtures.shape, 1))
+    num_loads = loads.shape[2]
+    fixtures = np.concatenate((fixtures, np.zeros(
+        (num_rand_nodes, 6, num_loads))), axis=0)
+    loads = np.concatenate((loads, np.zeros(
+        (num_rand_nodes, 6, num_loads))), axis=0)
+    domain = config['general']['domain']
+
+    # evaluator_params
+    config['evaluator_params']['boundary_conditions'] = {}
+    config['evaluator_params']['boundary_conditions']['loads'] = loads
+    config['evaluator_params']['boundary_conditions']['fixtures'] = fixtures
+    config['evaluator_params']['properties_dict'] = properties_dict
+
+    # random params
+    config['random_params']['num_rand_nodes'] = num_rand_nodes
+    config['random_params']['num_rand_edges'] = num_edges
+    config['random_params']['domain'] = domain
+    config['random_params']['num_material_options'] = num_matl
+    config['random_params']['user_spec_nodes'] = user_spec_nodes
+
+    # crossover params
+    config['crossover_params']['user_spec_nodes'] = user_spec_nodes
+
+    # mutator params
+    config['mutator_params']['user_spec_nodes'] = user_spec_nodes
+    config['mutator_params']['node_mutator_params']['boundaries'] = domain.T
+    config['mutator_params']['node_mutator_params']['int_flag'] = False
+    config['mutator_params']['edge_mutator_params']['boundaries'] = np.array(
+        [[-1, -1], [num_nodes, num_nodes]])
+    config['mutator_params']['edge_mutator_params']['int_flag'] = True
+    config['mutator_params']['property_mutator_params']['boundaries'] = np.array([
+                                                                                 [0], [num_matl]])
+    config['mutator_params']['property_mutator_params']['int_flag'] = True
+
+    # defaults or user override
+    if not config['crossover_params']['node_crossover_method']:
+        config['crossover_params']['node_crossover_method'] = 'uniform_crossover'
+    if not config['crossover_params']['edge_crossover_method']:
+        config['crossover_params']['edge_crossover_method'] = 'uniform_crossover'
+    if not config['crossover_params']['property_crossover_method']:
+        config['crossover_params']['property_crossover_method'] = 'uniform_crossover'
+
+    if not config['mutator_params']['node_mutator_method']:
+        config['mutator_params']['node_mutator_method'] = 'gaussian'
+        config['mutator_params']['node_mutator_params']['std'] = .1
+    if not config['mutator_params']['edge_mutator_method']:
+        config['mutator_params']['edge_mutator_method'] = 'pseudo_bit_flip'
+        config['mutator_params']['edge_mutator_params']['proportions'] = 0.3
+    if not config['mutator_params']['property_mutator_method']:
+        config['mutator_params']['property_mutator_method'] = 'pseudo_bit_flip'
+        config['mutator_params']['property_mutator_params']['proportions'] = 0.3
+
+    if not config['selector_params']['method']:
+        config['selector_params']['method'] = 'inverse_square_rank_probability'
+
+    if not config['ga_params']['num_elite']:
+        config['ga_params']['num_elite'] = np.ceil(
+            .01*config['ga_params']['pop_size']).astype(int)
+    if not config['ga_params']['percent_crossover']:
+        config['ga_params']['percent_crossover'] = 0.4
+    if not config['ga_params']['percent_mutation']:
+        config['ga_params']['percent_mutation'] = 0.4
+
     return config
 
 
@@ -159,8 +235,8 @@ def truss_plot(truss, domain=None, loads=None, fixtures=None):
 
     # remove self connected edges
     matl = matl[(con[:, 0]) >= 0]
-    matl = matl[(con[:, 1]) >= 0]
     con = con[(con[:, 0]) >= 0]
+    matl = matl[(con[:, 1]) >= 0]
     con = con[(con[:, 1]) >= 0]
 
     num_nodes = nodes.shape[0]

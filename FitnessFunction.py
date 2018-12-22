@@ -5,7 +5,7 @@ import numpy as np
 class FitnessFunction():
 
     def __init__(self, equation, parameters):
-        self.equation = equation  # string function handle
+        self.equation = getattr(self, equation)
         self.parameters = parameters  # dictionary
 
     def weighted_sum(self, truss, parameters):
@@ -110,6 +110,5 @@ class FitnessFunction():
         return f
 
     def __call__(self, truss):
-        equation = getattr(self, self.equation)
-        f = equation(truss, self.parameters)
+        f = self.equation(truss, self.parameters)
         truss.fitness_score = f

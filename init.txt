@@ -30,7 +30,7 @@ user_spec_nodes = '[[0,0,0]]'
       [[property_crossover_params]]
 
 
-[mutate_params]
+[mutator_params]
 node_mutator_method = gaussian
 edge_mutator_method = pseudo_bit_flip
 property_mutator_method = gaussian
