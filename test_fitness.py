@@ -9,8 +9,8 @@ class TestFitness(unittest.TestCase):
     def test_sphere(self):
         x = np.zeros(10)
         y = np.ones(10)
-        t0 = Truss.Truss(x, 0, 0)
-        t1 = Truss.Truss(y, 0, 0)
+        t0 = Truss.Truss(x, x, 0, 0)
+        t1 = Truss.Truss(y, y, 0, 0)
         f = FitnessFunction.FitnessFunction('sphere', 0)
         f(t0)
         f(t1)
@@ -20,8 +20,8 @@ class TestFitness(unittest.TestCase):
     def test_rosenbrock(self):
         x = np.zeros(10)
         y = np.ones(10)
-        t0 = Truss.Truss(x, 0, 0)
-        t1 = Truss.Truss(y, 0, 0)
+        t0 = Truss.Truss(x, x, 0, 0)
+        t1 = Truss.Truss(y, y, 0, 0)
         f = FitnessFunction.FitnessFunction('rosenbrock', 0)
         f(t0)
         f(t1)
@@ -31,8 +31,8 @@ class TestFitness(unittest.TestCase):
     def test_rastrigin(self):
         x = np.zeros(10)
         y = np.ones(10)
-        t0 = Truss.Truss(x, 0, 0)
-        t1 = Truss.Truss(y, 0, 0)
+        t0 = Truss.Truss(x, x, 0, 0)
+        t1 = Truss.Truss(y, y, 0, 0)
         f = FitnessFunction.FitnessFunction('rastrigin', 0)
         f(t0)
         f(t1)

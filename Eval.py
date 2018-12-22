@@ -54,11 +54,13 @@ class Eval():
 
         # make local copies of arrays in case something breaks
         nodes = np.concatenate(
-            (self.boundary_conditions.user_spec_nodes.copy(), truss.nodes.copy()))
+            (truss.user_spec_nodes.copy(), truss.rand_nodes.copy()))
         # mark self connected nodes
         truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
         con = truss.edges.copy()
         matl = truss.properties.copy()
+        loads = self.boundary_conditions['loads']
+        fixtures = self.boundary_conditions['fixtures']
 
         # remove self connected edges
         matl = matl[(con[:, 0]) >= 0]
@@ -68,7 +70,7 @@ class Eval():
 
         num_nodes = nodes.shape[0]
         num_con = con.shape[0]
-        num_loads = self.boundary_conditions.loads.shape[2]
+        num_loads = loads.shape[2]
 
         # get material properties etc
         E = self.beam_dict['elastic_modulus'][matl]
@@ -163,19 +165,18 @@ class Eval():
         for j in range(num_loads):
             # set unconnected nodes to fixed
             unconnected = np.setdiff1d(range(num_nodes), con.flatten())
-            self.boundary_conditions.fixed_points[unconnected] = 1
+            fixtures[unconnected] = 1
             # make sure loaded nodes are not fixed
-            self.boundary_conditions.fixed_points[:, :, j][self.boundary_conditions.loads[:, :, j].any(
-                axis=1)] = 0
+            fixtures[:, :, j][loads[:, :, j].any(axis=1)] = 0
             # get indices of free nodes
             f = np.nonzero(
-                1-np.ravel(self.boundary_conditions.fixed_points[:, :, j]))
+                1-np.ravel(fixtures[:, :, j]))
             f = f[0]  # get array out of tuple
 
             # solve for displacements of free nodes
             try:
                 np.ravel(V[:, :, j])[f] = np.linalg.solve(
-                    Kglob[np.ix_(f, f)], np.ravel(self.boundary_conditions.loads[:, :, j])[f])
+                    Kglob[np.ix_(f, f)], np.ravel(loads[:, :, j])[f])
             # if matrix is singular, stop, FoS still all zeros
             except np.linalg.LinAlgError:
                 return FoS, V
@@ -219,7 +220,7 @@ class Eval():
 
         # make local copy of arrays in case something breaks
         nodes = np.concatenate(
-            (self.boundary_conditions.user_spec_nodes.copy(), truss.nodes.copy()))
+            (truss.user_spec_nodes.copy(), truss.rand_nodes.copy()))
         # mark self connected nodes
         truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
         con = truss.edges.copy()

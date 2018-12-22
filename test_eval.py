@@ -4,7 +4,6 @@ import numpy as np
 import Truss
 import unittest
 import Eval
-import Boundaries
 import utilities
 
 
@@ -20,11 +19,13 @@ class TestEval(unittest.TestCase):
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(rand_nodes, edges, properties)
-        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]])
-        load = np.array([[0, 0, 0, 0, 0, 0], [p, 0, 0, 0, 0, 0]])
+        truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
+        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]]
+                       ).reshape(2, 6, 1)
+        load = np.array(
+            [[0, 0, 0, 0, 0, 0], [p, 0, 0, 0, 0, 0]]).reshape(2, 6, 1)
         beam_dict = utilities.beam_file_parser('properties.csv')
-        bdry = Boundaries.Boundaries(user_spec_nodes, load, dof)
+        bdry = {'loads': load, 'fixtures': dof}
         evaluator = Eval.Eval('mat_struct_analysis_DSM',
                               'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
@@ -54,11 +55,13 @@ class TestEval(unittest.TestCase):
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(rand_nodes, edges, properties)
-        dof = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]])
-        load = np.array([[0, 0, 0, 0, 0, 0], [p, 0, 0, 0, 0, 0]])
+        truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
+        dof = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]
+                       ).reshape(2, 6, 1)
+        load = np.array(
+            [[0, 0, 0, 0, 0, 0], [p, 0, 0, 0, 0, 0]]).reshape(2, 6, 1)
         beam_dict = utilities.beam_file_parser('properties.csv')
-        bdry = Boundaries.Boundaries(user_spec_nodes, load, dof)
+        bdry = {'loads': load, 'fixtures': dof}
         evaluator = Eval.Eval('mat_struct_analysis_DSM',
                               'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
@@ -82,11 +85,13 @@ class TestEval(unittest.TestCase):
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(rand_nodes, edges, properties)
-        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]])
-        load = np.array([[0, 0, 0, 0, 0, 0], [p, -f, 0, -T, 0, 0]])
+        truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
+        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]]
+                       ).reshape(2, 6, 1)
+        load = np.array(
+            [[0, 0, 0, 0, 0, 0], [p, -f, 0, -T, 0, 0]]).reshape(2, 6, 1)
         beam_dict = utilities.beam_file_parser('properties.csv')
-        bdry = Boundaries.Boundaries(user_spec_nodes, load, dof)
+        bdry = {'loads': load, 'fixtures': dof}
         evaluator = Eval.Eval('mat_struct_analysis_DSM',
                               'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
@@ -116,15 +121,15 @@ class TestEval(unittest.TestCase):
                                     [0, 0, L]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(rand_nodes, edges, properties)
+        truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
         dof = np.array([[1, 1, 1, 1, 1, 1],
                         [0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0]])
+                        [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
         load = np.array([[0, 0, 0, 0, 0, 0],
                          [p, 0, 0, 0, 0, 0],
-                         [p, 0, 0, 0, 0, 0]])
+                         [p, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
         beam_dict = utilities.beam_file_parser('properties.csv')
-        bdry = Boundaries.Boundaries(user_spec_nodes, load, dof)
+        bdry = {'loads': load, 'fixtures': dof}
         evaluator = Eval.Eval('mat_struct_analysis_DSM',
                               'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
@@ -148,15 +153,15 @@ class TestEval(unittest.TestCase):
                                     [0, L, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(rand_nodes, edges, properties)
+        truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
         dof = np.array([[1, 1, 1, 1, 1, 1],
                         [0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0]])
+                        [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
         load = np.array([[0, 0, 0, 0, 0, 0],
                          [p, 0, 0, 0, 0, 0],
-                         [0, 0, 0, 0, 0, 0]])
+                         [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
         beam_dict = utilities.beam_file_parser('properties.csv')
-        bdry = Boundaries.Boundaries(user_spec_nodes, load, dof)
+        bdry = {'loads': load, 'fixtures': dof}
         evaluator = Eval.Eval('mat_struct_analysis_DSM',
                               'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)

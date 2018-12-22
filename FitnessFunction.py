@@ -52,7 +52,7 @@ class FitnessFunction():
                 x_i are entries of node array
         """
 
-        x = truss.nodes.flatten()
+        x = truss.rand_nodes.flatten()
         f = np.sum(x**2)
         return f
 
@@ -75,7 +75,7 @@ class FitnessFunction():
                 x_i are entries of node array
         """
 
-        x = truss.nodes.flatten()
+        x = truss.rand_nodes.flatten()
         if x.size % 2:
             x = x[1:]  # need an even number of elements
         n = x.size
@@ -102,7 +102,7 @@ class FitnessFunction():
         """
 
         A = 10  # normalizing parameters
-        x = truss.nodes.flatten()
+        x = truss.rand_nodes.flatten()
         n = x.size
         x2 = x**2
         cosx = np.cos(2*np.pi*x)

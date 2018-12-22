@@ -31,7 +31,7 @@ class GenAlg():
     # stat_stdev_matl: float (0->1) chance that a new material is assigned
 
     def __init__(self, ga_params, mutate_params, random_params, crossover_params, selector_params,
-                 evaluator, fitness_function, properties_df):
+                 evaluator, fitness_function):
         # ********
         self.ga_params = ga_params
         self.mutate_params = mutate_params
@@ -53,7 +53,8 @@ class GenAlg():
         # Generates new random chromosomes with uniform distribution
         num_rand_nodes = self.random_params['num_rand_nodes']
         num_rand_edges = self.random_params['num_rand_edges']
-        num_user_spec_nodes = self.random_params['num_user_spec_nodes']
+        user_spec_nodes = self.random_params['user_spec_nodes']
+        num_user_spec_nodes = user_spec_nodes.shape[0]
         domain = self.random_params['domain']
         # First, generate the new nodes:
         new_nodes = np.random.rand(num_rand_nodes, 3)
@@ -77,7 +78,7 @@ class GenAlg():
         new_properties = np.random.randint(num_rand_nodes + num_user_spec_nodes,
                                            size=(self.random_params['num_material_options'], 1))
 
-        return Truss.Truss(new_nodes, new_edges, new_properties)
+        return Truss.Truss(user_spec_nodes, new_nodes, new_edges, new_properties)
 
         """
         # Check to see if any nodes are unused: - Decided to move this to the solver if needed
@@ -139,10 +140,10 @@ class GenAlg():
 
         # pass
 
-    def save_state(self,config,properties,population,
-                                        dest_config='state_config.txt',
-                                        dest_properties='state_properties.txt',
-                                        dest_pop='state_population.txt'): # Cristian
+    def save_state(self, config, properties, population,
+                   dest_config='state_config.txt',
+                   dest_properties='state_properties.txt',
+                   dest_pop='state_population.txt'):  # Cristian
         class ConfigEncoder(json.JSONEncoder):
             def default(self, obj):
                 if type(obj).__module__ == np.__name__:
@@ -160,7 +161,7 @@ class GenAlg():
             def default(self, obj):
                 if isinstance(obj, Truss.Truss):
                     a = obj.__dict__
-                    for key,val in a.items():
+                    for key, val in a.items():
                         if type(val).__module__ == np.__name__:
                             if isinstance(val, np.ndarray):
                                 a[key] = val.tolist()
@@ -182,7 +183,6 @@ class GenAlg():
 
         # Save properties data
 
-
         # Save population data
         with open(dest_pop, 'w') as f:
             pop_dumped = json.dumps(population, cls=PopulationEncoder)
@@ -194,8 +194,7 @@ class GenAlg():
         # print(population)
         # print(type(population[0]['nodes']))
 
-
-    def load_state(self): # Cristian
+    def load_state(self):  # Cristian
         pass
 
     def update_population(self, population):  # Cristian

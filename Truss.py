@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 class Truss():
     #
     # nodes: np array num_rand_nodesx3 matrix (xi,yi,zi)
@@ -12,8 +13,9 @@ class Truss():
     # num_joints: int
     # fitness_score: double
 
-    def __init__(self, nodes, edges, properties):
-        self.nodes = nodes
+    def __init__(self, user_spec_nodes, rand_nodes, edges, properties):
+        self.user_spec_nodes = user_spec_nodes
+        self.rand_nodes = rand_nodes
         self.edges = edges
         self.properties = properties
         self.fos = None

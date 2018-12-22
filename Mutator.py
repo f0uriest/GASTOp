@@ -1,6 +1,7 @@
 import numpy as np
 import Truss
 
+
 class Mutator():
 
     '''
@@ -17,10 +18,10 @@ class Mutator():
 
     '''
 
-    def __init__(self,mutator_params):
+    def __init__(self, mutator_params):
         self.params = mutator_params
 
-    def gaussian(self,array,gaussian_params): #Paul
+    def gaussian(self, array, gaussian_params):  # Paul
         '''Performs a gaussian mutation on the given parent array
 
         The gaussian mutator method creates a child array by mutating the given parent
@@ -49,26 +50,27 @@ class Mutator():
 
         bounds = gaussian_params['boundaries']
         # clips the numbers that are out of bounds and brings it to the boundary
-        #for i in range(nn[1]):
+        # for i in range(nn[1]):
         #    new_array[:,i] = np.clip(new_array[:,i], bounds[i,0], bounds[i,1])
 
         # checks for flag that specifies whether output should be an integer and rounds the \
         # output arrays
-        if (gaussian_params['int_flag']==True):
+        if (gaussian_params['int_flag'] == True):
             new_array = (np.rint(new_array)).astype(int)
 
         # new method to handle out of bounds problem: loop around on other side
         for j in range(nn[1]):
             for i in range(nn[0]):
-                if (new_array[i,j] < bounds[j,0]):
-                    new_array[i,j] = bounds[j,1] - (new_array[i,j] % bounds[j,0])
-                elif (new_array[i,j] > bounds[j,1]):
-                    new_array[i,j] = bounds[j,0] + (new_array[i,j] % bounds[j,1])
+                if (new_array[i, j] < bounds[j, 0]):
+                    new_array[i, j] = bounds[j, 1] - \
+                        (new_array[i, j] % bounds[j, 0])
+                elif (new_array[i, j] > bounds[j, 1]):
+                    new_array[i, j] = bounds[j, 0] + \
+                        (new_array[i, j] % bounds[j, 1])
 
         return new_array
 
-    def pseudo_bit_flip(self,array, bit_flip_params): #Amlan
-
+    def pseudo_bit_flip(self, array, bit_flip_params):  # Amlan
         '''
 
         Mutate specific values of the parent and return the mutant child.
@@ -92,26 +94,31 @@ class Mutator():
         proportions = bit_flip_params['proportions']
 
         # Random binary matrix with a user-specified ratio of 1s and 0s
-        B = np.random.choice([0, 1], size=array.shape, p=[1.-proportions, proportions])
+        B = np.random.choice([0, 1], size=array.shape, p=[
+                             1.-proportions, proportions])
 
         # Random matrix whose elements are chosen randomly within the domain
-        M = np.random.uniform(boundaries[0,:],boundaries[1,:],array.shape)
+        M = np.random.uniform(boundaries[0, :], boundaries[1, :], array.shape)
 
         # Mutating the parent
-        array = np.multiply(B,M)+np.multiply((np.ones(array.shape)-B),array)
+        array = np.multiply(B, M)+np.multiply((np.ones(array.shape)-B), array)
 
         # Checking for flag to force integer output
-        if (bit_flip_params['int_flag']==True):
+        if (bit_flip_params['int_flag'] == True):
             array = (np.rint(array)).astype(int)
 
         return array
 
-    def __call__(self,truss):
-        node_method = getattr(self,self.params['node_mutator_method'])
-        edge_method = getattr(self,self.params['edge_mutator_method'])
-        property_method = getattr(self,self.params['property_mutator_method'])
-        child = Truss.Truss(0,0,0)
-        child.nodes = node_method(truss.nodes,self.params['node_mutator_params'])
-        child.edges = edge_method(truss.edges,self.params['edge_mutator_params'])
-        child.properties = property_method(truss.properties, self.params['property_mutator_params'])
+    def __call__(self, truss):
+        node_method = getattr(self, self.params['node_mutator_method'])
+        edge_method = getattr(self, self.params['edge_mutator_method'])
+        property_method = getattr(self, self.params['property_mutator_method'])
+        user_spec_nodes = self.params['user_spec_nodes']
+        child = Truss.Truss(user_spec_nodes, 0, 0, 0)
+        child.rand_nodes = node_method(
+            truss.rand_nodes, self.params['node_mutator_params'])
+        child.edges = edge_method(
+            truss.edges, self.params['edge_mutator_params'])
+        child.properties = property_method(
+            truss.properties, self.params['property_mutator_params'])
         return child

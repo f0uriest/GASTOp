@@ -23,7 +23,7 @@ random_params = {
     # np array 2x3 [[xmin,ymin,zmin],[xmax,ymax,zmax]]
     'domain': np.array([[-5, -5, -5], [5, 5, 5]]),
     'num_material_options': 10,
-    'num_user_spec_nodes': 0
+    'user_spec_nodes': np.array([[]]).reshape(0, 3)
 }
 
 crossover_params = {
@@ -33,6 +33,8 @@ crossover_params = {
     'node_crossover_params': {},
     'edge_crossover_params': {},
     'property_crossover_params': {},
+    'user_spec_nodes': np.array([[]]).reshape(0, 3)
+
 }
 
 mutate_params = {
@@ -42,7 +44,9 @@ mutate_params = {
 
     'node_mutator_params': {'boundaries': np.array([[-5, 5], [-5, 5], [-5, 5]]), 'std': 0.1, 'int_flag': False},
     'edge_mutator_params': {'boundaries': np.array([[-1, -1], [10, 10]]), 'proportions': 0.5, 'int_flag': False},
-    'property_mutator_params': {'boundaries': np.array([[-1, 10], [-1, 10]]), 'std': 2, 'int_flag': False}
+    'property_mutator_params': {'boundaries': np.array([[-1, 10], [-1, 10]]), 'std': 2, 'int_flag': False},
+    'user_spec_nodes': np.array([[]]).reshape(0, 3)
+
 }
 
 selector_params = {'method': 'inverse_square_rank_probability'}
