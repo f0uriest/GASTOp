@@ -3,7 +3,20 @@ import Truss
 
 class Crossover():
 
-# Crossover() object takes in two parents and returns two children
+    '''
+
+    Mixes attributes belonging to two different parents to produce two children with
+    specific characteristics from both parents.
+
+    When creating a new Crossover() obejct, must be initialized with dictionary
+    crossover_params (containing crossover method). Object can then be used as a
+    function that produces children according to the specified method.
+
+    Attributes:
+        crossover_params(dict of str: ): Dictionary of parameters required by crossover objects.
+        crossover_params['method'](str): Name of chosen crossover method.
+
+    '''
 
     def __init__(self,crossover_params):
         self.params = crossover_params
@@ -46,14 +59,79 @@ class Crossover():
 
     def single_point_split(self, array_1, array_2, single_point_split_params=None): #Amlan
 
-        (array_row,array_col) = array_1.shape
+        '''
+
+        Takes specific values of two parents and return two children containing
+        characteristics from both parents.
+
+        Chooses a random point and splits the two parents into two different parts.
+        Merges the first half of the first parent with the second half of the second
+        parent and vice versa.
+
+        Args:
+            parents (numpy arrays): the parent arrays.
+            single_point_split_params (dictionary): Dictionary containing the domain
+            for which the problem is valid
+
+        Returns:
+            children (numpy arrays): Numpy arrays containing values from both the parents
+
+        '''
+
+        # Choosing a random point
+        array_row = len(array_1)
         point = np.random.randint(0, array_row)
 
+        # Mixing the two parents
         child_1 = np.concatenate((array_1[:point],array_2[point:]),axis=0)
         child_2 = np.concatenate((array_2[:point],array_1[point:]),axis=0)
 
+        # Checking for flag to force integer output
         if single_point_split_params:
             if (single_point_split_params['int_flag']==True):
+                child_1 = (np.rint(child_1)).astype(int)
+                child_2 = (np.rint(child_2)).astype(int)
+
+        return child_1, child_2
+
+    def two_points_split(self, array_1, array_2, two_points_split_params=None): #Amlan
+
+        '''
+
+        Takes specific values of two parents and return two children containing
+        characteristics from both parents.
+
+        Chooses two random points and splits the two parents into three different parts.
+        Replaces the central part of the first parent with the central part of the second
+        parent.
+
+        Args:
+            parents (numpy arrays): the parent arrays.
+            two_points_split_params (dictionary): Dictionary containing the domain
+            for which the problem is valid
+
+        Returns:
+            children (numpy arrays): Numpy arrays containing values from both the parents
+
+        '''
+        # Choosing two random points
+        p1 = np.random.randint(1,len(array_1))
+        p2 = np.random.randint(1,len(array_1)-1)
+
+        # Preparing the two points such that p1<p2
+        if p2 >= p1:
+            p2 += 1
+        else:
+            p1, p2 = p2, p1
+
+        # # Mixing the two parents
+        child_1 = array_1
+        child_2 = array_2
+        child_1[p1:p2,:], child_2[p1:p2,:] = child_2[p1:p2,:], child_1[p1:p2,:]
+
+        # Checking for flag to force integer output
+        if two_points_split_params:
+            if (two_points_split_params['int_flag']==True):
                 child_1 = (np.rint(child_1)).astype(int)
                 child_2 = (np.rint(child_2)).astype(int)
 

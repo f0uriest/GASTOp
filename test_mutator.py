@@ -3,7 +3,7 @@ import numpy as np
 
 import Mutator
 
-class TestMutator_pseudo_bit_flip(unittest.TestCase):
+class TestMutator_pseudo_bit_flip(unittest.TestCase): #Amlan
 
     def test_basic(self):
         array = np.ones((10,3))
@@ -17,7 +17,7 @@ class TestMutator_pseudo_bit_flip(unittest.TestCase):
         myMutator = Mutator.Mutator([])
         child = myMutator.pseudo_bit_flip(array,bit_flip_params)
 
-        np.testing.assert_string_equal(str(child.dtype), 'int64')
+        np.testing.assert_string_equal(str(child.dtype), 'int32')
 
 if __name__ == '__main__':
     unittest.main()
