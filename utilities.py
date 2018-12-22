@@ -169,8 +169,8 @@ def init_file_parser(init_file_path):  # Cristian
         config['selector_params']['method'] = 'inverse_square_rank_probability'
 
     if not config['ga_params']['num_elite']:
-        config['ga_params']['num_elite'] = np.ceil(
-            .01*config['ga_params']['pop_size']).astype(int)
+        config['ga_params']['num_elite'] = int(np.ceil(
+            .01*config['ga_params']['pop_size']))
     if not config['ga_params']['percent_crossover']:
         config['ga_params']['percent_crossover'] = 0.4
     if not config['ga_params']['percent_mutation']:

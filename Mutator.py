@@ -59,7 +59,7 @@ class Mutator():
             new_array = (np.rint(new_array)).astype(int)
 
         # new method to handle out of bounds problem: loop around on other side
-        for j in range(nn[1]):
+        for j in range(nn[-1]):
             for i in range(nn[0]):
                 if (new_array[i, j] < bounds[j, 0]):
                     new_array[i, j] = bounds[j, 1] - \

@@ -79,7 +79,7 @@ class TestGenAlg_Cristian(unittest.TestCase):
 
     def testSaveState(self):
         # Create config
-        init_file_path = 'init.txt'
+        init_file_path = 'struct_making_test_init.txt'
         config = utilities.init_file_parser(init_file_path)
 
         # Create properties

@@ -14,7 +14,7 @@ class TestEval(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = 0
+        matl = np.array([[0]])
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
@@ -50,7 +50,7 @@ class TestEval(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = 0
+        matl = np.array([[0]])
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
@@ -80,7 +80,7 @@ class TestEval(unittest.TestCase):
         f = 1750  # transverse load in newtons
         T = 72  # torsion in newton-meters
         L = .12  # length in meters
-        matl = 4
+        matl = np.array([[4]])
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
@@ -114,7 +114,7 @@ class TestEval(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = 0
+        matl = np.array([[0]])
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0],
                                     [L, 0, 0],
@@ -146,7 +146,7 @@ class TestEval(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = 2
+        matl = np.array([[2]])
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0],
                                     [L, 0, 0],

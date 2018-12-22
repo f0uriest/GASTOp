@@ -55,7 +55,7 @@ evaluator = Eval.Eval(struct_solver='blank_test',
                       mass_solver='blank_test',
                       interferences_solver='blank_test',
                       boundary_conditions=0,
-                      beam_dict=0)
+                      properties_dict=0)
 
 
 class TestOptimization(unittest.TestCase):

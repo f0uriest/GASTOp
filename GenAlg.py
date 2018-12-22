@@ -76,7 +76,7 @@ class GenAlg():
                 new_edges[j][1] = -1
 
         new_properties = np.random.randint(self.random_params['num_material_options'],
-                                           size=(num_rand_edges))
+                                           size=(num_rand_edges, 1))
 
         return Truss.Truss(user_spec_nodes, new_nodes, new_edges, new_properties)
 
