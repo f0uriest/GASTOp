@@ -32,6 +32,10 @@ class TestSelector(unittest.TestCase):  # Cristian
         parents = selector(num_parents, population)
 
         unique, counts = np.unique(parents, return_counts=True)
+        # unique_missing = [x for x in range(pop_size) if x not in unique]
+        # counts = np.append(counts,np.zeros(len(unique_missing)))
+        # counts = np.insert(counts,unique_missing,np.zeros(len(unique_missing)))
+        # print(counts.size)
         distribution = counts/num_parents
         # print(distribution)
 
@@ -44,6 +48,8 @@ class TestSelector(unittest.TestCase):  # Cristian
         max_err = np.amax(error)
         # print(max_err)
 
+        # print(parents,parents.shape,parents.max())
+
         self.assertAlmostEqual(max_err/pop_size, 0, places=3)
         self.assertEqual(num_parents, len(parents))
 
@@ -53,7 +59,7 @@ class TestSelector(unittest.TestCase):  # Cristian
         edges = np.array([[0, 1]])
         properties = np.array([[0, 3]])
 
-        pop_size = int(1e5)
+        pop_size = int(1e2)
         population = [Truss.Truss(nodes, nodes, edges, properties)
                       for i in range(pop_size)]
         for truss in population:
@@ -64,17 +70,20 @@ class TestSelector(unittest.TestCase):  # Cristian
 
         sel_params = {'method': 'tournament',
                       'tourn_size': 25,
-                      'tourn_prob': 0.7}
+                      'tourn_prob': 0.5}
         selector = Selector.Selector(sel_params)
 
-        num_parents = int(1e5)
+        num_parents = int(1e2)
         parents = selector(num_parents, population)
 
         unique, counts = np.unique(parents, return_counts=True)
         distribution = counts/num_parents
         # print(distribution)
 
+        # print(parents,parents.shape,parents.max())
+
         self.assertEqual(num_parents, len(parents))
+        self.assertTrue(parents.max() < pop_size)
 
 
 if __name__ == "__main__":

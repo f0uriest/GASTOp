@@ -13,7 +13,7 @@ class Selector(): # Cristian
         sel_params['method'](str): Name of chosen selection methodself.
         sel_params['tourn_size'](int): Number of indices in each tournament.
                                     Only needed for tournament method.
-        sel_params['tourn_prob'](int): Probability of selecting first inde in
+        sel_params['tourn_prob'](int): Probability of selecting first index in
                                     each tournament. Only needed for tournament
                                     method.
     '''
@@ -89,6 +89,7 @@ class Selector(): # Cristian
         rand_dimen = (num_parents,tourn_size)
         rand_vals = np.random.randint(0,pop_size,rand_dimen)
         rand_vals.sort(axis=1)
+        # print(rand_vals,rand_vals.shape,rand_vals.max())
 
         # Build probability array
         generator = (tourn_prob*(1-tourn_prob)**x for x in range(tourn_size))
@@ -98,7 +99,8 @@ class Selector(): # Cristian
         # Randomly select indices from each row of rand_vals assigning the
         # corresponding probability in tourn_distribution to each element in
         # the row.
-        select_ids = np.random.choice(tourn_size,pop_size,p=tourn_distribution)
+        select_ids = np.random.choice(tourn_size,num_parents,p=tourn_distribution)
+        # print(select_ids,select_ids.shape,select_ids.max())
 
         # Build parents array, selecting an element from each row of rand_vals
         parents = np.choose(select_ids,rand_vals.T)
