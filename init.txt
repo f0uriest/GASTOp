@@ -49,9 +49,9 @@ user_spec_nodes = '[[0,0,0]]'
       int_flag = False
 
 [selector_params]
-method = inverse_square_rank_probability
-tourn_size = 25
-tourn_prob = 0.7
+method = tournament
+tourn_size = 31 # Must be less than 32
+tourn_prob = 0.5
 
 [monitor_params]
 progress_display = 1
