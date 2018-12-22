@@ -2,7 +2,7 @@ import numpy as np
 import configobj
 import ast
 
-def beam_file_parser(filename):
+def beam_file_parser(properties_path):
     """
     Inputs:
     - Init file material path
@@ -23,31 +23,31 @@ def beam_file_parser(filename):
    mat option 2 , c/s 2, inner dim 2, outer dim 2
    """
 
-    OD = np.loadtxt(filename, delimiter=',', skiprows=1, usecols=2)
-    ID = np.loadtxt(filename, delimiter=',', skiprows=1, usecols=3)
-    E = np.loadtxt(filename, delimiter=',', skiprows=1, usecols=4)
-    YS = np.loadtxt(filename, delimiter=',', skiprows=1, usecols=5)
-    dens = np.loadtxt(filename, delimiter=',', skiprows=1, usecols=6)
-    nu = np.loadtxt(filename, delimiter=',', skiprows=1, usecols=7)
+    OD = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=2)
+    ID = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=3)
+    E = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=4)
+    YS = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=5)
+    dens = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=6)
+    nu = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=7)
     G = E/(2*(1+nu))
     A = np.pi/4*(OD**2 - ID**2)
     Iz = np.pi/64*(OD**4 - ID**4)
     Iy = np.pi/64*(OD**4 - ID**4)
     J = np.pi/32*(OD**4 - ID**4)
 
-    beam_dict = {'elastic_modulus': E,
-                 'yield_strength': YS,
-                 'shear_modulus': G,
-                 'poisson_ratio': nu,
-                 'x_section_area': A,
-                 'moment_inertia_z': Iz,
-                 'moment_inertia_y': Iy,
-                 'polar_moment_inertia': J,
-                 'outer_diameter': OD,
-                 'inner_diameter': ID,
-                 'density': dens}
+    properties_dict = {'elastic_modulus': E,
+                        'yield_strength': YS,
+                         'shear_modulus': G,
+                         'poisson_ratio': nu,
+                         'x_section_area': A,
+                         'moment_inertia_z': Iz,
+                         'moment_inertia_y': Iy,
+                         'polar_moment_inertia': J,
+                         'outer_diameter': OD,
+                         'inner_diameter': ID,
+                         'density': dens}
 
-    return beam_dict
+    return properties_dict
 
 
 def init_file_parser(init_file_path): # Cristian

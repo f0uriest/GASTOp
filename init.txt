@@ -1,5 +1,13 @@
+[general]
+material_choices = '[1,2,3,4,5]'
+
+[boundary_conditions]
+loads = '[[2,3,4],[3,3,2]]'
+fixtures = '[[0,0,0,0,0,0],[0,0,1,0,1,1]]'
+
 [ga_params]
-pop_size = None
+pop_size = 1000
+num_generations = 100
 num_elite = 1 # int, ~10 (the whole truss that get passed)
 percent_crossover = 0.4 # float between 0 and 1
 percent_mutation = 0.4 # float between 0 and 1
@@ -41,3 +49,6 @@ property_mutator_method = gaussian
 method = tournament
 tourn_size = 25
 tourn_prob = 0.7
+
+[monitor_params]
+progress_display = 1
