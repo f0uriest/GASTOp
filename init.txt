@@ -1,0 +1,57 @@
+[general]
+material_choices = '[1,2,3,4,5]'
+
+[boundary_conditions]
+loads = '[[2,3,4],[3,3,2]]'
+fixtures = '[[0,0,0,0,0,0],[0,0,1,0,1,1]]'
+
+[ga_params]
+pop_size = 1000
+num_generations = 30
+num_elite = 1 # int, ~10 (the whole truss that get passed)
+percent_crossover = 0.4 # float between 0 and 1
+percent_mutation = 0.4 # float between 0 and 1
+
+[random_params]
+num_rand_nodes = 1 # int
+num_rand_edges = 10 # int
+# np array 2x3 [[xmin,ymin,zmin],[xmax,ymax,zmax]]
+domain = '[[-5, -5, -5], [5, 5, 5]]'
+num_material_options = 10
+user_spec_nodes = '[[0,0,0]]'
+
+[crossover_params]
+node_crossover_method = uniform_crossover
+edge_crossover_method = uniform_crossover
+property_crossover_method = single_point_split
+user_spec_nodes = '[[0,0,0]]'
+      [[node_crossover_params]]
+      [[edge_crossover_params]]
+      [[property_crossover_params]]
+
+
+[mutator_params]
+node_mutator_method = gaussian
+edge_mutator_method = pseudo_bit_flip
+property_mutator_method = gaussian
+user_spec_nodes = '[[0,0,0]]'
+      [[node_mutator_params]]
+      boundaries = '[[-5, 5], [-5, 5], [-5, 5]]'
+      std = 0.1
+      int_flag = False
+      [[edge_mutator_params]]
+      boundaries = '[[-1, -1], [10, 10]]'
+      proportions = 0.5
+      int_flag = False
+      [[property_mutator_params]]
+      boundaries = '[[-1, 10], [-1, 10]]'
+      std = 2
+      int_flag = False
+
+[selector_params]
+method = tournament
+tourn_size = 31 # Must be less than 32
+tourn_prob = 0.5
+
+[monitor_params]
+progress_display = 1
