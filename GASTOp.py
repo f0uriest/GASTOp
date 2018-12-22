@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import GenAlg
 import Eval
 import FitnessFunction
-import Boundaries
 
 
 # Specify set-up things
@@ -72,12 +71,12 @@ fitness_function = FitnessFunction.FitnessFunction('rastrigin', 0)
 
 # Create the Genetic Algorithm Object
 ga = GenAlg.GenAlg(ga_params, mutate_params, random_params, crossover_params, selector_params,
-                   evaluator, fitness_function, properties_df)
+                   evaluator, fitness_function)
 ga.initialize_population(pop_size)
 best, progress_history = ga.run(num_gens, 2)
 
 
-print(best.nodes)
+print(best.rand_nodes)
 print(best.fitness_score)
 
 

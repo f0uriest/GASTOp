@@ -154,7 +154,7 @@ class Crossover():
             self, self.params['property_crossover_method'])
         user_spec_nodes = self.params['user_spec_nodes']
         child_1 = Truss.Truss(user_spec_nodes, 0, 0, 0)
-        child_2 = Truss.Truss(user_spec_nodes0, 0, 0)
+        child_2 = Truss.Truss(user_spec_nodes, 0, 0, 0)
         child_1.rand_nodes, child_2.rand_nodes = node_method(
             truss_1.rand_nodes, truss_2.rand_nodes, self.params['node_crossover_params'])
         child_1.edges, child_2.edges = edge_method(
