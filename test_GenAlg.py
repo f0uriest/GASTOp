@@ -10,6 +10,7 @@ import Truss
 import Eval
 import FitnessFunction
 import Boundaries
+import utilities
 
 
 # Specify set-up things
@@ -70,9 +71,24 @@ fitness_function = FitnessFunction.FitnessFunction('rastrigin',0)
 class TestGenAlg_Cristian(unittest.TestCase):
     def testUpdatePopulation(self):
         pass
-        
+
     def testSaveState(self):
-        pass
+        # Create config
+        init_file_path = 'init.txt'
+        config = utilities.init_file_parser(init_file_path)
+
+        # Create properties
+        properties = []
+
+        # Create GenAlg object
+        pop_size = int(1e4)
+        ga = GenAlg.GenAlg(ga_params,mutate_params,random_params,crossover_params,selector_params,
+                     evaluator, fitness_function, properties_df)
+        ga.initialize_population(pop_size)
+
+        ga.save_state(config,properties,ga.population)
+
+
 
     def testLoadState(self):
         pass
