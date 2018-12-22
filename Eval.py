@@ -7,9 +7,9 @@ class Eval():
     # wrapper for structural analysis,
     #
     def __init__(self, struct_solver, mass_solver, interferences_solver, boundary_conditions, beam_dict):
-        self.struct_solver = struct_solver
-        self.mass_solver = mass_solver
-        self.interferences_solver = interferences_solver
+        self.struct_solver = getattr(self, struct_solver)
+        self.mass_solver = getattr(self, mass_solver)
+        self.interferences_solver = getattr(self, interferences_solver)
         self.boundary_conditions = boundary_conditions
         self.beam_dict = beam_dict
 
@@ -248,11 +248,15 @@ class Eval():
     def interferences_ray_tracing(self, truss):
         pass
 
+    def blank_test(self, truss):
+        """Blank function used for testing GA when no evaluation needed"""
+        return None, None
+
     def __call__(self, truss):
-        struct_solver = getattr(self, self.struct_solver)
-        mass_solver = getattr(self, self.mass_solver)
-        fos, deflection = struct_solver(truss)
-        mass = mass_solver(truss)
+
+        fos, deflection = self.struct_solver(truss)
+        mass = self.mass_solver(truss)
+        interferences = self.interferences_solver(truss)
         truss.fos = fos
         truss.deflection = deflection
         truss.mass = mass

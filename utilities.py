@@ -1,5 +1,6 @@
 import numpy as np
-
+import configobj
+import ast
 
 def beam_file_parser(filename):
     """
@@ -49,21 +50,66 @@ def beam_file_parser(filename):
     return beam_dict
 
 
-def init_file_parser(init_file_path):
-    # Gets all of the inputs from the file
-    pass
+def init_file_parser(init_file_path): # Cristian
+    ''' Parse init file for input parameters.
+
+    Creates ConfigObj object, which reads input parameters as a nested
+    dictionary of strings. The string are then converted to their correct types
+    using the ConfigObj walk method and a transform function.
+
+    Args:
+        init_file_path (string): Path to the init file.
+
+    Returns:
+        config (ConfigObj object): Nested dicitonary of input parameters as
+            correct types.
+    '''
+    # Extract inputs from the file as strings
+    config = configobj.ConfigObj(init_file_path)
+
+    # Function used to convert each string in config to associated type
+    def transform(section,key):
+        val = section[key]
+        newval = val
+        # Convert string to float or int
+        try:
+            newval = float(val)
+            newval = int(val)
+        except ValueError:
+            pass
+        # Convert string to True, False, None
+        if val == 'True':
+            newval = True
+        elif val == 'False':
+            newval = False
+        elif val == 'None':
+            newval = None
+        # Convert string to numpy array
+        try:
+            a = ast.literal_eval(val)
+            if type(a) is list:
+                newval = np.array(a)
+        except:
+            pass
+        section[key] = newval
+
+    # Recursively walk through config object converting strings according to
+    # transform function.
+    config.walk(transform)
+
+    return config
 
 
 def cart2sph(x, y, z):
     """Converts cartesian coordinates to spherical coordinates
 
     Args:
-        x,y,z (array like): cartesian coordinates
+        x,y,z (array like): cartesian coordinates. Arrays must all have same shape
 
     Returns:
         r (ndarray): radial coordinate, L2 norm of x,y,z vector.
         theta (ndarray): elevation angle, in radians. Ranges from pi/2 to -pi/2
-            theta = 0 corresponds to a vector in the x-y plane, theta = pi/2 
+            theta = 0 corresponds to a vector in the x-y plane, theta = pi/2
             along positive z axis.
         phi (ndarray): azimuthal angle, in radians. Ranges from 0 to 2pi.
             phi = 0 along positive x axis.
