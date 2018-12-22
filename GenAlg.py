@@ -109,7 +109,8 @@ class GenAlg():
                 self.evaluator(current_truss)
                 # Assigns numerical score to each truss
                 self.fitness_function(current_truss)
-            self.progress_monitor(current_gen, progress_display, ax1)
+            if progress_display == 2:
+                self.progress_monitor(current_gen, progress_display, ax1)
             self.population = self.update_population(
                 self.population)  # Determine which members to
         if progress_display == 2:
