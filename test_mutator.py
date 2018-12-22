@@ -19,7 +19,7 @@ class TestMutator_pseudo_bit_flip(unittest.TestCase): #Amlan
         myMutator = Mutator.Mutator([])
         child = myMutator.pseudo_bit_flip(array,bit_flip_params)
 
-        np.testing.assert_string_equal(str(child.dtype), 'int32')
+        np.testing.assert_string_equal(str(child.dtype), 'int64')
 
 if __name__ == '__main__':
     unittest.main()
