@@ -58,7 +58,7 @@ class Eval():
         # mark self connected nodes
         truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
         con = truss.edges.copy()
-        matl = truss.properties[:, 0].copy()
+        matl = truss.properties.copy()
         loads = self.boundary_conditions['loads'].copy()
         fixtures = self.boundary_conditions['fixtures'].copy()
 
@@ -227,7 +227,7 @@ class Eval():
         # mark self connected nodes
         truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
         con = truss.edges.copy()
-        matl = truss.properties[:, 0].copy()
+        matl = truss.properties.copy()
 
         # remove self connected edges
         matl = matl[(con[:, 0]) >= 0]

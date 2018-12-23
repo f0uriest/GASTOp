@@ -44,7 +44,7 @@ mutate_params = {
 
     'node_mutator_params': {'boundaries': np.array([[-5, -5, -5], [5, 5, 5]]), 'std': 0.01, 'int_flag': False},
     'edge_mutator_params': {'boundaries': np.array([[-1, -1], [10, 10]]), 'proportions': 0.5, 'int_flag': False},
-    'property_mutator_params': {'boundaries': np.array([[-1, -1], [10, 10]]), 'std': 2, 'int_flag': False},
+    'property_mutator_params': {'boundaries': np.array([[-1], [10]]), 'std': 2, 'int_flag': False},
     'user_spec_nodes': np.array([[]]).reshape(0, 3)
 
 }
