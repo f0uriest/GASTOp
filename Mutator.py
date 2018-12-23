@@ -61,12 +61,19 @@ class Mutator():
         # new method to handle out of bounds problem: loop around on other side
         for j in range(nn[-1]):
             for i in range(nn[0]):
-                if (new_array[i, j] < bounds[j, 0]):
-                    new_array[i, j] = bounds[j, 1] - \
-                        (new_array[i, j] % bounds[j, 0])
-                elif (new_array[i, j] > bounds[j, 1]):
-                    new_array[i, j] = bounds[j, 0] + \
-                        (new_array[i, j] % bounds[j, 1])
+                while (new_array[i, j] < bounds[j, 0]):
+                    if (new_array[i, j] < bounds[j, 0] and bounds[j,0] != 0):
+                        new_array[i, j] = bounds[j, 1] - \
+                                        abs(new_array[i, j] % bounds[j, 0])
+                    elif (new_array[i, j] < bounds[j, 0] and bounds[j,0] == 0):
+                        new_array[i, j] = bounds[j, 1] - abs(new_array[i, j])
+
+                while (new_array[i, j] > bounds[j, 1]):
+                    if (new_array[i, j] > bounds[j, 1] and bounds[j,1] != 0):
+                        new_array[i, j] = bounds[j, 0] + \
+                                        abs(new_array[i, j] % bounds[j, 1])
+                    elif (new_array[i, j] > bounds[j, 1] and bounds[j,1] == 0):
+                        new_array[i, j] = bounds[j, 0] + abs(new_array[i, j])
 
         return new_array
 
