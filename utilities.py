@@ -138,7 +138,7 @@ def init_file_parser(init_file_path):  # Cristian
 
     # mutator params
     config['mutator_params']['user_spec_nodes'] = user_spec_nodes
-    config['mutator_params']['node_mutator_params']['boundaries'] = domain.T
+    config['mutator_params']['node_mutator_params']['boundaries'] = domain
     config['mutator_params']['node_mutator_params']['int_flag'] = False
     config['mutator_params']['edge_mutator_params']['boundaries'] = np.array(
         [[-1, -1], [num_nodes, num_nodes]])

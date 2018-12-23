@@ -59,22 +59,8 @@ class Mutator():
             new_array = (np.rint(new_array)).astype(int)
 
         # new method to handle out of bounds problem: loop around on other side
-        for j in range(nn[-1]):
-            for i in range(nn[0]):
-                while (new_array[i, j] < bounds[j, 0]):
-                    if (new_array[i, j] < bounds[j, 0] and bounds[j,0] != 0):
-                        new_array[i, j] = bounds[j, 1] - \
-                                        abs(new_array[i, j] % bounds[j, 0])
-                    elif (new_array[i, j] < bounds[j, 0] and bounds[j,0] == 0):
-                        new_array[i, j] = bounds[j, 1] - abs(new_array[i, j])
-
-                while (new_array[i, j] > bounds[j, 1]):
-                    if (new_array[i, j] > bounds[j, 1] and bounds[j,1] != 0):
-                        new_array[i, j] = bounds[j, 0] + \
-                                        abs(new_array[i, j] % bounds[j, 1])
-                    elif (new_array[i, j] > bounds[j, 1] and bounds[j,1] == 0):
-                        new_array[i, j] = bounds[j, 0] + abs(new_array[i, j])
-
+        new_array = bounds[0,:] + ((new_array-bounds[0,:]) % (bounds[1,:]-bounds[0,:]))
+        
         return new_array
 
     def pseudo_bit_flip(self, array, bit_flip_params):  # Amlan
