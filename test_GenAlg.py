@@ -48,9 +48,9 @@ mutate_params = {
     'edge_mutator_method': 'pseudo_bit_flip',
     'property_mutator_method': 'gaussian',
 
-    'node_mutator_params': {'boundaries': np.array([[-5, 5], [-5, 5], [-5, 5]]), 'std': 0.2},
+    'node_mutator_params': {'boundaries': np.array([[-5, -5, -5], [5, 5, 5]]), 'std': 0.2},
     'edge_mutator_params': {'bounds': np.array([[-1, -1], [10, 10]])},
-    'property_mutator_params': {'boundaries': np.array([[-1, 10], [-1, 10]]), 'std': 2},
+    'property_mutator_params': {'boundaries': np.array([[-1, -1], [10, 10]]), 'std': 2},
     'user_spec_nodes': np.array([[]]).reshape(0, 3)
 
 }
