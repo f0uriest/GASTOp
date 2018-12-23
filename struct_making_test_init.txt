@@ -5,7 +5,7 @@ fixtures = '[[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,0,0,0,0]]'
 num_rand_nodes = 10 # int
 num_rand_edges = 15 # int
 properties_path = 'properties.csv'
-domain = '[[0, -1, -1], [5, 1, 2]]'
+domain = '[[-1, -1, -1], [5, 1, 2]]'
 
 [fitness_params]
 equation = weighted_sum

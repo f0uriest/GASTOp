@@ -29,8 +29,10 @@ class FitnessFunction():
                 If min_fos > goal_fos, no fos penalty applied, so f 
                 depends only on mass.
         """
-
-        minfos = truss.fos.min()
+        if truss.fos.size:
+            minfos = truss.fos.min()
+        else:
+            minfos = 0
         fs = np.maximum(self.parameters['goal_fos'] - minfos, 0)
         f = self.parameters['w_mass']*truss.mass + self.parameters['w_fos']*fs
         return f

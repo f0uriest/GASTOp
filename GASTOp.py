@@ -36,5 +36,8 @@ best, progress_history = ga.run(num_gens, 2)
 
 
 print(best.rand_nodes)
-print(best.fitness_score)
+print(best.edges)
+print(best.properties)
+print(best.fos)
+print(best.deflection)
 utilities.truss_plot(best, random_params['domain'].T)
