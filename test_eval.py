@@ -72,7 +72,7 @@ class TestEval(unittest.TestCase):
     def test_combined_load(self):
         """Tests beam under combined loading
 
-        Beam is fixed at one end, and loads applied at the other, 
+        Beam is fixed at one end, and loads applied at the other,
         creating bending moment, torsion and shear forces.
         From Shigley's Mechanical Engineering Design, 10th ed, pp 247-248
         """
@@ -173,6 +173,35 @@ class TestEval(unittest.TestCase):
         np.testing.assert_almost_equal(
             truss.mass, A*L*beam_dict['density'][matl])
         np.testing.assert_array_almost_equal(truss.fos, fos_true)
+
+    # def test_fixtures(self):
+    #     """Tests applied loads with various dof fixed"""
+
+    #     p = 10000  # load in newtons
+    #     L = 1  # length in meters
+    #     matl = 2
+    #     rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
+    #     user_spec_nodes = np.array([[0, 1, 0],
+    #                                 [L, 0, 0],
+    #                                 [0, -1, 0]])
+    #     edges = np.array([[0, 1], [2, 1]])
+    #     properties = matl*np.ones((edges.shape[0], 1)).astype(int)
+    #     truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
+    #     dof = np.array([[1, 1, 1, 0, 0, 0],
+    #                     [0, 0, 0, 0, 0, 0],
+    #                     [1, 1, 1, 0, 0, 0]]).reshape(3, 6, 1)
+    #     load = np.array([[0, 0, 0, 0, 0, 0],
+    #                      [0, 0, p, 0, 0, 0],
+    #                      [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
+    #     beam_dict = utilities.beam_file_parser('properties.csv')
+    #     bdry = {'loads': load, 'fixtures': dof}
+    #     evaluator = Eval.Eval('mat_struct_analysis_DSM',
+    #                           'mass_basic', 'blank_test', bdry, beam_dict)
+    #     evaluator(truss)
+
+    #     fos_true = np.zeros((edges.shape[0], 1))
+
+    #     np.testing.assert_array_almost_equal(truss.fos, fos_true)
 
 
 if __name__ == '__main__':

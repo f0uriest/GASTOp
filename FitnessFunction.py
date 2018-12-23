@@ -17,24 +17,41 @@ class FitnessFunction():
             parameters (dict): Dictionary with the following entries:
                 'goal_fos' (float >= 0) : desired factor of safety. Trusses with
                     a smaller fos will be penalized according to 'w_fos'
+                'critical_nodes' (int, array): Array of nodes #s for which 
+                    deflection should be minimized. If empty, defaults to all.
                 'w_fos' (float >= 0): penalty weight for low fos. Only applied
                     if fos < goal_fos
                 'w_mass' (float >= 0): weight penalty applied to mass. Relative
                     magnitude of 'w_mass' and 'w_fos' determines importance of
                     minimizing mass vs maximizing fos.
+                'w_deflection' (float >=0, array): penalty applied to deflections
+                    If scalar, applies the same penalty to all critical nodes.
+                    Can also be an array the same size as 'critical_nodes' in 
+                    which case different penalties will be applied to each node.
         Returns:
             f (float): Fitness score. Computed as:
                 f = w_mass*mass + w_fos*max(goal_fos-min_fos, 0)
+                    + w_deflection*deflection[critical_nodes]
                 min_fos is the lowest fos for structure under all loads.
                 If min_fos > goal_fos, no fos penalty applied, so f 
                 depends only on mass.
         """
+
         if truss.fos.size:
             minfos = truss.fos.min()
         else:
             minfos = 0
+
+        if self.parameters['critical_nodes'].size:
+            deflections = truss.deflection[self.parameters['critical_nodes']][:, :3]
+        else:
+            deflections = truss.deflection[:, :3]
+
+        deflection_score = np.sum(
+            self.parameters['w_deflection']*np.sqrt(np.sum(deflections**2)))
         fs = np.maximum(self.parameters['goal_fos'] - minfos, 0)
-        f = self.parameters['w_mass']*truss.mass + self.parameters['w_fos']*fs
+        f = self.parameters['w_mass']*truss.mass + \
+            self.parameters['w_fos']*fs + deflection_score
         return f
 
     def sphere(self, truss, parameters=None):

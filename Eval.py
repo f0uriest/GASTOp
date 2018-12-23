@@ -161,18 +161,19 @@ class Eval():
                                    np.matmul(T[:, :, ii].T, KlocT[:, :, ii]))
             Ei[ii, :] = e  # save indices for later
 
-        # calculate displacements
+            # fix free node displacements
+            # currently acts weird and gives wrong results if a node is fixed in one direction and free in another
+            # calculate displacements
         for j in range(num_loads):
             # set unconnected nodes to fixed
             unconnected = np.setdiff1d(range(num_nodes), con.flatten())
-            fixtures[unconnected] = 1
+            fixtures[unconnected, :, j] = 1
             # make sure loaded nodes are not fixed
             fixtures[:, :, j][loads[:, :, j].any(axis=1)] = 0
             # get indices of free nodes
             f = np.nonzero(
                 1-np.ravel(fixtures[:, :, j]))
             f = f[0]  # get array out of tuple
-
             # solve for displacements of free nodes
             try:
                 np.ravel(V[:, :, j])[f] = np.linalg.solve(
@@ -180,7 +181,6 @@ class Eval():
             # if matrix is singular, stop, FoS still all zeros
             except np.linalg.LinAlgError:
                 return FoS, V
-
             # calculate forces and stresses
             for i in range(num_con):
                 # end forces
