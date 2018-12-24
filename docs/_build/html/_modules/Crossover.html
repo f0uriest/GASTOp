@@ -1,0 +1,257 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Crossover &#8212; gastop beta documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Crossover</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">Truss</span>
+
+
+<div class="viewcode-block" id="Crossover"><a class="viewcode-back" href="../source/Crossover.html#Crossover.Crossover">[docs]</a><span class="k">class</span> <span class="nc">Crossover</span><span class="p">():</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">    Mixes attributes belonging to two different parents to produce two children with</span>
+<span class="sd">    specific characteristics from both parents.</span>
+
+<span class="sd">    When creating a new Crossover() obejct, must be initialized with dictionary</span>
+<span class="sd">    crossover_params (containing crossover method). Object can then be used as a</span>
+<span class="sd">    function that produces children according to the specified method.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        crossover_params(dict of str: ): Dictionary of parameters required by crossover objects.</span>
+<span class="sd">        crossover_params[&#39;method&#39;](str): Name of chosen crossover method.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crossover_params</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">crossover_params</span>
+
+<div class="viewcode-block" id="Crossover.uniform_crossover"><a class="viewcode-back" href="../source/Crossover.html#Crossover.Crossover.uniform_crossover">[docs]</a>    <span class="k">def</span> <span class="nf">uniform_crossover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">truss_1</span><span class="p">,</span> <span class="n">truss_2</span><span class="p">,</span> <span class="n">uniform_crossover_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># Paul</span>
+        <span class="sd">&#39;&#39;&#39;Performs a uniform crossover on the two parents</span>
+
+<span class="sd">        The uniform crossover method creates two child arrays by randomly mixing together</span>
+<span class="sd">        information taken from two parent arrays. To do this, the method creates two arrays</span>
+<span class="sd">        of ones and zeros -one being the complement of the other- with the same shape as</span>
+<span class="sd">        the parent arrays. The first array is multiplied with parent1 and the complementary</span>
+<span class="sd">        array is multiplied with parent2 before adding the results together to make child1.</span>
+<span class="sd">        The exact opposite multiplication is done to make child2.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            truss_1 (array): Numpy array containing information for parent 1</span>
+<span class="sd">            truss_2 (array): Numpy array containing information for parent 2</span>
+<span class="sd">            uniform_crossover_params (dictionary): parameters containing any information</span>
+<span class="sd">                needed for the method.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            child1 (array): Numpy array containing information for child 1</span>
+<span class="sd">            child2 (array): Numpy array containing information for child 2</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># find the shape of the parents</span>
+        <span class="n">nn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">truss_1</span><span class="p">)</span>
+
+        <span class="c1"># making an array of ones and zeros</span>
+        <span class="n">unos_and_zeros</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">nn</span><span class="p">)</span>
+
+        <span class="c1"># creating an array of all ones to later create the complementary array</span>
+        <span class="n">unos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># creating the complementary array</span>
+        <span class="n">unos_and_zeros_c</span> <span class="o">=</span> <span class="n">unos</span> <span class="o">-</span> <span class="n">unos_and_zeros</span>
+
+        <span class="c1"># making kids ;)</span>
+        <span class="n">child1</span> <span class="o">=</span> <span class="p">(</span><span class="n">unos_and_zeros</span> <span class="o">*</span> <span class="n">truss_1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">unos_and_zeros_c</span> <span class="o">*</span> <span class="n">truss_2</span><span class="p">)</span>
+        <span class="n">child2</span> <span class="o">=</span> <span class="p">(</span><span class="n">unos_and_zeros_c</span> <span class="o">*</span> <span class="n">truss_1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">unos_and_zeros</span> <span class="o">*</span> <span class="n">truss_2</span><span class="p">)</span>
+
+        <span class="c1"># checks for flag that specifies whether output should be an integer and rounds the \</span>
+        <span class="c1"># output arrays</span>
+        <span class="k">if</span> <span class="n">uniform_crossover_params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">uniform_crossover_params</span><span class="p">[</span><span class="s1">&#39;int_flag&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="n">child1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">child1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="n">child2</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">child2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">child1</span><span class="p">,</span> <span class="n">child2</span></div>
+
+<div class="viewcode-block" id="Crossover.single_point_split"><a class="viewcode-back" href="../source/Crossover.html#Crossover.Crossover.single_point_split">[docs]</a>    <span class="k">def</span> <span class="nf">single_point_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">,</span> <span class="n">single_point_split_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># Amlan</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">        Takes specific values of two parents and return two children containing</span>
+<span class="sd">        characteristics from both parents.</span>
+
+<span class="sd">        Chooses a random point and splits the two parents into two different parts.</span>
+<span class="sd">        Merges the first half of the first parent with the second half of the second</span>
+<span class="sd">        parent and vice versa.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parents (numpy arrays): the parent arrays.</span>
+<span class="sd">            single_point_split_params (dictionary): Dictionary containing the domain</span>
+<span class="sd">            for which the problem is valid</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            children (numpy arrays): Numpy arrays containing values from both the parents</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1"># Choosing a random point</span>
+        <span class="n">array_row</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">array_1</span><span class="p">)</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">array_row</span><span class="p">)</span>
+
+        <span class="c1"># Mixing the two parents</span>
+        <span class="n">child_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">array_1</span><span class="p">[:</span><span class="n">point</span><span class="p">],</span> <span class="n">array_2</span><span class="p">[</span><span class="n">point</span><span class="p">:]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">child_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">array_2</span><span class="p">[:</span><span class="n">point</span><span class="p">],</span> <span class="n">array_1</span><span class="p">[</span><span class="n">point</span><span class="p">:]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Checking for flag to force integer output</span>
+        <span class="k">if</span> <span class="n">single_point_split_params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">single_point_split_params</span><span class="p">[</span><span class="s1">&#39;int_flag&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="n">child_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">child_1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="n">child_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">child_2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">child_1</span><span class="p">,</span> <span class="n">child_2</span></div>
+
+<div class="viewcode-block" id="Crossover.two_points_split"><a class="viewcode-back" href="../source/Crossover.html#Crossover.Crossover.two_points_split">[docs]</a>    <span class="k">def</span> <span class="nf">two_points_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array_1</span><span class="p">,</span> <span class="n">array_2</span><span class="p">,</span> <span class="n">two_points_split_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># Amlan</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">        Takes specific values of two parents and return two children containing</span>
+<span class="sd">        characteristics from both parents.</span>
+
+<span class="sd">        Chooses two random points and splits the two parents into three different parts.</span>
+<span class="sd">        Replaces the central part of the first parent with the central part of the second</span>
+<span class="sd">        parent.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parents (numpy arrays): the parent arrays.</span>
+<span class="sd">            two_points_split_params (dictionary): Dictionary containing the domain</span>
+<span class="sd">            for which the problem is valid</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            children (numpy arrays): Numpy arrays containing values from both the parents</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Choosing two random points</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">array_1</span><span class="p">))</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">array_1</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Preparing the two points such that p1&lt;p2</span>
+        <span class="k">if</span> <span class="n">p2</span> <span class="o">&gt;=</span> <span class="n">p1</span><span class="p">:</span>
+            <span class="n">p2</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p1</span>
+
+        <span class="c1"># # Mixing the two parents</span>
+        <span class="n">child_1</span> <span class="o">=</span> <span class="n">array_1</span>
+        <span class="n">child_2</span> <span class="o">=</span> <span class="n">array_2</span>
+        <span class="n">child_1</span><span class="p">[</span><span class="n">p1</span><span class="p">:</span><span class="n">p2</span><span class="p">,</span> <span class="p">:],</span> <span class="n">child_2</span><span class="p">[</span><span class="n">p1</span><span class="p">:</span><span class="n">p2</span><span class="p">,</span>
+                                   <span class="p">:]</span> <span class="o">=</span> <span class="n">child_2</span><span class="p">[</span><span class="n">p1</span><span class="p">:</span><span class="n">p2</span><span class="p">,</span> <span class="p">:],</span> <span class="n">child_1</span><span class="p">[</span><span class="n">p1</span><span class="p">:</span><span class="n">p2</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># Checking for flag to force integer output</span>
+        <span class="k">if</span> <span class="n">two_points_split_params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">two_points_split_params</span><span class="p">[</span><span class="s1">&#39;int_flag&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="n">child_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">child_1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="n">child_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">child_2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">child_1</span><span class="p">,</span> <span class="n">child_2</span></div>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">truss_1</span><span class="p">,</span> <span class="n">truss_2</span><span class="p">):</span>
+
+        <span class="n">node_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;node_crossover_method&#39;</span><span class="p">])</span>
+        <span class="n">edge_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;edge_crossover_method&#39;</span><span class="p">])</span>
+        <span class="n">property_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;property_crossover_method&#39;</span><span class="p">])</span>
+        <span class="n">user_spec_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_spec_nodes&#39;</span><span class="p">]</span>
+        <span class="n">child_1</span> <span class="o">=</span> <span class="n">Truss</span><span class="o">.</span><span class="n">Truss</span><span class="p">(</span><span class="n">user_spec_nodes</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">child_2</span> <span class="o">=</span> <span class="n">Truss</span><span class="o">.</span><span class="n">Truss</span><span class="p">(</span><span class="n">user_spec_nodes</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">child_1</span><span class="o">.</span><span class="n">rand_nodes</span><span class="p">,</span> <span class="n">child_2</span><span class="o">.</span><span class="n">rand_nodes</span> <span class="o">=</span> <span class="n">node_method</span><span class="p">(</span>
+            <span class="n">truss_1</span><span class="o">.</span><span class="n">rand_nodes</span><span class="p">,</span> <span class="n">truss_2</span><span class="o">.</span><span class="n">rand_nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;node_crossover_params&#39;</span><span class="p">])</span>
+        <span class="n">child_1</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="n">child_2</span><span class="o">.</span><span class="n">edges</span> <span class="o">=</span> <span class="n">edge_method</span><span class="p">(</span>
+            <span class="n">truss_1</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="n">truss_2</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;edge_crossover_params&#39;</span><span class="p">])</span>
+        <span class="n">child_1</span><span class="o">.</span><span class="n">properties</span><span class="p">,</span> <span class="n">child_2</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">property_method</span><span class="p">(</span>
+            <span class="n">truss_1</span><span class="o">.</span><span class="n">properties</span><span class="p">,</span> <span class="n">truss_2</span><span class="o">.</span><span class="n">properties</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;property_crossover_params&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">child_1</span><span class="p">,</span> <span class="n">child_2</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">gastop</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amla Sinha.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

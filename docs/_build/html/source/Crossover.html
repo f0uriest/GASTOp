@@ -1,0 +1,217 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Crossover module &#8212; gastop beta documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Crossover">
+<span id="crossover-module"></span><h1>Crossover module<a class="headerlink" href="#module-Crossover" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Crossover.Crossover">
+<em class="property">class </em><code class="descclassname">Crossover.</code><code class="descname">Crossover</code><span class="sig-paren">(</span><em>crossover_params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Crossover.html#Crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crossover.Crossover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mixes attributes belonging to two different parents to produce two children with
+specific characteristics from both parents.</p>
+<p>When creating a new Crossover() obejct, must be initialized with dictionary
+crossover_params (containing crossover method). Object can then be used as a
+function that produces children according to the specified method.</p>
+<dl class="attribute">
+<dt>
+<code class="descname">crossover_params(dict of str</code></dt>
+<dd><p>): Dictionary of parameters required by crossover objects.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">crossover_params['method']</code></dt>
+<dd><p>Name of chosen crossover method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Crossover.Crossover.single_point_split">
+<code class="descname">single_point_split</code><span class="sig-paren">(</span><em>array_1</em>, <em>array_2</em>, <em>single_point_split_params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Crossover.html#Crossover.single_point_split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crossover.Crossover.single_point_split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes specific values of two parents and return two children containing
+characteristics from both parents.</p>
+<p>Chooses a random point and splits the two parents into two different parts.
+Merges the first half of the first parent with the second half of the second
+parent and vice versa.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>parents</strong> (<em>numpy arrays</em>) – the parent arrays.</li>
+<li><strong>single_point_split_params</strong> (<em>dictionary</em>) – Dictionary containing the domain</li>
+<li><strong>which the problem is valid</strong> (<em>for</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Numpy arrays containing values from both the parents</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">children (numpy arrays)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Crossover.Crossover.two_points_split">
+<code class="descname">two_points_split</code><span class="sig-paren">(</span><em>array_1</em>, <em>array_2</em>, <em>two_points_split_params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Crossover.html#Crossover.two_points_split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crossover.Crossover.two_points_split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes specific values of two parents and return two children containing
+characteristics from both parents.</p>
+<p>Chooses two random points and splits the two parents into three different parts.
+Replaces the central part of the first parent with the central part of the second
+parent.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>parents</strong> (<em>numpy arrays</em>) – the parent arrays.</li>
+<li><strong>two_points_split_params</strong> (<em>dictionary</em>) – Dictionary containing the domain</li>
+<li><strong>which the problem is valid</strong> (<em>for</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Numpy arrays containing values from both the parents</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">children (numpy arrays)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Crossover.Crossover.uniform_crossover">
+<code class="descname">uniform_crossover</code><span class="sig-paren">(</span><em>truss_1</em>, <em>truss_2</em>, <em>uniform_crossover_params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Crossover.html#Crossover.uniform_crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Crossover.Crossover.uniform_crossover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a uniform crossover on the two parents</p>
+<p>The uniform crossover method creates two child arrays by randomly mixing together
+information taken from two parent arrays. To do this, the method creates two arrays
+of ones and zeros -one being the complement of the other- with the same shape as
+the parent arrays. The first array is multiplied with parent1 and the complementary
+array is multiplied with parent2 before adding the results together to make child1.
+The exact opposite multiplication is done to make child2.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>truss_1</strong> (<em>array</em>) – Numpy array containing information for parent 1</li>
+<li><strong>truss_2</strong> (<em>array</em>) – Numpy array containing information for parent 2</li>
+<li><strong>uniform_crossover_params</strong> (<em>dictionary</em>) – parameters containing any information
+needed for the method.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Numpy array containing information for child 1
+child2 (array): Numpy array containing information for child 2</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">child1 (array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">gastop</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amla Sinha.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/source/Crossover.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,225 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>FitnessFunction &#8212; gastop beta documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for FitnessFunction</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">Truss</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="FitnessFunction"><a class="viewcode-back" href="../source/FitnessFunction.html#FitnessFunction.FitnessFunction">[docs]</a><span class="k">class</span> <span class="nc">FitnessFunction</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">equation</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">equation</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">equation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">parameters</span>  <span class="c1"># dictionary</span>
+
+<div class="viewcode-block" id="FitnessFunction.weighted_sum"><a class="viewcode-back" href="../source/FitnessFunction.html#FitnessFunction.FitnessFunction.weighted_sum">[docs]</a>    <span class="k">def</span> <span class="nf">weighted_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">truss</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes fitness score using a weighted sum of mass and fos</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            truss (Truss object): truss to be scored. Must have mass</span>
+<span class="sd">                fos attributes defined (for example, by using evaluator).</span>
+<span class="sd">            parameters (dict): Dictionary with the following entries:</span>
+<span class="sd">                &#39;goal_fos&#39; (float &gt;= 0) : desired factor of safety. Trusses with</span>
+<span class="sd">                    a smaller fos will be penalized according to &#39;w_fos&#39;</span>
+<span class="sd">                &#39;critical_nodes&#39; (int, array): Array of nodes #s for which </span>
+<span class="sd">                    deflection should be minimized. If empty, defaults to all.</span>
+<span class="sd">                &#39;w_fos&#39; (float &gt;= 0): penalty weight for low fos. Only applied</span>
+<span class="sd">                    if fos &lt; goal_fos</span>
+<span class="sd">                &#39;w_mass&#39; (float &gt;= 0): weight penalty applied to mass. Relative</span>
+<span class="sd">                    magnitude of &#39;w_mass&#39; and &#39;w_fos&#39; determines importance of</span>
+<span class="sd">                    minimizing mass vs maximizing fos.</span>
+<span class="sd">                &#39;w_deflection&#39; (float &gt;=0, array): penalty applied to deflections</span>
+<span class="sd">                    If scalar, applies the same penalty to all critical nodes.</span>
+<span class="sd">                    Can also be an array the same size as &#39;critical_nodes&#39; in </span>
+<span class="sd">                    which case different penalties will be applied to each node.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            f (float): Fitness score. Computed as:</span>
+<span class="sd">                f = w_mass*mass + w_fos*max(goal_fos-min_fos, 0)</span>
+<span class="sd">                    + w_deflection*deflection[critical_nodes]</span>
+<span class="sd">                min_fos is the lowest fos for structure under all loads.</span>
+<span class="sd">                If min_fos &gt; goal_fos, no fos penalty applied, so f </span>
+<span class="sd">                depends only on mass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">truss</span><span class="o">.</span><span class="n">fos</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="n">minfos</span> <span class="o">=</span> <span class="n">truss</span><span class="o">.</span><span class="n">fos</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">minfos</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;critical_nodes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="n">deflections</span> <span class="o">=</span> <span class="n">truss</span><span class="o">.</span><span class="n">deflection</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;critical_nodes&#39;</span><span class="p">]][:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">deflections</span> <span class="o">=</span> <span class="n">truss</span><span class="o">.</span><span class="n">deflection</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+
+        <span class="n">deflection_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;w_deflection&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">deflections</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;goal_fos&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">minfos</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;w_mass&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">truss</span><span class="o">.</span><span class="n">mass</span> <span class="o">+</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;w_fos&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">fs</span> <span class="o">+</span> <span class="n">deflection_score</span>
+        <span class="k">return</span> <span class="n">f</span></div>
+
+<div class="viewcode-block" id="FitnessFunction.sphere"><a class="viewcode-back" href="../source/FitnessFunction.html#FitnessFunction.FitnessFunction.sphere">[docs]</a>    <span class="k">def</span> <span class="nf">sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">truss</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sum of squares of node array elements. aka, sphere function</span>
+
+<span class="sd">        Global min at x = 0 where f = 0</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            truss (Truss object): only uses truss object as container for </span>
+<span class="sd">                nodes. No other attributes needed.</span>
+<span class="sd">            parameters (dict): None needed for this method</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            f (float): fitness score. Computed as</span>
+<span class="sd">                f(x) = Sum(x[i]**2) for i=1 to n</span>
+<span class="sd">                n determined from size of nodes array</span>
+<span class="sd">                x_i are entries of node array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">truss</span><span class="o">.</span><span class="n">rand_nodes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span></div>
+
+<div class="viewcode-block" id="FitnessFunction.rosenbrock"><a class="viewcode-back" href="../source/FitnessFunction.html#FitnessFunction.FitnessFunction.rosenbrock">[docs]</a>    <span class="k">def</span> <span class="nf">rosenbrock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">truss</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;n-dimensional Rosenbrock function</span>
+
+<span class="sd">        Sum of n/2 2D Rosenbrock functions</span>
+<span class="sd">        Global min at x=1 where f=0</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            truss (Truss object): only uses truss object as container for </span>
+<span class="sd">                nodes. No other attributes needed.</span>
+<span class="sd">            parameters (dict): None needed for this method</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            f (float): fitness score. Computed as</span>
+<span class="sd">                f(x) = Sum(100*(x[2i-1]^2 - x[2i]^2)^2 + (x[2i-1] - 1)^2)</span>
+<span class="sd">                for i=1 to n/2</span>
+<span class="sd">                n determined from size of nodes array</span>
+<span class="sd">                x_i are entries of node array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">truss</span><span class="o">.</span><span class="n">rand_nodes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="o">%</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># need an even number of elements</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)):</span>
+            <span class="n">f</span> <span class="o">+=</span> <span class="mi">100</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">return</span> <span class="n">f</span></div>
+
+<div class="viewcode-block" id="FitnessFunction.rastrigin"><a class="viewcode-back" href="../source/FitnessFunction.html#FitnessFunction.FitnessFunction.rastrigin">[docs]</a>    <span class="k">def</span> <span class="nf">rastrigin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">truss</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;n-dimensional Restrigin function</span>
+
+<span class="sd">        Global min at x=0 where f=0</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            truss (Truss object): only uses truss object as container for </span>
+<span class="sd">                nodes. No other attributes needed.</span>
+<span class="sd">            parameters (dict): None needed for this method</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            f (float): fitness score. Computed as</span>
+<span class="sd">                f(x) = A*n + Sum(x_i^2 -A*cos(2*pi*x_i)) for i=1 to n</span>
+<span class="sd">                n determined from size of nodes array</span>
+<span class="sd">                x_i are entries of node array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">A</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># normalizing parameters</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">truss</span><span class="o">.</span><span class="n">rand_nodes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">cosx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">A</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x2</span><span class="o">-</span><span class="n">A</span><span class="o">*</span><span class="n">cosx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span></div>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">truss</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">equation</span><span class="p">(</span><span class="n">truss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="n">truss</span><span class="o">.</span><span class="n">fitness_score</span> <span class="o">=</span> <span class="n">f</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">gastop</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amla Sinha.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,209 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Mutator &#8212; gastop beta documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Mutator</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">Truss</span>
+
+
+<div class="viewcode-block" id="Mutator"><a class="viewcode-back" href="../source/Mutator.html#Mutator.Mutator">[docs]</a><span class="k">class</span> <span class="nc">Mutator</span><span class="p">():</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">    Randomly mutates the whole/specific attributes belonging to the parents.</span>
+
+<span class="sd">    When creating a new Mutator() obejct, must be initialized with dictionary</span>
+<span class="sd">    mutator_params (containing mutation method). Object can then be used as a</span>
+<span class="sd">    function that mutates parents according to the specified method.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        mutator_params(dict of str: ): Dictionary of parameters required by mutator objects.</span>
+<span class="sd">        mutator_params[&#39;method&#39;](str): Name of chosen mutation method.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mutator_params</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">mutator_params</span>
+
+<div class="viewcode-block" id="Mutator.gaussian"><a class="viewcode-back" href="../source/Mutator.html#Mutator.Mutator.gaussian">[docs]</a>    <span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">gaussian_params</span><span class="p">):</span>  <span class="c1"># Paul</span>
+        <span class="sd">&#39;&#39;&#39;Performs a gaussian mutation on the given parent array</span>
+
+<span class="sd">        The gaussian mutator method creates a child array by mutating the given parent</span>
+<span class="sd">        array. The mutation is done by adding a random value from the gaussian distribution</span>
+<span class="sd">        with a user specified standard deviation to each of the elements in the parent</span>
+<span class="sd">        array. Since values need to be within a specified boundary, any elements that are</span>
+<span class="sd">        mutated out of bounds on one side are looped inside the other side by the same</span>
+<span class="sd">        amount, assuming a periodic boundary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            array (array): Numpy array containing the information for the parent array that</span>
+<span class="sd">                  is being mutated.</span>
+<span class="sd">            gaussian_params (dictionary): parameters containing information needed for</span>
+<span class="sd">                  the method.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            new_array (array): Numpy array containing information for the mutated child</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">nn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+        <span class="c1"># makes an array of the same size as the one given with random values\</span>
+        <span class="c1"># pulled from a normal distribution with mean 0 and std given</span>
+        <span class="n">gauss_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">gaussian_params</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">],</span> <span class="n">nn</span><span class="p">)</span>
+
+        <span class="c1"># creates the new mutated array with values mutated at all indices</span>
+        <span class="n">new_array</span> <span class="o">=</span> <span class="n">array</span> <span class="o">+</span> <span class="n">gauss_val</span>
+
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">gaussian_params</span><span class="p">[</span><span class="s1">&#39;boundaries&#39;</span><span class="p">]</span>
+        <span class="c1"># clips the numbers that are out of bounds and brings it to the boundary</span>
+        <span class="c1"># for i in range(nn[1]):</span>
+        <span class="c1">#    new_array[:,i] = np.clip(new_array[:,i], bounds[i,0], bounds[i,1])</span>
+
+        <span class="c1"># checks for flag that specifies whether output should be an integer and rounds the \</span>
+        <span class="c1"># output arrays</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">gaussian_params</span><span class="p">[</span><span class="s1">&#39;int_flag&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="n">new_array</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">new_array</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># new method to handle out of bounds problem: loop around on other side</span>
+        <span class="n">new_array</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">+</span> <span class="p">((</span><span class="n">new_array</span><span class="o">-</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span> <span class="o">%</span> <span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span><span class="o">-</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]))</span>
+        
+        <span class="k">return</span> <span class="n">new_array</span></div>
+
+<div class="viewcode-block" id="Mutator.pseudo_bit_flip"><a class="viewcode-back" href="../source/Mutator.html#Mutator.Mutator.pseudo_bit_flip">[docs]</a>    <span class="k">def</span> <span class="nf">pseudo_bit_flip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">bit_flip_params</span><span class="p">):</span>  <span class="c1"># Amlan</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">        Mutate specific values of the parent and return the mutant child.</span>
+
+<span class="sd">        Creates a random binary matrix with a fixed ratio of 1s and 0s, as specified</span>
+<span class="sd">        by the user. Creates another matrix with elements within the domain specified</span>
+<span class="sd">        by the user. Replaces the values from the original matrix with the corresponding</span>
+<span class="sd">        value in the new matrix only if the corresponding entry in the binary matrix is 1.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parent (numpy array): the parent array.</span>
+<span class="sd">            bit_flip_params (dictionary): Dictionary containing the domain for which</span>
+<span class="sd">            the problem is valid, and the proportions of 1s to 0s for the binary matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            child (numpy array): Numpy array containing values mutated from the parent.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">boundaries</span> <span class="o">=</span> <span class="n">bit_flip_params</span><span class="p">[</span><span class="s1">&#39;boundaries&#39;</span><span class="p">]</span>
+        <span class="n">proportions</span> <span class="o">=</span> <span class="n">bit_flip_params</span><span class="p">[</span><span class="s1">&#39;proportions&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Random binary matrix with a user-specified ratio of 1s and 0s</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span>
+                             <span class="mf">1.</span><span class="o">-</span><span class="n">proportions</span><span class="p">,</span> <span class="n">proportions</span><span class="p">])</span>
+
+        <span class="c1"># Random matrix whose elements are chosen randomly within the domain</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">boundaries</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">boundaries</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># Mutating the parent</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">-</span><span class="n">B</span><span class="p">),</span> <span class="n">array</span><span class="p">)</span>
+
+        <span class="c1"># Checking for flag to force integer output</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">bit_flip_params</span><span class="p">[</span><span class="s1">&#39;int_flag&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">array</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">array</span></div>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">truss</span><span class="p">):</span>
+        <span class="n">node_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;node_mutator_method&#39;</span><span class="p">])</span>
+        <span class="n">edge_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;edge_mutator_method&#39;</span><span class="p">])</span>
+        <span class="n">property_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;property_mutator_method&#39;</span><span class="p">])</span>
+        <span class="n">user_spec_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_spec_nodes&#39;</span><span class="p">]</span>
+        <span class="n">child</span> <span class="o">=</span> <span class="n">Truss</span><span class="o">.</span><span class="n">Truss</span><span class="p">(</span><span class="n">user_spec_nodes</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">child</span><span class="o">.</span><span class="n">rand_nodes</span> <span class="o">=</span> <span class="n">node_method</span><span class="p">(</span>
+            <span class="n">truss</span><span class="o">.</span><span class="n">rand_nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;node_mutator_params&#39;</span><span class="p">])</span>
+        <span class="n">child</span><span class="o">.</span><span class="n">edges</span> <span class="o">=</span> <span class="n">edge_method</span><span class="p">(</span>
+            <span class="n">truss</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;edge_mutator_params&#39;</span><span class="p">])</span>
+        <span class="n">child</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">property_method</span><span class="p">(</span>
+            <span class="n">truss</span><span class="o">.</span><span class="n">properties</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;property_mutator_params&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">child</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">gastop</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amla Sinha.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
