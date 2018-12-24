@@ -64,23 +64,22 @@ class TestGenAlg_Cristian(unittest.TestCase): # Cristian
             self.assertTrue(type(truss.properties) is np.ndarray)
 
     def testSaveLoadState(self):
-        # Destination save files
-        dest_config = 'state_config.txt'
-        dest_pop = 'state_population.txt'
-
-        # Parse input paramters from init.txt file
+        # Parse input parameters from init file
         init_file_path = 'struct_making_test_init.txt'
         config = utilities.init_file_parser(init_file_path)
 
         # Create GenAlg object
         pop_size = int(1e4)
-        ga = GenAlg.GenAlg(ga_params, mutator_params, random_params, crossover_params, selector_params,
-                           evaluator, fitness_function)
+        ga = GenAlg.GenAlg(ga_params, mutator_params, random_params,
+                            crossover_params, selector_params,
+                            evaluator, fitness_function)
         ga.initialize_population(pop_size)
 
-        # Test GenAlg.save_state()
-        ga.save_state(config, ga.population)
+        # Save and reload
+        ga.save_state(config)
+        config,population = ga.load_state()
 
+        # Test config
         self.assertTrue(type(config['ga_params']['num_elite']) is int)
         self.assertTrue(
             type(config['ga_params']['percent_crossover']) is float)
@@ -89,9 +88,7 @@ class TestGenAlg_Cristian(unittest.TestCase): # Cristian
         self.assertTrue(type(config['mutator_params']['node_mutator_params']['int_flag'])
                         is bool)
 
-        # Test GenAlg.load_state()
-        config,population = ga.load_state(dest_config=dest_config,dest_pop=dest_pop)
-
+        # Test population
         for truss in population:
             self.assertTrue(type(truss) is Truss.Truss)
             self.assertTrue(type(truss.user_spec_nodes) is np.ndarray)
@@ -106,8 +103,9 @@ class TestGenAlg_Dan(unittest.TestCase):
     def test_nodes_in_domain(self):
 
         # Create the Genetic Algorithm Object
-        ga = GenAlg.GenAlg(ga_params, mutator_params, random_params, crossover_params, selector_params,
-                           evaluator, fitness_function)
+        ga = GenAlg.GenAlg(ga_params, mutator_params, random_params,
+                            crossover_params, selector_params,
+                            evaluator, fitness_function)
         ga.initialize_population(pop_size)
 
         for truss in ga.population:

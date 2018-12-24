@@ -141,11 +141,12 @@ class GenAlg():
 
         # pass
 
-    def save_state(self, config, population, dest_config='state_config.txt',
+    def save_state(self, config, dest_config='state_config.txt',
                                 dest_pop='state_population.txt'):  # Cristian
         # Save rng_seed for reloading
         config['random_params']['rng_seed'] = np.random.get_state()
-        # print(np.random.get_state())
+
+        population = self.population
 
         # Save config data
         with open(dest_config, 'w') as f:
