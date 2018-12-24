@@ -79,7 +79,7 @@ class TestGenAlg_Cristian(unittest.TestCase): # Cristian
     def testUpdatePopulation(self):
         pass
 
-    def testSaveState(self):
+    def testSaveLoadState(self):
         # Destination save files
         dest_config = 'state_config.txt'
         dest_pop = 'state_population.txt'
@@ -94,39 +94,19 @@ class TestGenAlg_Cristian(unittest.TestCase): # Cristian
                            evaluator, fitness_function)
         ga.initialize_population(pop_size)
 
+        # Test GenAlg.save_state()
         ga.save_state(config, ga.population)
 
-        with open(dest_config, 'r') as f:
-            config_loaded = json.load(f)
-        config = json.loads(config_loaded)
-        # print(config)
-        # print([val for val in config])
-        # print(type(config['mutator_params']['node_mutator_params']['boundaries']))
-
-        with open(dest_pop, 'r') as f:
-            pop_loaded = json.load(f)
-        population = json.loads(pop_loaded)
-        # print(population)
-        # print(type(population[0]['nodes']))
-
-    def testLoadState(self):
-        # Destination save files
-        dest_config = 'state_config.txt'
-        dest_pop = 'state_population.txt'
-
-        # Create config
-        init_file_path = 'struct_making_test_init.txt'
-        config = utilities.init_file_parser(init_file_path)
-
-        # Create properties
-        properties_path = "properties.csv"
-        properties_dict = utilities.beam_file_parser(properties_path)
-
-        # Create GenAlg object
-        pop_size = int(1e1)
-        ga = GenAlg.GenAlg(ga_params, mutate_params, random_params, crossover_params, selector_params,
-                           evaluator, fitness_function)
+        # Test GenAlg.load_state()
         config,population = ga.load_state(dest_config=dest_config,dest_pop=dest_pop)
+
+        self.assertTrue(type(config['ga_params']['num_elite']) is int)
+        self.assertTrue(
+            type(config['ga_params']['percent_crossover']) is float)
+        self.assertTrue(type(config['mutator_params']['node_mutator_params']['boundaries'])
+                        is type(np.array([1, 1])))
+        self.assertTrue(type(config['mutator_params']['node_mutator_params']['int_flag'])
+                        is bool)
 
         # print(config)
         # print(population)
