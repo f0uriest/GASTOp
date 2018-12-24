@@ -169,6 +169,7 @@ class GenAlg():
         with open(dest_pop, 'r') as f:
             pop_loaded = json.load(f)
         population = json.loads(pop_loaded, object_hook=encoders.numpy_decoder)
+        population = (Truss.Truss(**dct) for dct in population)
 
         return config, population
 

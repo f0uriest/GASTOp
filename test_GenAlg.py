@@ -96,6 +96,7 @@ class TestGenAlg_Cristian(unittest.TestCase): # Cristian
 
         # Test GenAlg.save_state()
         ga.save_state(config, ga.population)
+        # print(ga.population)
 
         # Test GenAlg.load_state()
         config,population = ga.load_state(dest_config=dest_config,dest_pop=dest_pop)
@@ -108,8 +109,10 @@ class TestGenAlg_Cristian(unittest.TestCase): # Cristian
         self.assertTrue(type(config['mutator_params']['node_mutator_params']['int_flag'])
                         is bool)
 
+        for truss in population:
+            self.assertTrue(type(truss) is Truss.Truss)
         # print(config)
-        # print(population)
+        # print([truss for truss in population])
 
 
 class TestGenAlg_Dan(unittest.TestCase):
