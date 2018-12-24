@@ -7,6 +7,7 @@ import Truss
 import Mutator
 import Crossover
 import Selector
+import encoders
 # plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
 
@@ -141,62 +142,35 @@ class GenAlg():
 
         # pass
 
-    def save_state(self, config, properties, population,
-                   dest_config='state_config.txt',
-                   dest_properties='state_properties.txt',
-                   dest_pop='state_population.txt'):  # Cristian
-        class ConfigEncoder(json.JSONEncoder):
-            def default(self, obj):
-                if type(obj).__module__ == np.__name__:
-                    if isinstance(obj, np.ndarray):
-                        return obj.tolist()
-                    else:
-                        return obj.item()
-                return json.JSONEncoder.default(self, obj)
-
-        # class PropertiesEncoder(json.JSONEncoder):
-        #     def default(self, obj):
-        #         return json.JSONEncoder.default(self, obj)
-
-        class PopulationEncoder(json.JSONEncoder):
-            def default(self, obj):
-                if isinstance(obj, Truss.Truss):
-                    a = obj.__dict__
-                    for key, val in a.items():
-                        if type(val).__module__ == np.__name__:
-                            if isinstance(val, np.ndarray):
-                                a[key] = val.tolist()
-                            else:
-                                a[key] = val.item()
-                    return a
-                return json.JSONEncoder.default(self, obj)
+    def save_state(self, config, population, dest_config='state_config.txt',
+                                dest_pop='state_population.txt'):  # Cristian
+        # Save rng_seed for reloading
+        config['random_params']['rng_seed'] = np.random.get_state()
+        # print(np.random.get_state())
 
         # Save config data
         with open(dest_config, 'w') as f:
-            config_dumped = json.dumps(config, cls=ConfigEncoder)
+            config_dumped = json.dumps(config, cls=encoders.ConfigEncoder)
             json.dump(config_dumped, f)
-
-        with open(dest_config, 'r') as f:
-            config_loaded = json.load(f)
-        config = json.loads(config_loaded)
-        # print(config)
-        # print(type(config['mutate_params']['node_mutator_params']['boundaries']))
-
-        # Save properties data
 
         # Save population data
         with open(dest_pop, 'w') as f:
-            pop_dumped = json.dumps(population, cls=PopulationEncoder)
+            pop_dumped = json.dumps(population, cls=encoders.PopulationEncoder)
             json.dump(pop_dumped, f)
 
+    def load_state(self, dest_config='state_config.txt',
+                        dest_pop='state_population.txt'):  # Cristian
+        # Load config data
+        with open(dest_config, 'r') as f:
+            config_loaded = json.load(f)
+        config = json.loads(config_loaded, object_hook=encoders.numpy_decoder)
+
+        # Load population data
         with open(dest_pop, 'r') as f:
             pop_loaded = json.load(f)
-        population = json.loads(pop_loaded)
-        # print(population)
-        # print(type(population[0]['nodes']))
+        population = json.loads(pop_loaded, object_hook=encoders.numpy_decoder)
 
-    def load_state(self):  # Cristian
-        pass
+        return config, population
 
     def update_population(self, population):  # Cristian
         ''' Creates new population by performing crossover and mutation, as well

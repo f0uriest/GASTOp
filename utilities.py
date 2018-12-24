@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import configobj
 import ast
 
-
 def beam_file_parser(properties_path):
     """
     Inputs:
@@ -214,13 +213,13 @@ def truss_plot(truss, domain=None, loads=None, fixtures=None):
         domain (ndarray): (optional) axis limits in x,y,z, specified as a
             3x2 array: [[xmin, xmax],[ymin,ymax],[zmin,zmax]].
         loads (ndarray): (optional) Array of loads to be plotted as arrows.
-            Specified as nx6 array, each row corresponding to the load at 
+            Specified as nx6 array, each row corresponding to the load at
             the node matching the row #. Load format:
             [Fx,Fy,Fz,Mx,My,Mz]
         fixtures (ndarray): (optional) Array of fixtures to be plotted as blobs.
             Specified as an nx6 array, each row corresponding to fixtures at
             the node matching the row #. Format:
-            [Dx,Dy,Dz,Rx,Ry,Rz] value of 1 means fixed in that direction, 
+            [Dx,Dy,Dz,Rx,Ry,Rz] value of 1 means fixed in that direction,
             value of zero is free.
 
     Returns:

@@ -5,6 +5,8 @@ import numpy as np
 import numpy.testing as npt
 import matplotlib.pyplot as plt
 from matplotlib import style
+import json
+
 import GenAlg
 import Truss
 import Eval
@@ -73,28 +75,61 @@ num_gens = 100
 fitness_function = FitnessFunction.FitnessFunction('rastrigin', 0)
 
 
-class TestGenAlg_Cristian(unittest.TestCase):
+class TestGenAlg_Cristian(unittest.TestCase): # Cristian
     def testUpdatePopulation(self):
         pass
 
     def testSaveState(self):
+        # Destination save files
+        dest_config = 'state_config.txt'
+        dest_pop = 'state_population.txt'
+
+        # Create config
+        init_file_path = 'struct_making_test_init.txt'
+        config = utilities.init_file_parser(init_file_path)
+
+        # Create GenAlg object
+        pop_size = int(1e1)
+        ga = GenAlg.GenAlg(ga_params, mutate_params, random_params, crossover_params, selector_params,
+                           evaluator, fitness_function)
+        ga.initialize_population(pop_size)
+
+        ga.save_state(config, ga.population)
+
+        with open(dest_config, 'r') as f:
+            config_loaded = json.load(f)
+        config = json.loads(config_loaded)
+        # print(config)
+        # print([val for val in config])
+        # print(type(config['mutator_params']['node_mutator_params']['boundaries']))
+
+        with open(dest_pop, 'r') as f:
+            pop_loaded = json.load(f)
+        population = json.loads(pop_loaded)
+        # print(population)
+        # print(type(population[0]['nodes']))
+
+    def testLoadState(self):
+        # Destination save files
+        dest_config = 'state_config.txt'
+        dest_pop = 'state_population.txt'
+
         # Create config
         init_file_path = 'struct_making_test_init.txt'
         config = utilities.init_file_parser(init_file_path)
 
         # Create properties
-        properties = []
+        properties_path = "properties.csv"
+        properties_dict = utilities.beam_file_parser(properties_path)
 
         # Create GenAlg object
-        pop_size = int(1e4)
+        pop_size = int(1e1)
         ga = GenAlg.GenAlg(ga_params, mutate_params, random_params, crossover_params, selector_params,
                            evaluator, fitness_function)
-        ga.initialize_population(pop_size)
+        config,population = ga.load_state(dest_config=dest_config,dest_pop=dest_pop)
 
-        ga.save_state(config, properties, ga.population)
-
-    def testLoadState(self):
-        pass
+        # print(config)
+        # print(population)
 
 
 class TestGenAlg_Dan(unittest.TestCase):
@@ -150,7 +185,7 @@ class TestGenAlg_SFR(unittest.TestCase):
             for truss in GA.population:
                 #truss.fos = np.random.random()
                 truss.fitness_score = truss.fitness_score + 5.0
-        plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+        # plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         return GA.population[0], GA.pop_progress
 
         #GA = GenAlg()
