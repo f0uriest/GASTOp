@@ -25,7 +25,7 @@ selector_params = config['selector_params']
 evaluator_params = config['evaluator_params']
 fitness_params = config['fitness_params']
 
-properties_df = 0
+# properties_df = 0
 evaluator = 0
 
 pop_size = int(1e4)
@@ -42,14 +42,33 @@ fitness_function = FitnessFunction.FitnessFunction('rastrigin', 0)
 
 class TestGenAlg_Cristian(unittest.TestCase): # Cristian
     def testUpdatePopulation(self):
-        pass
+        # Create GenAlg object and assign random fitness scores
+        pop_size = int(1e4)
+        ga = GenAlg.GenAlg(ga_params, mutator_params, random_params, crossover_params, selector_params,
+                           evaluator, fitness_function)
+        ga.initialize_population(pop_size)
+        for truss in ga.population:
+            truss.fitness_score = np.random.random()
+
+        ga.update_population()
+
+        # Check that population is sorted by fitness_score
+        fitness = [truss.fitness_score for truss in ga.population][:ga_params['num_elite']]
+        self.assertTrue(sorted(fitness)==fitness)
+
+        for truss in ga.population:
+            self.assertTrue(type(truss) is Truss.Truss)
+            self.assertTrue(type(truss.user_spec_nodes) is np.ndarray)
+            self.assertTrue(type(truss.rand_nodes) is np.ndarray)
+            self.assertTrue(type(truss.edges) is np.ndarray)
+            self.assertTrue(type(truss.properties) is np.ndarray)
 
     def testSaveLoadState(self):
         # Destination save files
         dest_config = 'state_config.txt'
         dest_pop = 'state_population.txt'
 
-        # Create config
+        # Parse input paramters from init.txt file
         init_file_path = 'struct_making_test_init.txt'
         config = utilities.init_file_parser(init_file_path)
 

@@ -112,8 +112,7 @@ class GenAlg():
                 self.fitness_function(current_truss)
             if progress_display == 2:
                 self.progress_monitor(current_gen, progress_display, ax1)
-            self.population = self.update_population(
-                self.population)  # Determine which members to
+            self.update_population()  # Determine which members to
         if progress_display == 2:
             plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         return self.population[0], self.pop_progress
@@ -173,7 +172,7 @@ class GenAlg():
 
         return config, population
 
-    def update_population(self, population):  # Cristian
+    def update_population(self):  # Cristian
         ''' Creates new population by performing crossover and mutation, as well
         as taking elites and randomly generating trusses.
 
@@ -181,17 +180,10 @@ class GenAlg():
         Creates selector object from population and method. Calls selector to
         get list of parents for crossover and mutation. Performs crossover and
         mutation.
-
-        Args:
-            population (list): List of Truss objects that constitutes the
-                current generation.
-
-        Returns:
-            population (list): List of Truss objects that constitutes the
-                current generation.
         '''
 
         # Store parameters for readability
+        population = self.population
         pop_size = self.ga_params['pop_size']
         percent_crossover = self.ga_params['percent_crossover']
         percent_mutation = self.ga_params['percent_mutation']
@@ -246,4 +238,6 @@ class GenAlg():
 
         # Append separate lists to form new generation
         population = pop_elite + pop_crossover + pop_mutation + pop_random
-        return population
+
+        # Update population attribute
+        self.population = population
