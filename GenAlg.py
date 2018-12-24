@@ -231,7 +231,7 @@ class GenAlg():
             parent1 = population[parentindex1]
             parent2 = population[parentindex2]
             child1, child2 = crossover(parent1, parent2)
-            pop_crossover.extend([child1, child2])
+            pop_crossover.extend((child1,child2))
 
         # Portion of new population formed by mutation
         pop_mutation = []
