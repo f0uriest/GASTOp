@@ -194,11 +194,11 @@ class GenAlg():
         population.sort(key=lambda x: x.fitness_score)
 
         # Calculate parents needed for crossover, ensure even number
-        num_crossover = round(pop_size*percent_crossover)
+        num_crossover = round((pop_size-num_elite)*percent_crossover)
         if (num_crossover % 2) != 0:  # If odd, increment by 1
             num_crossover += 1
         # Calculate parents needed for mutation
-        num_mutation = round(pop_size*percent_mutation)
+        num_mutation = round((pop_size-num_elite)*percent_mutation)
         # Calculate remaining number of trusses in next population
         num_random = pop_size - num_elite - num_crossover - num_mutation
         if num_random < 0:  # Raise exception if input params are unreasonable
