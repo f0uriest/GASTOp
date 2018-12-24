@@ -112,8 +112,7 @@ class GenAlg():
                 self.fitness_function(current_truss)
             if progress_display == 2:
                 self.progress_monitor(current_gen, progress_display, ax1)
-            self.population = self.update_population(
-                self.population)  # Determine which members to
+            self.update_population()  # Determine which members to
         if progress_display == 2:
             plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         return self.population[0], self.pop_progress
@@ -142,11 +141,12 @@ class GenAlg():
 
         # pass
 
-    def save_state(self, config, population, dest_config='state_config.txt',
+    def save_state(self, config, dest_config='state_config.txt',
                                 dest_pop='state_population.txt'):  # Cristian
         # Save rng_seed for reloading
         config['random_params']['rng_seed'] = np.random.get_state()
-        # print(np.random.get_state())
+
+        population = self.population
 
         # Save config data
         with open(dest_config, 'w') as f:
@@ -173,7 +173,7 @@ class GenAlg():
 
         return config, population
 
-    def update_population(self, population):  # Cristian
+    def update_population(self):  # Cristian
         ''' Creates new population by performing crossover and mutation, as well
         as taking elites and randomly generating trusses.
 
@@ -181,17 +181,10 @@ class GenAlg():
         Creates selector object from population and method. Calls selector to
         get list of parents for crossover and mutation. Performs crossover and
         mutation.
-
-        Args:
-            population (list): List of Truss objects that constitutes the
-                current generation.
-
-        Returns:
-            population (list): List of Truss objects that constitutes the
-                current generation.
         '''
 
         # Store parameters for readability
+        population = self.population
         pop_size = self.ga_params['pop_size']
         percent_crossover = self.ga_params['percent_crossover']
         percent_mutation = self.ga_params['percent_mutation']
@@ -201,11 +194,11 @@ class GenAlg():
         population.sort(key=lambda x: x.fitness_score)
 
         # Calculate parents needed for crossover, ensure even number
-        num_crossover = round(pop_size*percent_crossover)
+        num_crossover = round((pop_size-num_elite)*percent_crossover)
         if (num_crossover % 2) != 0:  # If odd, increment by 1
             num_crossover += 1
         # Calculate parents needed for mutation
-        num_mutation = round(pop_size*percent_mutation)
+        num_mutation = round((pop_size-num_elite)*percent_mutation)
         # Calculate remaining number of trusses in next population
         num_random = pop_size - num_elite - num_crossover - num_mutation
         if num_random < 0:  # Raise exception if input params are unreasonable
@@ -231,7 +224,7 @@ class GenAlg():
             parent1 = population[parentindex1]
             parent2 = population[parentindex2]
             child1, child2 = crossover(parent1, parent2)
-            pop_crossover.extend([child1, child2])
+            pop_crossover.extend((child1,child2))
 
         # Portion of new population formed by mutation
         pop_mutation = []
@@ -246,4 +239,6 @@ class GenAlg():
 
         # Append separate lists to form new generation
         population = pop_elite + pop_crossover + pop_mutation + pop_random
-        return population
+
+        # Update population attribute
+        self.population = population
