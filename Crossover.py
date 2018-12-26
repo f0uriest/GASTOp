@@ -69,18 +69,18 @@ class Crossover():
 
     def single_point_split(self, array_1, array_2, single_point_split_params=None):  # Amlan
         '''
+        Performs a single point split crossover between two parents
 
-        Takes specific values of two parents and return two children containing
-        characteristics from both parents.
-
-        Chooses a random point and splits the two parents into two different parts.
-        Merges the first half of the first parent with the second half of the second
-        parent and vice versa.
+        It takes specific information from two parents and returns two children
+        containing characteristics from both parents. In order to achieve this,
+        it chooses a random point and splits the two parents into two different
+        parts. Then it merges the first half of the first parent with the second
+        half of the second parent and vice versa.
 
         Args:
             parents (numpy arrays): the parent arrays.
-            single_point_split_params (dictionary): Dictionary containing the domain
-            for which the problem is valid
+            single_point_split_params (dictionary): Dictionary containing the parameters
+            necessary for performing a single point split crossover
 
         Returns:
             children (numpy arrays): Numpy arrays containing values from both the parents
@@ -95,7 +95,7 @@ class Crossover():
         child_1 = np.concatenate((array_1[:point], array_2[point:]), axis=0)
         child_2 = np.concatenate((array_2[:point], array_1[point:]), axis=0)
 
-        # Checking for flag to force integer output
+        # Checking for flag that determines whether the output should be an integer or a float
         if single_point_split_params:
             if (single_point_split_params['int_flag'] == True):
                 child_1 = (np.rint(child_1)).astype(int)
