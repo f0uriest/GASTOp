@@ -2,8 +2,8 @@
 GASTOp
 ========
 
-.. image:: https://travis-ci.org/f0uriest/APC524_FinalProject.svg?branch=dev
-    :target: https://travis-ci.org/f0uriest/APC524_FinalProject
+.. image:: https://travis-ci.org/f0uriest/GASTOp.svg?branch=dev
+    :target: https://travis-ci.org/f0uriest/GASTOp
     :alt: Build Status
 .. image:: https://readthedocs.org/projects/gastop/badge/?version=latest
     :target: https://gastop.readthedocs.io/en/latest/?badge=latest
