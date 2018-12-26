@@ -1,3 +1,5 @@
+def bar(x, y):
+    print(x+y)
 
 
 class foo():
