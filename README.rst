@@ -38,8 +38,8 @@ hopefully, if we ever get that working
 Contribute
 ----------
 
-- Issue Tracker: `<github.com/f0uriest/GASTOp/issues>`_
-- Source Code: `<github.com/f0uriest/GASTOp/>`_
+- Issue Tracker: `<https://github.com/f0uriest/GASTOp/issues>`_
+- Source Code: `<https://github.com/f0uriest/GASTOp/>`_
 
 Support
 -------
