@@ -7,20 +7,8 @@
 
    installation
    usage
+   source/gastop
 
-.. toctree::
-   :caption: Classes and Functions
-   :maxdepth: 2
-
-   source/GenAlg
-   source/Crossover
-   source/Mutator
-   source/Selector
-   source/Truss
-   source/Eval
-   source/FitnessFunction
-   source/encoders
-   source/utilities
 
 
 Indices and tables

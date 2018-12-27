@@ -17,9 +17,9 @@ Given a set of boundary conditions such as applied loads and fixtures, it will d
 
 Look how easy it is to use:
 ::
-    import gastop
-    # Get your stuff done
-    gastop.do_stuff()
+import gastop
+# Get your stuff done
+gastop.do_stuff()
 
 oh if only it were that easy
 
@@ -34,7 +34,7 @@ Installation
 
 Install gastop by running:
 ::
-    pip install gastop
+pip install gastop
 	
 hopefully, if we ever get that working.
 Or, just clone the repo and throw together a random collection of virtualenvs and package interdepencies until it runs without errors.

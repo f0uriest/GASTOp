@@ -19,7 +19,7 @@ sys.path.append(os.path.abspath('../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'gastop'
+project = 'GASTOp'
 copyright = '2018, Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amla Sinha'
 author = 'Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amla Sinha'
 
@@ -110,7 +110,6 @@ html_theme_options = {
     'display_version': True,
     'prev_next_buttons_location': 'both',
     'style_external_links': False,
-    'vcs_pageview_mode': 'blob',
     # Toc options
     'collapse_navigation': True,
     'sticky_navigation': True,
