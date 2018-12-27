@@ -3,24 +3,78 @@ from gastop import utilities
 
 
 class Evaluator():
-    # wrapper for structural analysis,
-    #
+    """Implements various methods for scoring the truss in different areas.
+
+    Methods include calculations of mass, factor of safety, deflections, and
+    interference with user specified areas.
+
+    The class is designed to be instantiated as an Evaluator object which will
+    fully evaluate a Truss object using specified methods and parameters.
+    """
+
     def __init__(self, struct_solver, mass_solver, interferences_solver, boundary_conditions, properties_dict):
+        """Creates an Evaluator callable object.
+
+        Once created, the Evaluator can be called on a Truss object to 
+        calculate and assign mass, factor of safety, deflections, etc
+        to the truss.
+
+        Args:
+            struct_solver (str): Name of the method to be used for structural
+                analysis and calculating fos and deflections, as a string.
+                e.g. ``'mat_struct_analysis_DSM'``.
+            mass_solver (str): Name of the method to be used to calculate mass.
+                e.g. ``'mass_basic'``.
+            interferences_solver (str): Name of method to be used to determine
+                interferences. e.g. ``'interferences_ray_tracing'``.
+            boundary_conditions (dict): Dictionary containing:
+
+                - ``'loads'`` *(ndarray)*: Array of loads applied to the structure.
+                  First index corresponds to the node where the load is applied,
+                  second index is the force in x,y,z and moment about x,y,z,
+                  third index is for multiple loading scenarios.
+                - ``'fixtures'`` *(ndarray)*: Array of flags denoting whether a node
+                  is fixed or free. First index corresponds to the node, the
+                  second index corresponds to fixing displacements in x,y,z
+                  and rotations about x,y,z. The third index corresponds to
+                  multiple loading scenarios with different fixtures for each.
+                  Values of the array are 0 (free) or 1 (fixed).
+
+            properties_dict (dict): Dictionary containing beam properties.
+            Entries should be 1D arrays, with length equal to the number of
+            beam options. Each entry in the array is the value of the key
+            property for the specified beam type. Properties include:
+
+                - ``'OD'``: Outer diameter of the beam, in meters.
+                - ``'ID'``: Inner diameter of the beam, in meters.
+                - ``'elastic_modulus'``: Elastic or Young's modulus of the
+                  material, in Pascals.
+                - ``'yield_strength'``: Yield or failure strength of the 
+                  material, in Pascals.
+                - ``'shear_modulus'``: Shear modulus of the material, 
+                  in Pascals.
+                - ``'poisson_ratio'``: Poisson ratio of the material,
+                  dimensionless.
+                - ``'x_section_area'``: Cross sectional area of the beam,
+                  in square meters.
+                - ``'moment_inertia_y'``: Area moment of inertia about beams
+                  y axis, in meters^4.
+                - ``'moment_inertia_z'``: Area moment of inertia about beams
+                  z axis, in meters^4.  
+                - ``'polar_moment_inertia'``: Area moment of inertia about beams
+                  polar axis, in meters^4. 
+                - ``'dens'``: Density of the material, in kilograms per cubic meter.
+
+        Returns:
+            callable Evaluator object.
+
+
+        """
         self.struct_solver = getattr(self, struct_solver)
         self.mass_solver = getattr(self, mass_solver)
         self.interferences_solver = getattr(self, interferences_solver)
         self.boundary_conditions = boundary_conditions
         self.properties_dict = properties_dict
-
-        # df.at[0,'A']
-        # t2 = df.iloc[[4,4,3,4],[1]]
-        '''
-                  A         B         C
-            0 -0.074172 -0.090626  0.038272
-            1 -0.128545  0.762088 -0.714816
-            2  0.201498 -0.734963  0.558397
-            3  1.563307 -1.186415  0.848246
-        '''
 
     def mat_struct_analysis_DSM(self, truss):
         """Calculates deflections and stresses using direct stiffness method.
@@ -35,20 +89,25 @@ class Evaluator():
                 edges, and properties defined.
 
         Returns:
-            FoS (ndarray): 2D array of factor of safety values. First index 
-                corresponds to members, second index corresponds to different
-                loading scenarios. Factor of safety is defined as the materials
-                yield strength divided by the von Mises stress in the member.
-                If structure is statically indeterminate under a given loading
-                scenario, FoS will be zero.
-                FoS in member i under loading j is FoS[i, j]
-            V (ndarray): 3D array of node deflections. Distances in meters,
-                angles in radians. First index corresponds to node number,
-                second index is deflections in x,y,z coordinates, and rotations
-                about x,y,z axes. The third axis corresponds to different
-                loading scenarios.
-                Deflection at node i under loading j is V[i, :, j] = 
-                [dx, dy, dz, d_theta_x, d_theta_y, d_theta_z]
+            2-element tuple containing:
+
+            - **fos** *(ndarray)*: 2D array of factor of safety values. First index 
+              corresponds to members, second index corresponds to different
+              loading scenarios. Factor of safety is defined as the materials
+              yield strength divided by the von Mises stress in the member.
+              If structure is statically indeterminate under a given loading
+              scenario, fos will be zero.
+
+              Factor of safety in member i under loading j is fos[i, j]
+
+            - **deflections** *(ndarray)*: 3D array of node deflections.
+              Distances in meters, angles in radians. First index corresponds
+              to node number, second index is deflections in global  x,y,z
+              coordinates, and rotations about global x,y,z axes. The third
+              axis corresponds to different loading scenarios.
+
+              Deflection at node i under loading j is deflections[i, :, j] = 
+              [dx, dy, dz, d_theta_x, d_theta_y, d_theta_z]
         """
 
         # make local copies of arrays in case something breaks
@@ -217,7 +276,7 @@ class Evaluator():
                 edges, and properties defined.
 
         Returns:
-            mass (float): Mass of the structure in kg.
+            mass (float): Mass of the structure in kilograms.
         """
 
         # make local copy of arrays in case something breaks
@@ -249,13 +308,39 @@ class Evaluator():
         return mass
 
     def interferences_ray_tracing(self, truss):
+        """Not implemented yet.
+
+        TODO: method to determine if truss members are crossing into 
+        user specified areas. Used when a structure must be designed around
+        something, such as a passenger compartment or other design components.
+        """
         pass
 
     def blank_test(self, truss):
-        """Blank function used for testing GA when no evaluation needed"""
+        """Blank function used for testing GA when no evaluation needed
+
+        Args:
+            truss (Truss object): Dummy Truss object, no attributes required.
+
+        Returns:
+            2-element tuple of (None, None)
+        """
+
         return None, None
 
     def __call__(self, truss):
+        """Computes mass, deflections, etc, and stores it in truss object.
+
+        Used when an Evaluator object has been created with the
+        methods to be used and any necessary parameters.
+
+        Args:
+            truss (Truss object): truss to be evaluated. 
+
+        Returns:
+           None
+
+        """
 
         fos, deflection = self.struct_solver(truss)
         mass = self.mass_solver(truss)

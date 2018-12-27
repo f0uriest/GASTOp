@@ -166,7 +166,7 @@ class FitnessFunction():
         return f
 
     def __call__(self, truss):
-        """Computes fitness score and stores it in truss object
+        """Computes fitness score and stores it in truss object.
 
         Used when a FitnessFunction object has been created with the
         method to be used and any necessary parameters.
