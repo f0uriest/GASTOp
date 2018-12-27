@@ -7,14 +7,10 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import json
 
-import GenAlg
-import Truss
-import Eval
-import FitnessFunction
-import utilities
+from gastop import GenAlg, Truss, Evaluator, FitnessFunction, utilities
 
 # Parse input paramters from init.txt file
-init_file_path = 'struct_making_test_init.txt'
+init_file_path = 'gastop-config/struct_making_test_init.txt'
 config = utilities.init_file_parser(init_file_path)
 
 ga_params = config['ga_params']
@@ -37,15 +33,15 @@ num_gens = int(1e2)
 #evaluator = Eval(blah)
 
 # Create a Fitness Function Object
-fitness_function = FitnessFunction.FitnessFunction('rastrigin', 0)
+fitness_function = FitnessFunction('rastrigin', 0)
 
 
-class TestGenAlg_Cristian(unittest.TestCase): # Cristian
+class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
     def testUpdatePopulation(self):
         # Create GenAlg object and assign random fitness scores
         pop_size = int(1e4)
-        ga = GenAlg.GenAlg(ga_params, mutator_params, random_params, crossover_params, selector_params,
-                           evaluator, fitness_function)
+        ga = GenAlg(ga_params, mutator_params, random_params, crossover_params, selector_params,
+                    evaluator, fitness_function)
         ga.initialize_population(pop_size)
         for truss in ga.population:
             truss.fitness_score = np.random.random()
@@ -53,11 +49,12 @@ class TestGenAlg_Cristian(unittest.TestCase): # Cristian
         ga.update_population()
 
         # Check that population is sorted by fitness_score
-        fitness = [truss.fitness_score for truss in ga.population][:ga_params['num_elite']]
-        self.assertTrue(sorted(fitness)==fitness)
+        fitness = [
+            truss.fitness_score for truss in ga.population][:ga_params['num_elite']]
+        self.assertTrue(sorted(fitness) == fitness)
 
         for truss in ga.population:
-            self.assertTrue(type(truss) is Truss.Truss)
+            self.assertTrue(type(truss) is Truss)
             self.assertTrue(type(truss.user_spec_nodes) is np.ndarray)
             self.assertTrue(type(truss.rand_nodes) is np.ndarray)
             self.assertTrue(type(truss.edges) is np.ndarray)
@@ -65,19 +62,19 @@ class TestGenAlg_Cristian(unittest.TestCase): # Cristian
 
     def testSaveLoadState(self):
         # Parse input parameters from init file
-        init_file_path = 'struct_making_test_init.txt'
+        init_file_path = 'gastop-config/struct_making_test_init.txt'
         config = utilities.init_file_parser(init_file_path)
 
         # Create GenAlg object
         pop_size = int(1e4)
-        ga = GenAlg.GenAlg(ga_params, mutator_params, random_params,
-                            crossover_params, selector_params,
-                            evaluator, fitness_function)
+        ga = GenAlg(ga_params, mutator_params, random_params,
+                    crossover_params, selector_params,
+                    evaluator, fitness_function)
         ga.initialize_population(pop_size)
 
         # Save and reload
         ga.save_state(config)
-        config,population = ga.load_state()
+        config, population = ga.load_state()
 
         # Test config
         self.assertTrue(type(config['ga_params']['num_elite']) is int)
@@ -90,7 +87,7 @@ class TestGenAlg_Cristian(unittest.TestCase): # Cristian
 
         # Test population
         for truss in population:
-            self.assertTrue(type(truss) is Truss.Truss)
+            self.assertTrue(type(truss) is Truss)
             self.assertTrue(type(truss.user_spec_nodes) is np.ndarray)
             self.assertTrue(type(truss.rand_nodes) is np.ndarray)
             self.assertTrue(type(truss.edges) is np.ndarray)
@@ -103,9 +100,9 @@ class TestGenAlg_Dan(unittest.TestCase):
     def test_nodes_in_domain(self):
 
         # Create the Genetic Algorithm Object
-        ga = GenAlg.GenAlg(ga_params, mutator_params, random_params,
-                            crossover_params, selector_params,
-                            evaluator, fitness_function)
+        ga = GenAlg(ga_params, mutator_params, random_params,
+                    crossover_params, selector_params,
+                    evaluator, fitness_function)
         ga.initialize_population(pop_size)
 
         for truss in ga.population:
@@ -127,7 +124,7 @@ class TestGenAlg_SFR(unittest.TestCase):
         properties = np.array([[0, 3]])
 
         pop_size = 10
-        population = [Truss.Truss(
+        population = [Truss(
             user_spec_nodes, nodes, edges, properties) for i in range(pop_size)]
 
         for truss in population:
@@ -136,7 +133,7 @@ class TestGenAlg_SFR(unittest.TestCase):
         population.sort(key=lambda x: x.fitness_score)
         # print([x.fitness_score for x in population])
 
-        GA = GenAlg.GenAlg(0, 0, 0, 0, 0, 0, 0)  # put zeros in here
+        GA = GenAlg(0, 0, 0, 0, 0, 0, 0)  # put zeros in here
 
         GA.population = population
         progress_display = 2

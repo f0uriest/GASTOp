@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-
-import numpy as np
-import Truss
 import unittest
-import Eval
-import utilities
+import numpy as np
+from gastop import Truss, Evaluator, utilities
 
 
-class TestEval(unittest.TestCase):
+class TestEvaluator(unittest.TestCase):
 
     def test_axial_load(self):
         """Tests simple straight beam under axial forces"""
@@ -19,14 +16,14 @@ class TestEval(unittest.TestCase):
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
         dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]]
                        ).reshape(2, 6, 1)
         load = np.array(
             [[0, 0, 0, 0, 0, 0], [p, 0, 0, 0, 0, 0]]).reshape(2, 6, 1)
-        beam_dict = utilities.beam_file_parser('properties.csv')
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
-        evaluator = Eval.Eval('mat_struct_analysis_DSM',
+        evaluator = Evaluator('mat_struct_analysis_DSM',
                               'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
@@ -55,14 +52,14 @@ class TestEval(unittest.TestCase):
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
         dof = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]
                        ).reshape(2, 6, 1)
         load = np.array(
             [[0, 0, 0, 0, 0, 0], [p, 0, 0, 0, 0, 0]]).reshape(2, 6, 1)
-        beam_dict = utilities.beam_file_parser('properties.csv')
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
-        evaluator = Eval.Eval('mat_struct_analysis_DSM',
+        evaluator = Evaluator('mat_struct_analysis_DSM',
                               'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
         fos_true = 0
@@ -85,14 +82,14 @@ class TestEval(unittest.TestCase):
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
         dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]]
                        ).reshape(2, 6, 1)
         load = np.array(
             [[0, 0, 0, 0, 0, 0], [p, -f, 0, -T, 0, 0]]).reshape(2, 6, 1)
-        beam_dict = utilities.beam_file_parser('properties.csv')
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
-        evaluator = Eval.Eval('mat_struct_analysis_DSM',
+        evaluator = Evaluator('mat_struct_analysis_DSM',
                               'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
@@ -121,16 +118,16 @@ class TestEval(unittest.TestCase):
                                     [0, 0, L]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
         dof = np.array([[1, 1, 1, 1, 1, 1],
                         [0, 0, 0, 0, 0, 0],
                         [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
         load = np.array([[0, 0, 0, 0, 0, 0],
                          [p, 0, 0, 0, 0, 0],
                          [p, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
-        beam_dict = utilities.beam_file_parser('properties.csv')
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
-        evaluator = Eval.Eval('mat_struct_analysis_DSM',
+        evaluator = Evaluator('mat_struct_analysis_DSM',
                               'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
         fos_true = 0
@@ -153,16 +150,16 @@ class TestEval(unittest.TestCase):
                                     [0, L, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
         dof = np.array([[1, 1, 1, 1, 1, 1],
                         [0, 0, 0, 0, 0, 0],
                         [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
         load = np.array([[0, 0, 0, 0, 0, 0],
                          [p, 0, 0, 0, 0, 0],
                          [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
-        beam_dict = utilities.beam_file_parser('properties.csv')
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
-        evaluator = Eval.Eval('mat_struct_analysis_DSM',
+        evaluator = Evaluator('mat_struct_analysis_DSM',
                               'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
@@ -186,16 +183,16 @@ class TestEval(unittest.TestCase):
     #                                 [0, -1, 0]])
     #     edges = np.array([[0, 1], [2, 1]])
     #     properties = matl*np.ones((edges.shape[0], 1)).astype(int)
-    #     truss = Truss.Truss(user_spec_nodes, rand_nodes, edges, properties)
+    #     truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
     #     dof = np.array([[1, 1, 1, 0, 0, 0],
     #                     [0, 0, 0, 0, 0, 0],
     #                     [1, 1, 1, 0, 0, 0]]).reshape(3, 6, 1)
     #     load = np.array([[0, 0, 0, 0, 0, 0],
     #                      [0, 0, p, 0, 0, 0],
     #                      [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
-    #     beam_dict = utilities.beam_file_parser('properties.csv')
+    #     beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
     #     bdry = {'loads': load, 'fixtures': dof}
-    #     evaluator = Eval.Eval('mat_struct_analysis_DSM',
+    #     evaluator = Evaluator('mat_struct_analysis_DSM',
     #                           'mass_basic', 'blank_test', bdry, beam_dict)
     #     evaluator(truss)
 

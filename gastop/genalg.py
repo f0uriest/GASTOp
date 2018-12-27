@@ -3,11 +3,7 @@ from matplotlib import style
 import numpy as np
 import json
 
-import Truss
-import Mutator
-import Crossover
-import Selector
-import encoders
+from gastop import Truss, Mutator, Crossover, Selector, encoders
 # plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
 
@@ -79,7 +75,7 @@ class GenAlg():
         new_properties = np.random.randint(self.random_params['num_material_options'],
                                            size=(num_rand_edges))
 
-        return Truss.Truss(user_spec_nodes, new_nodes, new_edges, new_properties)
+        return Truss(user_spec_nodes, new_nodes, new_edges, new_properties)
 
         """
         # Check to see if any nodes are unused: - Decided to move this to the solver if needed
@@ -142,7 +138,7 @@ class GenAlg():
         # pass
 
     def save_state(self, config, dest_config='state_config.txt',
-                                dest_pop='state_population.txt'):  # Cristian
+                   dest_pop='state_population.txt'):  # Cristian
         # Save rng_seed for reloading
         config['random_params']['rng_seed'] = np.random.get_state()
 
@@ -159,7 +155,7 @@ class GenAlg():
             json.dump(pop_dumped, f)
 
     def load_state(self, dest_config='state_config.txt',
-                        dest_pop='state_population.txt'):  # Cristian
+                   dest_pop='state_population.txt'):  # Cristian
         # Load config data
         with open(dest_config, 'r') as f:
             config_loaded = json.load(f)
@@ -169,7 +165,7 @@ class GenAlg():
         with open(dest_pop, 'r') as f:
             pop_loaded = json.load(f)
         population = json.loads(pop_loaded, object_hook=encoders.numpy_decoder)
-        population = (Truss.Truss(**dct) for dct in population)
+        population = (Truss(**dct) for dct in population)
 
         return config, population
 
@@ -205,9 +201,9 @@ class GenAlg():
             raise RuntimeError('Invalid GenAlg parameters.')
 
         # Instantiate objects
-        selector = Selector.Selector(self.selector_params)
-        crossover = Crossover.Crossover(self.crossover_params)
-        mutator = Mutator.Mutator(self.mutate_params)
+        selector = Selector(self.selector_params)
+        crossover = Crossover(self.crossover_params)
+        mutator = Mutator(self.mutate_params)
 
         # Select parents as indices in current population
         crossover_parents = selector(num_crossover, population)
@@ -224,7 +220,7 @@ class GenAlg():
             parent1 = population[parentindex1]
             parent2 = population[parentindex2]
             child1, child2 = crossover(parent1, parent2)
-            pop_crossover.extend((child1,child2))
+            pop_crossover.extend((child1, child2))
 
         # Portion of new population formed by mutation
         pop_mutation = []

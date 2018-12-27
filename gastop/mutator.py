@@ -1,5 +1,5 @@
 import numpy as np
-import Truss
+from gastop import Truss
 
 
 class Mutator():
@@ -59,7 +59,8 @@ class Mutator():
             new_array = (np.rint(new_array)).astype(int)
 
         # new method to handle out of bounds problem: loop around on other side
-        new_array = bounds[0,:] + ((new_array-bounds[0,:]) % (bounds[1,:]-bounds[0,:]))
+        new_array = bounds[0, :] + ((new_array-bounds[0, :]) %
+                                    (bounds[1, :]-bounds[0, :]))
 
         return new_array
 
@@ -89,13 +90,15 @@ class Mutator():
         proportions = bit_flip_params['proportions']
 
         # Random binary matrix with a user-specified ratio of 1s and 0s
-        B = np.random.choice([0, 1], size=parent.shape, p=[1.-proportions, proportions])
+        B = np.random.choice([0, 1], size=parent.shape, p=[
+                             1.-proportions, proportions])
 
         # Random matrix whose elements are chosen randomly within the domain
         M = np.random.uniform(boundaries[0, :], boundaries[1, :], parent.shape)
 
         # Mutating the parent
-        child = np.multiply(B, M)+np.multiply((np.ones(parent.shape)-B), parent)
+        child = np.multiply(
+            B, M)+np.multiply((np.ones(parent.shape)-B), parent)
 
         # Checking for flag to force integer output
         if (bit_flip_params['int_flag'] == True):
@@ -130,7 +133,7 @@ class Mutator():
 
         child = np.copy(parent)
 
-        check = B<A
+        check = B < A
 
         child[check] = np.random.permutation(child[check])
 
@@ -141,7 +144,7 @@ class Mutator():
         edge_method = getattr(self, self.params['edge_mutator_method'])
         property_method = getattr(self, self.params['property_mutator_method'])
         user_spec_nodes = self.params['user_spec_nodes']
-        child = Truss.Truss(user_spec_nodes, 0, 0, 0)
+        child = Truss(user_spec_nodes, 0, 0, 0)
         child.rand_nodes = node_method(
             truss.rand_nodes, self.params['node_mutator_params'])
         child.edges = edge_method(

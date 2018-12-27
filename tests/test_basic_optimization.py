@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
 import unittest
-
 import numpy as np
 import matplotlib.pyplot as plt
-import GenAlg
-import Eval
-import FitnessFunction
+from gastop import GenAlg, Evaluator, FitnessFunction
 
 ga_params = {
     # ga_params
@@ -51,7 +48,7 @@ mutate_params = {
 
 selector_params = {'method': 'inverse_square_rank_probability'}
 properties_df = 0
-evaluator = Eval.Eval(struct_solver='blank_test',
+evaluator = Evaluator(struct_solver='blank_test',
                       mass_solver='blank_test',
                       interferences_solver='blank_test',
                       boundary_conditions=0,
@@ -62,9 +59,9 @@ class TestOptimization(unittest.TestCase):
     def test_rastrigin(self):
         pop_size = 1000
         num_gens = 100
-        fitness_function = FitnessFunction.FitnessFunction('rastrigin', 0)
-        ga = GenAlg.GenAlg(ga_params, mutate_params, random_params, crossover_params, selector_params,
-                           evaluator, fitness_function)
+        fitness_function = FitnessFunction('rastrigin', 0)
+        ga = GenAlg(ga_params, mutate_params, random_params, crossover_params, selector_params,
+                    evaluator, fitness_function)
         ga.initialize_population(pop_size)
         best, progress_history = ga.run(num_gens, 0)
         self.assertAlmostEqual(best.fitness_score, 0, places=2)
@@ -72,9 +69,9 @@ class TestOptimization(unittest.TestCase):
     def test_sphere(self):
         pop_size = 1000
         num_gens = 100
-        fitness_function = FitnessFunction.FitnessFunction('sphere', 0)
-        ga = GenAlg.GenAlg(ga_params, mutate_params, random_params, crossover_params, selector_params,
-                           evaluator, fitness_function)
+        fitness_function = FitnessFunction('sphere', 0)
+        ga = GenAlg(ga_params, mutate_params, random_params, crossover_params, selector_params,
+                    evaluator, fitness_function)
         ga.initialize_population(pop_size)
         best, progress_history = ga.run(num_gens, 0)
         self.assertAlmostEqual(best.fitness_score, 0, places=4)

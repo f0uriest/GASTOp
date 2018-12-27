@@ -1,9 +1,8 @@
 import numpy as np
-import utilities
-import Truss
+from gastop import utilities
 
 
-class Eval():
+class Evaluator():
     # wrapper for structural analysis,
     #
     def __init__(self, struct_solver, mass_solver, interferences_solver, boundary_conditions, properties_dict):

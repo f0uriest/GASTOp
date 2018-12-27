@@ -1,4 +1,3 @@
-import Truss
 import numpy as np
 
 

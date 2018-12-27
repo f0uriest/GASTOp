@@ -4,8 +4,7 @@ import unittest
 import numpy as np
 import random
 
-import Selector
-import Truss
+from gastop import Selector, Truss
 
 
 class TestSelector(unittest.TestCase):  # Cristian
@@ -15,7 +14,7 @@ class TestSelector(unittest.TestCase):  # Cristian
         edges = np.array([[0, 1]])
         properties = np.array([[0, 3]])
         pop_size = int(1e3)
-        population = [Truss.Truss(nodes, nodes, edges, properties)
+        population = [Truss(nodes, nodes, edges, properties)
                       for i in range(pop_size)]
         for truss in population:
             truss.fitness_score = random.random()
@@ -26,7 +25,7 @@ class TestSelector(unittest.TestCase):  # Cristian
         sel_params = {'method': 'inverse_square_rank_probability',
                       'tourn_size': None,
                       'tourn_prob': None}
-        selector = Selector.Selector(sel_params)
+        selector = Selector(sel_params)
 
         num_parents = int(1e6)
         parents = selector(num_parents, population)
@@ -60,7 +59,7 @@ class TestSelector(unittest.TestCase):  # Cristian
         properties = np.array([[0, 3]])
 
         pop_size = int(1e2)
-        population = [Truss.Truss(nodes, nodes, edges, properties)
+        population = [Truss(nodes, nodes, edges, properties)
                       for i in range(pop_size)]
         for truss in population:
             truss.fitness_score = random.random()
@@ -71,7 +70,7 @@ class TestSelector(unittest.TestCase):  # Cristian
         sel_params = {'method': 'tournament',
                       'tourn_size': 25,
                       'tourn_prob': 0.5}
-        selector = Selector.Selector(sel_params)
+        selector = Selector(sel_params)
 
         num_parents = int(1e2)
         parents = selector(num_parents, population)

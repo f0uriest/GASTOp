@@ -13,8 +13,8 @@ class Truss():
     # num_joints: int
     # fitness_score: double
 
-    def __init__(self, user_spec_nodes, rand_nodes, edges, properties,
-    fos=None,deflection=None,mass=None,cost=None,num_joints=None,fitness_score=None):
+    def __init__(self, user_spec_nodes=None, rand_nodes=None, edges=None, properties=None,
+                 fos=None, deflection=None, mass=None, cost=None, num_joints=None, fitness_score=None):
         self.user_spec_nodes = user_spec_nodes
         self.rand_nodes = rand_nodes
         self.edges = edges

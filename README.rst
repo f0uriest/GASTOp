@@ -5,6 +5,9 @@ GASTOp
 .. image:: https://travis-ci.org/f0uriest/GASTOp.svg?branch=dev
     :target: https://travis-ci.org/f0uriest/GASTOp
     :alt: Build Status
+.. image:: https://coveralls.io/repos/github/f0uriest/GASTOp/badge.svg?branch=dev
+    :target: https://coveralls.io/github/f0uriest/GASTOp?branch=dev
+    :alt: Code Coverage
 .. image:: https://readthedocs.org/projects/gastop/badge/?version=latest
     :target: https://gastop.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
@@ -33,18 +36,20 @@ Install gastop by running:
 ::
     pip install gastop
 	
-hopefully, if we ever get that working
+hopefully, if we ever get that working.
+Or, just clone the repo and throw together a random collection of virtualenvs and package interdepencies until it runs without errors.
 
 Contribute
 ----------
 
 - Issue Tracker: `<https://github.com/f0uriest/GASTOp/issues>`_
 - Source Code: `<https://github.com/f0uriest/GASTOp/>`_
-
+- Documentation: `<https://gastop.readthedocs.io/>`_
+  
 Support
 -------
 
-If you are having issues, please go away and figure it out yourself, that's what we're doing
+If you are having issues, please go away and figure it out yourself, that's what we're doing.
 
 License
 -------
