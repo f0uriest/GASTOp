@@ -3,12 +3,20 @@ python:
   - "3.6"
 # command to install dependencies
 install:
+  - pip install pytest
+  - pip install pytest-cov
+  - pip install coveralls
   - pip install numpy
   - pip install matplotlib
   - pip install configobj
+
 # command to run tests
 script:
-  - pytest
+  - pytest --cov .
+
+after_success:
+  - coveralls
+  
 notifications:
     slack:
       rooms:
