@@ -4,26 +4,27 @@ import matplotlib.pyplot as plt
 import configobj
 import ast
 
+
 def beam_file_parser(properties_path):
+    """Parses csv file of beam material properties
+
+    Each line of the properties file denotes one type of beam, with a specified
+    cross section and material properties.
+
+    Property entries should be formatted as:
+    beam #, material name, OD (m), ID (m), elastic_modulus (Pa),
+    yield_strength (Pa), density (kg/m^3), poisson_ratio
+
+    Args:
+        properties_path (str): Path to the properties csv file, relative to
+            the directory GASTOp is being executed from.
+
+    Returns:
+        properties_dict (dict): Dictionary of property values. 
+        Each entry is an ndarray of the key property of each beam. For example, 
+        properties_dict['dens'] is an ndarray of the density of each beam.
+
     """
-    Inputs:
-    - Init file material path
-    - Init file shape,mat,etc
-
-    For each item in the list:
-    Grab the appropriate material info for that member
-    material(self,name,elastic_modulus,yield_strength,density,poisson_ratio,shear_modulus)
-
-
-   Possible Material Properties .csv file (nominally not touched by user)s:
-   Full Name, abreviated_name, E, v, yield strength
-
-   User input file format:
-
-   Possible Members:
-   mat option 1 , c/s 1, inner dim 1, outer dim 1
-   mat option 2 , c/s 2, inner dim 2, outer dim 2
-   """
 
     OD = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=2)
     ID = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=3)
@@ -53,19 +54,20 @@ def beam_file_parser(properties_path):
 
 
 def init_file_parser(init_file_path):  # Cristian
-    ''' Parse init file for input parameters.
+    """Parse init file for input parameters.
 
     Creates ConfigObj object, which reads input parameters as a nested
     dictionary of strings. The string are then converted to their correct types
     using the ConfigObj walk method and a transform function.
 
     Args:
-        init_file_path (string): Path to the init file.
+        init_file_path (string): Path to the init file, relative to
+            the directory GASTOp is being executed from.
 
     Returns:
-        config (ConfigObj object): Nested dicitonary of input parameters as
-            correct types.
-    '''
+        config (ConfigObj object): Nested dicitonary of input parameters.
+
+    """
     # Extract inputs from the file as strings
     config = configobj.ConfigObj(init_file_path)
 
@@ -185,12 +187,14 @@ def cart2sph(x, y, z):
         x,y,z (array like): cartesian coordinates. Arrays must all have same shape
 
     Returns:
-        r (ndarray): radial coordinate, L2 norm of x,y,z vector.
-        theta (ndarray): elevation angle, in radians. Ranges from pi/2 to -pi/2
-            theta = 0 corresponds to a vector in the x-y plane, theta = pi/2
-            along positive z axis.
-        phi (ndarray): azimuthal angle, in radians. Ranges from 0 to 2pi.
-            phi = 0 along positive x axis.
+        3-element tuple containing:
+
+        - **r** (*ndarray*): Radial coordinate. computed as L2 norm of x,y,z vector.
+        - **elev** (*ndarray*):  Elevation angle, in radians. Ranges from pi/2 to
+          -pi/2. Elevation = 0 corresponds to a vector in the x-y plane,
+          elevation = pi/2 corresponds to a vector along positive z axis.
+        - **azim** (*ndarray*): Azimuth angle, in radians. ranges from 0 to 2pi. 
+          Azimuth = 0 along the positive x axis.
     """
 
     x = np.array(x)
@@ -198,10 +202,10 @@ def cart2sph(x, y, z):
     z = np.array(z)
 
     r = np.sqrt(x**2+y**2+z**2)
-    phi = np.arctan2(y, x)
-    theta = np.pi/2 - np.arccos(z/r)
+    azim = np.arctan2(y, x)
+    elev = np.pi/2 - np.arccos(z/r)
 
-    return r, theta, phi
+    return r, elev, azim
 
 
 def truss_plot(truss, domain=None, loads=None, fixtures=None):
