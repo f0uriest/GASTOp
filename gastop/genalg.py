@@ -22,23 +22,6 @@ class GenAlg():
     until a final solution is reached.
 
     """
-    # Attributes:
-    # Envelop Dimensions
-    # Parameters needed for the GA
-
-    # Random:
-    # num_rand_nodes: int, average num of nodes to randomly generate
-    # num_rand_edges: int, average num of edges to randomly generate
-    # domain: tuple of tuples, envelope dimensions (xmin,xmax;ymin,ymax;zmin,zmax)
-
-    # Crossover
-    # crossover_fraction: float (0->1), what ratio of each parent should be taken
-    # split_method: flag that says which parent to prefer. TO BE DETERMINED LATER
-
-    # Mutation:
-    # stat_stdev_nodes: double, statistical standard deviation on number of nodes that should be generated
-    # stat_stdev_edges: float (0->1), chance that a new node is assigned to one end
-    # stat_stdev_matl: float (0->1) chance that a new material is assigned
 
     def __init__(self, ga_params, mutate_params, random_params, crossover_params, selector_params,
                  evaluator, fitness_function):
@@ -73,7 +56,6 @@ class GenAlg():
         self.population = None
         self.evaluator = evaluator
         self.fitness_function = fitness_function
-        # ********
 
         # progress monitor stuff
         self.pop_progress = []  # initialize as empty array
