@@ -7,7 +7,10 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import json
 
+#from gastop import GenAlg, Truss, Evaluator, FitnessFunction, utilities
+
 from gastop import GenAlg, Truss, Evaluator, FitnessFunction, utilities
+
 
 # Parse input paramters from init.txt file
 init_file_path = 'gastop-config/struct_making_test_init.txt'
