@@ -6,6 +6,7 @@ from tqdm import tqdm #susan added
 from multiprocessing import Pool
 import os
 
+
 from gastop import Truss, Mutator, Crossover, Selector, encoders
 # plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
@@ -162,8 +163,10 @@ class GenAlg():
             plt.xlabel('iteration')
         #
 
-        # Try 1: time =
         # Loop over all generations:
+
+        # Without any parallelization:
+        # # Try 1: time =
         #for current_gen in range(num_generations): sfr
         for current_gen in tqdm(range(num_generations)):
             for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
@@ -178,9 +181,11 @@ class GenAlg():
             plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         return self.population[0], self.pop_progress
 
-        # # Try 2: time =
+        # With parallelization
+        # Try 2: time =
         # for current_gen in range(num_generations):
         #     p = Pool()
+        #     pool.map(self.generate_random)
         #     for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
         #         # Run evaluator method. Will store results in Truss Object
         #         self.evaluator(current_truss)
