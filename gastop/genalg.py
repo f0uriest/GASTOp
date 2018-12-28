@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import numpy as np
 import json
+from tqdm import tqdm #susan added
 
 from gastop import Truss, Mutator, Crossover, Selector, encoders
 # plt.ion() #look into multithreading this
@@ -139,7 +140,8 @@ class GenAlg():
         #
 
         # Loop over all generations:
-        for current_gen in range(num_generations):
+        #for current_gen in range(num_generations): sfr
+        for current_gen in tqdm(range(num_generations)):
             for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
                 # Run evaluator method. Will store results in Truss Object
                 self.evaluator(current_truss)
