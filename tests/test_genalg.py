@@ -71,7 +71,7 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
         ga.initialize_population(pop_size)
 
         # Save and reload
-        ga.save_state(config)
+        ga.save_state()
         config, population = ga.load_state()
 
         # Test config

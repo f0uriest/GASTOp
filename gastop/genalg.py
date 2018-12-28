@@ -231,11 +231,12 @@ class GenAlg():
 
         # pass
 
-    def save_state(self, config, dest_config='save_config.json',
+    def save_state(self, dest_config='save_config.json',
                    dest_pop='save_population.json'):  # Cristian
         # Save rng_seed for reloading
-        config['random_params']['rng_seed'] = np.random.get_state()
+        self.config['random_params']['rng_seed'] = np.random.get_state()
 
+        config = self.config
         population = self.population
 
         # Save config data
