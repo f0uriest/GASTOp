@@ -5,6 +5,9 @@ import Truss
 import Mutator
 import Crossover
 import Selector
+
+from tqdm import tqdm #susan added
+
 ##plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
 
@@ -26,6 +29,9 @@ class GenAlg():
     # stat_stdev_nodes: double, statistical standard deviation on number of nodes that should be generated
     # stat_stdev_edges: float (0->1), chance that a new node is assigned to one end
     # stat_stdev_matl: float (0->1) chance that a new material is assigned
+
+
+
 
 
     def __init__(self,ga_params,mutate_params,random_params,crossover_params,selector_params,
@@ -99,7 +105,9 @@ class GenAlg():
             plt.xlabel('iteration')
         #
 
-        for current_gen in range(num_generations): # Loop over all generations:
+        #for current_gen in range(num_generations): # Loop over all generations:
+        for current_gen in tqdm(range(num_generations)): # Loop over all generations:
+
             for current_truss in self.population: # Loop over all trusses -> PARALLELIZE. Later
                 #self.evaluator(self.population(current_truss)) # Run evaluator method. Will store results in Truss Object
                 self.fitness_function(current_truss) # Assigns numerical score to each truss
@@ -115,7 +123,9 @@ class GenAlg():
         fitscore = [i.fitness_score for i in self.population] #extract factor of safety from each truss object in population
         self.pop_progress.append(self.population) #append to history
         if progress_display == 1:
-            print(current_gen,min(fitscore))
+            #print(current_gen,min(fitscore))
+            test = min(fitscore)
+            #pass
         elif progress_display == 2:
             #print(current_gen,min(fitscore))
             ax1.scatter(current_gen,min(fitscore),c=[0,0,0]) #plot minimum fitscore for current gen in black

@@ -10,6 +10,8 @@ import Truss
 import Eval
 import FitnessFunction
 import Boundaries
+from tqdm import tqdm #susan added
+import time
 
 
 # Specify set-up things
@@ -91,6 +93,40 @@ class TestGenAlg_Dan(unittest.TestCase):
 
 
 class TestGenAlg_SFR(unittest.TestCase):
+
+    def testProgressBar(self):
+        #this doesnt quite work yet, showing all progress bars at the end instead of iteratively
+
+        nodes = np.array([[1,2,3],[2,3,4]])
+        edges = np.array([[0,1]])
+        properties = np.array([[0,3]])
+
+        pop_size = 10
+        population = [Truss.Truss(nodes,edges,properties) for i in range(pop_size)]
+
+        for truss in population:
+            truss.fitness_score = np.random.random()
+
+        population.sort(key=lambda x: x.fitness_score)
+                # print([x.fitness_score for x in population])
+
+        GA = GenAlg.GenAlg(0,0,0,0,0,0,0,0)#put zeros in here
+
+        GA.population = population
+        progress_display = 1
+        #dumb GA run
+        ax1 = []
+        num_generations = 20
+        #t = tqdm(total=num_generations,leave=False)
+        for current_gen in tqdm(range(num_generations)): # Loop over all generations:
+            GA.progress_monitor(current_gen,progress_display,ax1)
+            #t.update(current_gen)
+            time.sleep(0.05)
+            for truss in GA.population:
+                #truss.fos = np.random.random()
+                truss.fitness_score = truss.fitness_score + 5.0
+        #t.close()
+        return GA.population[0], GA.pop_progress
 
     def testProgressPlot(self):
 
