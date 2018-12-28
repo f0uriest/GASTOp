@@ -70,20 +70,16 @@ class GenAlg():
         # new_nodes = np.concatenate((nn1,nn2,nn3),axis=1)
 
         # Try 3: Time: 0.451
-        new_nodes = np.empty([num_rand_nodes,3])
-        for j in range(3):
-            new_nodes[:,j] = np.random.rand(num_rand_nodes)*Ranges[j] + domain[0][j]
+        # new_nodes = np.empty([num_rand_nodes,3])
+        # for j in range(3):
+        #     new_nodes[:,j] = np.random.rand(num_rand_nodes)*Ranges[j] + domain[0][j]
 
+        # Try 4: Time: 0.433!
+        new_nodes = np.random.uniform(domain[0],domain[1],(num_rand_nodes,3))
 
         # 2nd, generate the new edges between the nodes:
         new_edges = np.random.randint(num_rand_nodes + num_user_spec_nodes,
                                       size=(num_rand_edges, 2))
-        for j in range(num_rand_edges):
-            # Check that the indexs are not the same:
-            if new_edges[j][0] == new_edges[j][1]:
-                new_edges[j][0] = -1
-                new_edges[j][1] = -1
-
 
         new_properties = np.random.randint(self.random_params['num_material_options'],
                                            size=(num_rand_edges))
