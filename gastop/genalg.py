@@ -3,6 +3,9 @@ from matplotlib import style
 import numpy as np
 import json
 from tqdm import tqdm #susan added
+from multiprocessing import Pool
+import os
+
 
 from gastop import Truss, Mutator, Crossover, Selector, encoders
 # plt.ion() #look into multithreading this
@@ -54,7 +57,7 @@ class GenAlg():
         self.random_params = random_params
         self.crossover_params = crossover_params
         self.selector_params = selector_params
-        self.population = None
+        self.population = []
         self.evaluator = evaluator
         self.fitness_function = fitness_function
 
@@ -64,7 +67,7 @@ class GenAlg():
         # [0,1,2] = [no display, terminal display, plot display], change to text later
         np.random.seed(0)
 
-    def generate_random(self):  # Dan
+    def generate_random(self,_):  # Dan
         '''Generates and returns new truss objects with random properties
 
         The random method first determines the desired ranges of all values
@@ -117,7 +120,6 @@ class GenAlg():
 
         return Truss(user_spec_nodes, new_nodes, new_edges, new_properties)
 
-
     def initialize_population(self, pop_size):
         '''Initializes population with randomly creates Truss objects
 
@@ -128,7 +130,29 @@ class GenAlg():
             Updated self.population
         '''
         self.ga_params['pop_size'] = pop_size
-        self.population = [self.generate_random() for i in range(pop_size)]
+
+        # Try 1: t= 0.298
+        # self.population = [self.generate_random() for i in range(pop_size)]
+
+        # Try 2: t= 0.352
+        # pool = Pool()
+        # result_list = [pool.map_async(self.generate_random, ()) for i in range(pop_size)]
+        #
+        # self.population = [res.get() for res in result_list]
+
+        # Try 3: t=0.343
+        # pool = Pool()
+        # pool.map_async(self.generate_random, range(pop_size),callback=self.population.extend)
+        # pool.close()
+        # pool.join()
+
+        # Try 4: t=0.232
+        pool = Pool()
+        self.population = pool.map(self.generate_random, range(pop_size))
+        pool.close()
+        pool.join()
+
+
 
     def run(self, num_generations, progress_display):
         if progress_display == 2:  # check if figure method of progress monitoring is requested
@@ -140,6 +164,9 @@ class GenAlg():
         #
 
         # Loop over all generations:
+
+        # Without any parallelization:
+        # # Try 1: time =
         #for current_gen in range(num_generations): sfr
         for current_gen in tqdm(range(num_generations)):
             for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
@@ -153,6 +180,23 @@ class GenAlg():
         if progress_display == 2:
             plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         return self.population[0], self.pop_progress
+
+        # With parallelization
+        # Try 2: time =
+        # for current_gen in range(num_generations):
+        #     p = Pool()
+        #     pool.map(self.generate_random)
+        #     for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
+        #         # Run evaluator method. Will store results in Truss Object
+        #         self.evaluator(current_truss)
+        #         # Assigns numerical score to each truss
+        #         self.fitness_function(current_truss)
+        #     if progress_display == 2:
+        #         self.progress_monitor(current_gen, progress_display, ax1)
+        #     self.update_population()  # Determine which members to
+        # if progress_display == 2:
+        #     plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+        # return self.population[0], self.pop_progress
 
     def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
         # three options: plot, progress bar ish thing, no output just append
@@ -272,7 +316,7 @@ class GenAlg():
             pop_mutation.append(child)
 
         # Create new random trusses with remaining spots in generation
-        pop_random = [self.generate_random() for i in range(num_random)]
+        pop_random = [self.generate_random(2) for i in range(num_random)]
 
         # Append separate lists to form new generation
         population = pop_elite + pop_crossover + pop_mutation + pop_random

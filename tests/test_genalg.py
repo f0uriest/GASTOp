@@ -6,6 +6,11 @@ import numpy.testing as npt
 import matplotlib.pyplot as plt
 from matplotlib import style
 import json
+import sys
+#sys.path.append('../')
+#sys.path.append('.')
+#print(sys.path)
+
 
 #from gastop import GenAlg, Truss, Evaluator, FitnessFunction, utilities
 

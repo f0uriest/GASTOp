@@ -9,14 +9,14 @@ install:
   - pip install numpy
   - pip install matplotlib
   - pip install configobj
-
+  - pip install tqdm
 # command to run tests
 script:
   - python -m pytest --cov=gastop/
 
 after_success:
   - coveralls
-  
+
 notifications:
     slack:
       rooms:
