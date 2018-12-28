@@ -218,8 +218,8 @@ class GenAlg():
 
         # pass
 
-    def save_state(self, config, dest_config='state_config.txt',
-                   dest_pop='state_population.txt'):  # Cristian
+    def save_state(self, config, dest_config='save_config.json',
+                   dest_pop='save_population.json'):  # Cristian
         # Save rng_seed for reloading
         config['random_params']['rng_seed'] = np.random.get_state()
 
@@ -235,8 +235,8 @@ class GenAlg():
             pop_dumped = json.dumps(population, cls=encoders.PopulationEncoder)
             json.dump(pop_dumped, f)
 
-    def load_state(self, dest_config='state_config.txt',
-                   dest_pop='state_population.txt'):  # Cristian
+    def load_state(self, dest_config='save_config.json',
+                   dest_pop='save_population.json'):  # Cristian
         # Load config data
         with open(dest_config, 'r') as f:
             config_loaded = json.load(f)
