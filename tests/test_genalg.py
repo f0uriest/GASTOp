@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import json
 import sys
+from tqdm import tqdm
+import time
 #sys.path.append('../')
 #sys.path.append('.')
 #print(sys.path)
@@ -126,13 +128,14 @@ class TestGenAlg_Dan(unittest.TestCase):
 class TestGenAlg_SFR(unittest.TestCase):
     def testProgressBar(self):
         #this doesnt quite work yet, showing all progress bars at the end instead of iteratively
+        user_spec_nodes = np.array([[]]).reshape(0, 3)
 
         nodes = np.array([[1,2,3],[2,3,4]])
         edges = np.array([[0,1]])
         properties = np.array([[0,3]])
 
         pop_size = 10
-        population = [Truss.Truss(nodes,edges,properties) for i in range(pop_size)]
+        population = [Truss(user_spec_nodes,nodes,edges,properties) for i in range(pop_size)]
 
         for truss in population:
             truss.fitness_score = np.random.random()
@@ -140,7 +143,7 @@ class TestGenAlg_SFR(unittest.TestCase):
         population.sort(key=lambda x: x.fitness_score)
                 # print([x.fitness_score for x in population])
 
-        GA = GenAlg.GenAlg(0,0,0,0,0,0,0,0)#put zeros in here
+        GA = GenAlg(0,0,0,0,0,0,0)#put zeros in here
 
         GA.population = population
         progress_display = 1
