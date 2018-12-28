@@ -348,3 +348,4 @@ class Evaluator():
         truss.fos = fos
         truss.deflection = deflection
         truss.mass = mass
+        return truss

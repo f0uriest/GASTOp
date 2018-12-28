@@ -13,7 +13,7 @@ num_gens = config['ga_params']['num_generations']
 # Create the Genetic Algorithm Object
 ga = GenAlg(config)
 ga.initialize_population(pop_size)
-best, progress_history = ga.run(num_gens, 2)
+best, progress_history = ga.run(num_gens, 1)
 
 
 print(best.rand_nodes)
