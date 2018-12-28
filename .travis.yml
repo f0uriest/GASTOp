@@ -3,10 +3,23 @@ python:
   - "3.6"
 # command to install dependencies
 install:
+  - pip install pytest
+  - pip install pytest-cov
+  - pip install coveralls
   - pip install numpy
   - pip install matplotlib
+  - pip install configobj
+
 # command to run tests
 script:
-  - pytest
+  - python -m pytest --cov=gastop/
+
+after_success:
+  - coveralls
+  
 notifications:
-    slack: princetonmae:MyikIXs3nE7eGCiIODO5VDxK
+    slack:
+      rooms:
+        - princetonmae:MyikIXs3nE7eGCiIODO5VDxK
+      on_failure: always
+      on_success: change

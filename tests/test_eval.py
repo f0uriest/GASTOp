@@ -1,32 +1,30 @@
 #!/usr/bin/env python3
-
-import numpy as np
-import Truss
 import unittest
-import Eval
-import Boundaries
-import utilities
+import numpy as np
+from gastop import Truss, Evaluator, utilities
 
 
-class TestEval(unittest.TestCase):
+class TestEvaluator(unittest.TestCase):
 
     def test_axial_load(self):
         """Tests simple straight beam under axial forces"""
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = 0
+        matl = np.array([[0]])
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(rand_nodes, edges, properties)
-        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]])
-        load = np.array([[0, 0, 0, 0, 0, 0], [p, 0, 0, 0, 0, 0]])
-        beam_dict = utilities.beam_file_parser('properties.csv')
-        bdry = Boundaries.Boundaries(user_spec_nodes, load, dof)
-        evaluator = Eval.Eval('mat_struct_analysis_DSM',
-                              'mass_basic', None, bdry, beam_dict)
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
+        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]]
+                       ).reshape(2, 6, 1)
+        load = np.array(
+            [[0, 0, 0, 0, 0, 0], [p, 0, 0, 0, 0, 0]]).reshape(2, 6, 1)
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
+        bdry = {'loads': load, 'fixtures': dof}
+        evaluator = Evaluator('mat_struct_analysis_DSM',
+                              'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -49,18 +47,20 @@ class TestEval(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = 0
+        matl = np.array([[0]])
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(rand_nodes, edges, properties)
-        dof = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]])
-        load = np.array([[0, 0, 0, 0, 0, 0], [p, 0, 0, 0, 0, 0]])
-        beam_dict = utilities.beam_file_parser('properties.csv')
-        bdry = Boundaries.Boundaries(user_spec_nodes, load, dof)
-        evaluator = Eval.Eval('mat_struct_analysis_DSM',
-                              'mass_basic', None, bdry, beam_dict)
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
+        dof = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]
+                       ).reshape(2, 6, 1)
+        load = np.array(
+            [[0, 0, 0, 0, 0, 0], [p, 0, 0, 0, 0, 0]]).reshape(2, 6, 1)
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
+        bdry = {'loads': load, 'fixtures': dof}
+        evaluator = Evaluator('mat_struct_analysis_DSM',
+                              'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
         fos_true = 0
 
@@ -69,7 +69,7 @@ class TestEval(unittest.TestCase):
     def test_combined_load(self):
         """Tests beam under combined loading
 
-        Beam is fixed at one end, and loads applied at the other, 
+        Beam is fixed at one end, and loads applied at the other,
         creating bending moment, torsion and shear forces.
         From Shigley's Mechanical Engineering Design, 10th ed, pp 247-248
         """
@@ -77,18 +77,20 @@ class TestEval(unittest.TestCase):
         f = 1750  # transverse load in newtons
         T = 72  # torsion in newton-meters
         L = .12  # length in meters
-        matl = 4
+        matl = np.array([[4]])
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(rand_nodes, edges, properties)
-        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]])
-        load = np.array([[0, 0, 0, 0, 0, 0], [p, -f, 0, -T, 0, 0]])
-        beam_dict = utilities.beam_file_parser('properties.csv')
-        bdry = Boundaries.Boundaries(user_spec_nodes, load, dof)
-        evaluator = Eval.Eval('mat_struct_analysis_DSM',
-                              'mass_basic', None, bdry, beam_dict)
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
+        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]]
+                       ).reshape(2, 6, 1)
+        load = np.array(
+            [[0, 0, 0, 0, 0, 0], [p, -f, 0, -T, 0, 0]]).reshape(2, 6, 1)
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
+        bdry = {'loads': load, 'fixtures': dof}
+        evaluator = Evaluator('mat_struct_analysis_DSM',
+                              'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -109,24 +111,24 @@ class TestEval(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = 0
+        matl = np.array([[0]])
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0],
                                     [L, 0, 0],
                                     [0, 0, L]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(rand_nodes, edges, properties)
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
         dof = np.array([[1, 1, 1, 1, 1, 1],
                         [0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0]])
+                        [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
         load = np.array([[0, 0, 0, 0, 0, 0],
                          [p, 0, 0, 0, 0, 0],
-                         [p, 0, 0, 0, 0, 0]])
-        beam_dict = utilities.beam_file_parser('properties.csv')
-        bdry = Boundaries.Boundaries(user_spec_nodes, load, dof)
-        evaluator = Eval.Eval('mat_struct_analysis_DSM',
-                              'mass_basic', None, bdry, beam_dict)
+                         [p, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
+        bdry = {'loads': load, 'fixtures': dof}
+        evaluator = Evaluator('mat_struct_analysis_DSM',
+                              'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
         fos_true = 0
 
@@ -141,24 +143,24 @@ class TestEval(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = 2
+        matl = np.array([[2]])
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0],
                                     [L, 0, 0],
                                     [0, L, 0]])
         edges = np.array([[0, 1]])
         properties = np.array([matl])
-        truss = Truss.Truss(rand_nodes, edges, properties)
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
         dof = np.array([[1, 1, 1, 1, 1, 1],
                         [0, 0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0, 0]])
+                        [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
         load = np.array([[0, 0, 0, 0, 0, 0],
                          [p, 0, 0, 0, 0, 0],
-                         [0, 0, 0, 0, 0, 0]])
-        beam_dict = utilities.beam_file_parser('properties.csv')
-        bdry = Boundaries.Boundaries(user_spec_nodes, load, dof)
-        evaluator = Eval.Eval('mat_struct_analysis_DSM',
-                              'mass_basic', None, bdry, beam_dict)
+                         [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
+        bdry = {'loads': load, 'fixtures': dof}
+        evaluator = Evaluator('mat_struct_analysis_DSM',
+                              'mass_basic', 'blank_test', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -168,6 +170,35 @@ class TestEval(unittest.TestCase):
         np.testing.assert_almost_equal(
             truss.mass, A*L*beam_dict['density'][matl])
         np.testing.assert_array_almost_equal(truss.fos, fos_true)
+
+    # def test_fixtures(self):
+    #     """Tests applied loads with various dof fixed"""
+
+    #     p = 10000  # load in newtons
+    #     L = 1  # length in meters
+    #     matl = 2
+    #     rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
+    #     user_spec_nodes = np.array([[0, 1, 0],
+    #                                 [L, 0, 0],
+    #                                 [0, -1, 0]])
+    #     edges = np.array([[0, 1], [2, 1]])
+    #     properties = matl*np.ones((edges.shape[0], 1)).astype(int)
+    #     truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
+    #     dof = np.array([[1, 1, 1, 0, 0, 0],
+    #                     [0, 0, 0, 0, 0, 0],
+    #                     [1, 1, 1, 0, 0, 0]]).reshape(3, 6, 1)
+    #     load = np.array([[0, 0, 0, 0, 0, 0],
+    #                      [0, 0, p, 0, 0, 0],
+    #                      [0, 0, 0, 0, 0, 0]]).reshape(3, 6, 1)
+    #     beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
+    #     bdry = {'loads': load, 'fixtures': dof}
+    #     evaluator = Evaluator('mat_struct_analysis_DSM',
+    #                           'mass_basic', 'blank_test', bdry, beam_dict)
+    #     evaluator(truss)
+
+    #     fos_true = np.zeros((edges.shape[0], 1))
+
+    #     np.testing.assert_array_almost_equal(truss.fos, fos_true)
 
 
 if __name__ == '__main__':

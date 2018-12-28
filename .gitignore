@@ -5,3 +5,6 @@
 __pycache__/
 *#
 .coverage
+state_*.txt
+docs/_build
+docs/_static
