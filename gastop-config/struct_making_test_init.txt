@@ -22,6 +22,7 @@ mass_solver = mass_basic
 interferences_solver = blank_test
 
 [ga_params]
+num_threads = 4
 pop_size = 1000
 num_generations = 30
 num_elite =
@@ -29,7 +30,7 @@ percent_mutation =
 percent_crossover = 
 
 [monitor_params]
-progress_display = 2
+progress_display = 1
 
 
 
