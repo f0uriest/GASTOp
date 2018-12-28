@@ -68,7 +68,7 @@ class TestOptimization(unittest.TestCase):
         config['fitness_params'] = {'equation': 'rastrigin'}
         ga = GenAlg(config)
         ga.initialize_population(pop_size)
-        best, progress_history = ga.run(num_gens, 0)
+        best, progress_history = ga.run(num_gens, 0, num_threads=4)
         self.assertAlmostEqual(best.fitness_score, 0, places=2)
 
     def test_sphere(self):
@@ -77,7 +77,7 @@ class TestOptimization(unittest.TestCase):
         config['fitness_params'] = {'equation': 'sphere'}
         ga = GenAlg(config)
         ga.initialize_population(pop_size)
-        best, progress_history = ga.run(num_gens, 0)
+        best, progress_history = ga.run(num_gens, 0, num_threads=4)
         self.assertAlmostEqual(best.fitness_score, 0, places=4)
 
 
