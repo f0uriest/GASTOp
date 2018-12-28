@@ -166,14 +166,15 @@ class GenAlg():
         # Loop over all generations:
 
         # Without any parallelization:
-        # # Try 1: time =
-        #for current_gen in range(num_generations): sfr
+        # Try 1: time =
         for current_gen in tqdm(range(num_generations)):
             for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
-                # Run evaluator method. Will store results in Truss Object
+                # Run evaluator method. Will store refitness_scoresults in Truss Object
                 self.evaluator(current_truss)
                 # Assigns numerical score to each truss
                 self.fitness_function(current_truss)
+                #print(current_truss.fos)
+
             if progress_display == 2:
                 self.progress_monitor(current_gen, progress_display, ax1)
             self.update_population()  # Determine which members to
@@ -182,15 +183,27 @@ class GenAlg():
         return self.population[0], self.pop_progress
 
         # With parallelization
-        # Try 2: time =
+        # # Try 2: time =
         # for current_gen in range(num_generations):
-        #     p = Pool()
-        #     pool.map(self.generate_random)
+        #     # pool = Pool(1)
+        #     # pool.map(self.evaluator, [ct for ct in self.population])
+        #     # pool.close()
+        #     # pool.join()
+        #
         #     for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
-        #         # Run evaluator method. Will store results in Truss Object
-        #         self.evaluator(current_truss)
-        #         # Assigns numerical score to each truss
-        #         self.fitness_function(current_truss)
+        #          # Run evaluator method. Will store results in Truss Object
+        #          self.evaluator(current_truss)
+        #          # self.fitness_function(current_truss)
+        #
+        #     pool = Pool(1)
+        #     pool.map(self.fitness_function, (ct for ct in self.population))
+        #     pool.close()
+        #     pool.join()
+        #
+        #     #for current_truss in self.population:
+        #         #print(current_truss.fitness_score)
+        #
+        #
         #     if progress_display == 2:
         #         self.progress_monitor(current_gen, progress_display, ax1)
         #     self.update_population()  # Determine which members to
