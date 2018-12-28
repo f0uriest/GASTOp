@@ -2,12 +2,29 @@
 
 
 .. toctree::
-   :caption: GASTOp Documentation
+   :caption: GASTOp Quickstart
    :maxdepth: 2
 
    installation
    usage
-   source/gastop
+
+.. toctree::
+   :caption: GASTOp Documentation
+   :maxdepth: 2
+
+   source/Crossover
+   source/Evaluator
+   source/Fitness
+   source/GenAlg
+   source/Mutator
+   source/Selector
+   source/Truss
+   source/encoders
+   source/utilities
+
+
+
+
 
 
 
@@ -15,5 +32,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
