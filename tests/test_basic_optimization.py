@@ -34,7 +34,7 @@ crossover_params = {
 
 }
 
-mutate_params = {
+mutator_params = {
     'node_mutator_method': 'gaussian',
     'edge_mutator_method': 'pseudo_bit_flip',
     'property_mutator_method': 'gaussian',
@@ -47,21 +47,26 @@ mutate_params = {
 }
 
 selector_params = {'method': 'inverse_square_rank_probability'}
-properties_df = 0
-evaluator = Evaluator(struct_solver='blank_test',
-                      mass_solver='blank_test',
-                      interferences_solver='blank_test',
-                      boundary_conditions=0,
-                      properties_dict=0)
+evaluator_params = {'struct_solver': 'blank_test',
+                    'mass_solver': 'blank_test',
+                    'interferences_solver': 'blank_test',
+                    'boundary_conditions': 0,
+                    'properties_dict': 0}
+
+config = {'ga_params': ga_params,
+          'random_params': random_params,
+          'mutator_params': mutator_params,
+          'crossover_params': crossover_params,
+          'selector_params': selector_params,
+          'evaluator_params': evaluator_params}
 
 
 class TestOptimization(unittest.TestCase):
     def test_rastrigin(self):
         pop_size = 1000
         num_gens = 100
-        fitness_function = FitnessFunction('rastrigin', 0)
-        ga = GenAlg(ga_params, mutate_params, random_params, crossover_params, selector_params,
-                    evaluator, fitness_function)
+        config['fitness_params'] = {'equation': 'rastrigin'}
+        ga = GenAlg(config)
         ga.initialize_population(pop_size)
         best, progress_history = ga.run(num_gens, 0)
         self.assertAlmostEqual(best.fitness_score, 0, places=2)
@@ -69,9 +74,8 @@ class TestOptimization(unittest.TestCase):
     def test_sphere(self):
         pop_size = 1000
         num_gens = 100
-        fitness_function = FitnessFunction('sphere', 0)
-        ga = GenAlg(ga_params, mutate_params, random_params, crossover_params, selector_params,
-                    evaluator, fitness_function)
+        config['fitness_params'] = {'equation': 'sphere'}
+        ga = GenAlg(config)
         ga.initialize_population(pop_size)
         best, progress_history = ga.run(num_gens, 0)
         self.assertAlmostEqual(best.fitness_score, 0, places=4)

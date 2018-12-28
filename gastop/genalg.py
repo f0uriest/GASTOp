@@ -2,12 +2,12 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import numpy as np
 import json
-from tqdm import tqdm #susan added
+from tqdm import tqdm  # susan added
 from multiprocessing import Pool
 import os
 
 
-from gastop import Truss, Mutator, Crossover, Selector, encoders
+from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders
 # plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
 
@@ -27,8 +27,7 @@ class GenAlg():
 
     """
 
-    def __init__(self, ga_params, mutate_params, random_params, crossover_params, selector_params,
-                 evaluator, fitness_function):
+    def __init__(self, config=None, config_file_path=None):
         """Creates a GenAlg object
 
         Once created, the object will store all of the relavant information
@@ -37,29 +36,27 @@ class GenAlg():
         the next generation.
 
         Args:
-            ga_params (dict): Dictionary of parameters needed for the core
-                functionality of the genetic algorithm
-            mutate_params (dict): Dictionary of parameters for mutation
-            random_params (dict): Dictionary of parameters for random mutation
-            crossover_params (dict): Dictionary of parameters for crossover
-            selector_params (dict): Dictionary of parameters for selecting good
-                members of the population
-            evaluator (dict): Dictionary of parameters for evaluating which
-                members of the population have 'good' results
-            fitness_function (dict): Dictionary of parameters for evaluating the
-                fitness of a members
+            config (dict): Configuration dictionary with parameters, such as one 
+                created by ``utilities.init_file_parser``.
+            config_file_path (str): File path to config file to be parsed. Used
+                instead of passing config dictionary directly. If both are supplied,
+                config dictionary takes precedence.
 
         Returns:
             GenAlg callable object
         """
-        self.ga_params = ga_params
-        self.mutate_params = mutate_params
-        self.random_params = random_params
-        self.crossover_params = crossover_params
-        self.selector_params = selector_params
+        if config is None:
+            config = config = utilities.init_file_parser(config_file_path)
+
+        self.config = config
+        self.ga_params = config['ga_params']
+        self.mutator_params = config['mutator_params']
+        self.random_params = config['random_params']
+        self.crossover_params = config['crossover_params']
+        self.selector_params = config['selector_params']
         self.population = []
-        self.evaluator = evaluator
-        self.fitness_function = fitness_function
+        self.evaluator = Evaluator(**config['evaluator_params'])
+        self.fitness_function = FitnessFunction(**config['fitness_params'])
 
         # progress monitor stuff
         self.pop_progress = []  # initialize as empty array
@@ -67,7 +64,7 @@ class GenAlg():
         # [0,1,2] = [no display, terminal display, plot display], change to text later
         np.random.seed(0)
 
-    def generate_random(self,_):  # Dan
+    def generate_random(self, _):  # Dan
         '''Generates and returns new truss objects with random properties
 
         The random method first determines the desired ranges of all values
@@ -109,7 +106,8 @@ class GenAlg():
         #     new_nodes[:,j] = np.random.rand(num_rand_nodes)*Ranges[j] + domain[0][j]
 
         # Try 4: Time: 0.433!
-        new_nodes = np.random.uniform(domain[0],domain[1],(num_rand_nodes,3))
+        new_nodes = np.random.uniform(
+            domain[0], domain[1], (num_rand_nodes, 3))
 
         # 2nd, generate the new edges between the nodes:
         new_edges = np.random.randint(num_rand_nodes + num_user_spec_nodes,
@@ -152,8 +150,6 @@ class GenAlg():
         pool.close()
         pool.join()
 
-
-
     def run(self, num_generations, progress_display):
         if progress_display == 2:  # check if figure method of progress monitoring is requested
             # initialize plot:
@@ -166,7 +162,12 @@ class GenAlg():
         # Loop over all generations:
 
         # Without any parallelization:
+<<<<<<< HEAD
         # Try 1: time =
+=======
+        # # Try 1: time =
+        # for current_gen in range(num_generations): sfr
+>>>>>>> dd4de6fbc8165e7fe1db1df85e51f189fbc0f40c
         for current_gen in tqdm(range(num_generations)):
             for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
                 # Run evaluator method. Will store refitness_scoresults in Truss Object
@@ -235,8 +236,8 @@ class GenAlg():
 
         # pass
 
-    def save_state(self, config, dest_config='state_config.txt',
-                   dest_pop='state_population.txt'):  # Cristian
+    def save_state(self, config, dest_config='save_config.json',
+                   dest_pop='save_population.json'):  # Cristian
         # Save rng_seed for reloading
         config['random_params']['rng_seed'] = np.random.get_state()
 
@@ -252,8 +253,8 @@ class GenAlg():
             pop_dumped = json.dumps(population, cls=encoders.PopulationEncoder)
             json.dump(pop_dumped, f)
 
-    def load_state(self, dest_config='state_config.txt',
-                   dest_pop='state_population.txt'):  # Cristian
+    def load_state(self, dest_config='save_config.json',
+                   dest_pop='save_population.json'):  # Cristian
         # Load config data
         with open(dest_config, 'r') as f:
             config_loaded = json.load(f)
@@ -301,7 +302,7 @@ class GenAlg():
         # Instantiate objects
         selector = Selector(self.selector_params)
         crossover = Crossover(self.crossover_params)
-        mutator = Mutator(self.mutate_params)
+        mutator = Mutator(self.mutator_params)
 
         # Select parents as indices in current population
         crossover_parents = selector(num_crossover, population)

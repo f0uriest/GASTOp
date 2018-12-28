@@ -12,7 +12,7 @@ class FitnessFunction():
     from the class may also be called directly.
     """
 
-    def __init__(self, equation, parameters):
+    def __init__(self, equation, parameters=None):
         """Creates a FitnessFunction object
 
         Once created, the object acts like a function and can be called on a Truss

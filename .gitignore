@@ -5,6 +5,6 @@
 __pycache__/
 *#
 .coverage
-state_*.txt
+save_*.json
 docs/_build
 docs/_static

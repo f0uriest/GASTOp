@@ -7,9 +7,11 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import json
 import sys
-#sys.path.append('../')
-#sys.path.append('.')
-#print(sys.path)
+from tqdm import tqdm
+import time
+# sys.path.append('../')
+# sys.path.append('.')
+# print(sys.path)
 
 
 #from gastop import GenAlg, Truss, Evaluator, FitnessFunction, utilities
@@ -21,16 +23,8 @@ from gastop import GenAlg, Truss, Evaluator, FitnessFunction, utilities
 init_file_path = 'gastop-config/struct_making_test_init.txt'
 config = utilities.init_file_parser(init_file_path)
 
-ga_params = config['ga_params']
-random_params = config['random_params']
-crossover_params = config['crossover_params']
-mutator_params = config['mutator_params']
-selector_params = config['selector_params']
-evaluator_params = config['evaluator_params']
-fitness_params = config['fitness_params']
 
 # properties_df = 0
-evaluator = 0
 
 pop_size = int(1e4)
 num_gens = int(1e2)
@@ -41,15 +35,13 @@ num_gens = int(1e2)
 #evaluator = Eval(blah)
 
 # Create a Fitness Function Object
-fitness_function = FitnessFunction('rastrigin', 0)
 
 
 class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
     def testUpdatePopulation(self):
         # Create GenAlg object and assign random fitness scores
         pop_size = int(1e4)
-        ga = GenAlg(ga_params, mutator_params, random_params, crossover_params, selector_params,
-                    evaluator, fitness_function)
+        ga = GenAlg(config)
         ga.initialize_population(pop_size)
         for truss in ga.population:
             truss.fitness_score = np.random.random()
@@ -58,7 +50,7 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
 
         # Check that population is sorted by fitness_score
         fitness = [
-            truss.fitness_score for truss in ga.population][:ga_params['num_elite']]
+            truss.fitness_score for truss in ga.population][:config['ga_params']['num_elite']]
         self.assertTrue(sorted(fitness) == fitness)
 
         for truss in ga.population:
@@ -75,9 +67,7 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
 
         # Create GenAlg object
         pop_size = int(1e4)
-        ga = GenAlg(ga_params, mutator_params, random_params,
-                    crossover_params, selector_params,
-                    evaluator, fitness_function)
+        ga = GenAlg(config)
         ga.initialize_population(pop_size)
 
         # Save and reload
@@ -108,54 +98,55 @@ class TestGenAlg_Dan(unittest.TestCase):
     def test_nodes_in_domain(self):
 
         # Create the Genetic Algorithm Object
-        ga = GenAlg(ga_params, mutator_params, random_params,
-                    crossover_params, selector_params,
-                    evaluator, fitness_function)
+        ga = GenAlg(config)
         ga.initialize_population(pop_size)
 
         for truss in ga.population:
             for node in truss.rand_nodes:
-                self.assertTrue(node[0] > random_params['domain'][0, 0])
-                self.assertTrue(node[0] < random_params['domain'][1, 0])
-                self.assertTrue(node[1] > random_params['domain'][0, 1])
-                self.assertTrue(node[1] < random_params['domain'][1, 1])
-                self.assertTrue(node[2] > random_params['domain'][0, 2])
-                self.assertTrue(node[2] < random_params['domain'][1, 2])
+                self.assertTrue(node[0] > ga.random_params['domain'][0, 0])
+                self.assertTrue(node[0] < ga.random_params['domain'][1, 0])
+                self.assertTrue(node[1] > ga.random_params['domain'][0, 1])
+                self.assertTrue(node[1] < ga.random_params['domain'][1, 1])
+                self.assertTrue(node[2] > ga.random_params['domain'][0, 2])
+                self.assertTrue(node[2] < ga.random_params['domain'][1, 2])
 
 
 class TestGenAlg_SFR(unittest.TestCase):
     def testProgressBar(self):
-        #this doesnt quite work yet, showing all progress bars at the end instead of iteratively
+        # this doesnt quite work yet, showing all progress bars at the end instead of iteratively
+        user_spec_nodes = np.array([[]]).reshape(0, 3)
 
-        nodes = np.array([[1,2,3],[2,3,4]])
-        edges = np.array([[0,1]])
-        properties = np.array([[0,3]])
+        nodes = np.array([[1, 2, 3], [2, 3, 4]])
+        edges = np.array([[0, 1]])
+        properties = np.array([[0, 3]])
 
         pop_size = 10
-        population = [Truss.Truss(nodes,edges,properties) for i in range(pop_size)]
+        population = [Truss(user_spec_nodes, nodes, edges, properties)
+                      for i in range(pop_size)]
 
         for truss in population:
             truss.fitness_score = np.random.random()
 
         population.sort(key=lambda x: x.fitness_score)
-                # print([x.fitness_score for x in population])
+        # print([x.fitness_score for x in population])
 
-        GA = GenAlg.GenAlg(0,0,0,0,0,0,0,0)#put zeros in here
+        GA = GenAlg(config)
 
         GA.population = population
         progress_display = 1
-        #dumb GA run
+        # dumb GA run
         ax1 = []
         num_generations = 20
         #t = tqdm(total=num_generations,leave=False)
-        for current_gen in tqdm(range(num_generations)): # Loop over all generations:
-            GA.progress_monitor(current_gen,progress_display,ax1)
-            #t.update(current_gen)
+        # Loop over all generations:
+        for current_gen in tqdm(range(num_generations)):
+            GA.progress_monitor(current_gen, progress_display, ax1)
+            # t.update(current_gen)
             time.sleep(0.05)
             for truss in GA.population:
                 #truss.fos = np.random.random()
                 truss.fitness_score = truss.fitness_score + 5.0
-        #t.close()
+        # t.close()
         return GA.population[0], GA.pop_progress
 
     def testProgressPlot(self):
@@ -174,7 +165,7 @@ class TestGenAlg_SFR(unittest.TestCase):
         population.sort(key=lambda x: x.fitness_score)
         # print([x.fitness_score for x in population])
 
-        GA = GenAlg(0, 0, 0, 0, 0, 0, 0)  # put zeros in here
+        GA = GenAlg(config)
 
         GA.population = population
         progress_display = 2
