@@ -181,3 +181,4 @@ class FitnessFunction():
 
         f = self.equation(truss, self.parameters)
         truss.fitness_score = f
+        return truss

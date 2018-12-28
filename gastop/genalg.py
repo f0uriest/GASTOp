@@ -36,8 +36,9 @@ class GenAlg():
         the next generation.
 
         Args:
+            Either:
             config (dict): Configuration dictionary with parameters, such as one 
-                created by ``utilities.init_file_parser``.
+                created by :meth:`gastop.utilities.init_file_parser`
             config_file_path (str): File path to config file to be parsed. Used
                 instead of passing config dictionary directly. If both are supplied,
                 config dictionary takes precedence.
@@ -150,7 +151,17 @@ class GenAlg():
         pool.close()
         pool.join()
 
-    def run(self, num_generations, progress_display):
+    def run(self, num_generations=None, progress_display=1, num_threads=None):
+        if num_threads is None:
+            if self.ga_params['num_threads'] is None:
+                num_threads = 1
+            else:
+                num_threads = self.ga_params['num_threads']
+        if num_generations is None:
+            num_generations = ga_params['num_generations']
+        else:
+            self.ga_params['num_generations'] = num_generations
+
         if progress_display == 2:  # check if figure method of progress monitoring is requested
             # initialize plot:
             fig = plt.figure()
@@ -164,24 +175,7 @@ class GenAlg():
         # Without any parallelization:
         # # Try 1: time =
         # for current_gen in range(num_generations): sfr
-        for current_gen in tqdm(range(num_generations)):
-            for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
-                # Run evaluator method. Will store results in Truss Object
-                self.evaluator(current_truss)
-                # Assigns numerical score to each truss
-                self.fitness_function(current_truss)
-            if progress_display == 2:
-                self.progress_monitor(current_gen, progress_display, ax1)
-            self.update_population()  # Determine which members to
-        if progress_display == 2:
-            plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
-        return self.population[0], self.pop_progress
-
-        # With parallelization
-        # Try 2: time =
-        # for current_gen in range(num_generations):
-        #     p = Pool()
-        #     pool.map(self.generate_random)
+        # for current_gen in tqdm(range(num_generations)):
         #     for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
         #         # Run evaluator method. Will store results in Truss Object
         #         self.evaluator(current_truss)
@@ -193,6 +187,22 @@ class GenAlg():
         # if progress_display == 2:
         #     plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         # return self.population[0], self.pop_progress
+
+        # With parallelization
+        # Try 2: time =
+        for current_gen in tqdm(range(num_generations)):
+            self.ga_params['current_generation'] = current_gen
+            pool = Pool(num_threads)
+            self.population = pool.map(self.evaluator, self.population)
+            self.population = pool.map(self.fitness_function, self.population)
+            pool.close()
+            pool.join()
+            if progress_display == 2:
+                self.progress_monitor(current_gen, progress_display, ax1)
+            self.update_population()  # Determine which members to
+        if progress_display == 2:
+            plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+        return self.population[0], self.pop_progress
 
     def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
         # three options: plot, progress bar ish thing, no output just append

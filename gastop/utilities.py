@@ -121,6 +121,9 @@ def init_file_parser(init_file_path):  # Cristian
         (num_rand_nodes, 6, num_loads))), axis=0)
     domain = config['general']['domain']
 
+    # ga_params
+    config['ga_params']['current_generation'] = 0
+
     # evaluator_params
     config['evaluator_params']['boundary_conditions'] = {}
     config['evaluator_params']['boundary_conditions']['loads'] = loads
