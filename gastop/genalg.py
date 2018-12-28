@@ -46,7 +46,7 @@ class GenAlg():
             GenAlg callable object
         """
         if config is None:
-            config = config = utilities.init_file_parser(config_file_path)
+            config = utilities.init_file_parser(config_file_path)
 
         self.config = config
         self.ga_params = config['ga_params']
