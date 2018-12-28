@@ -26,7 +26,7 @@ fitness_params = config['fitness_params']
 # properties_df = 0
 evaluator = 0
 
-pop_size = int(1e4)
+pop_size = int(1e6)
 num_gens = int(1e2)
 
 # boundaries = Boundaries(#Input here);
