@@ -1,6 +1,7 @@
 # Cristian
 import numpy as np
 import timeit
+import multiprocessing
 import sys
 sys.path.append('.')
 
@@ -10,52 +11,28 @@ from gastop import GenAlg, Truss, Evaluator, FitnessFunction, Crossover, Mutator
 init_file_path = 'gastop-config/struct_making_test_init.txt'
 config = utilities.init_file_parser(init_file_path)
 
-ga_params = config['ga_params']
-random_params = config['random_params']
-crossover_params = config['crossover_params']
-mutator_params = config['mutator_params']
-selector_params = config['selector_params']
-evaluator_params = config['evaluator_params']
-fitness_params = config['fitness_params']
-
-# properties_df = 0
-evaluator = 0
-# Create a Fitness Function Object
-fitness_function = FitnessFunction('rastrigin', 0)
-
-pop_size = int(1e3)
+pop_size = int(1e2)
 num_gens = int(1e1)
 
 # Create GenAlg object and assign random fitness scores
-ga = GenAlg(ga_params, mutator_params, random_params, crossover_params, selector_params,
-            evaluator, fitness_function)
+ga = GenAlg(config)
 ga.initialize_population(pop_size)
 for truss in ga.population:
     truss.fitness_score = np.random.random()
 
 setup ='''
 import numpy as np
-from gastop import GenAlg, Truss, Evaluator, FitnessFunction, Selector, utilities
+import multiprocessing
+from gastop import GenAlg, Truss, Evaluator, FitnessFunction, Crossover, Mutator, Selector, utilities
 from __main__ import method1, method2
+
 init_file_path = 'gastop-config/struct_making_test_init.txt'
 config = utilities.init_file_parser(init_file_path)
 
-ga_params = config['ga_params']
-random_params = config['random_params']
-crossover_params = config['crossover_params']
-mutator_params = config['mutator_params']
-selector_params = config['selector_params']
-evaluator_params = config['evaluator_params']
-fitness_params = config['fitness_params']
-
-evaluator = 0
-fitness_function = FitnessFunction('rastrigin', 0)
-
-pop_size = int(1e3)
+pop_size = int(1e2)
 num_gens = int(1e1)
 
-ga = GenAlg(ga_params, mutator_params, random_params, crossover_params, selector_params,
-            evaluator, fitness_function)
+ga = GenAlg(config)
 ga.initialize_population(pop_size)
 for truss in ga.population:
     truss.fitness_score = np.random.random()
@@ -86,7 +63,7 @@ def method1(ga): # Method 1 performs serial loops for crossover/mutation
     # Instantiate objects
     selector = Selector(ga.selector_params)
     crossover = Crossover(ga.crossover_params)
-    mutator = Mutator(ga.mutate_params)
+    mutator = Mutator(ga.mutator_params)
 
     # Select parents as indices in current population
     crossover_parents = selector(num_crossover, population)
@@ -122,7 +99,8 @@ def method1(ga): # Method 1 performs serial loops for crossover/mutation
     # Update population attribute
     return population
 
-def method2(ga):
+def method2(ga): # Using multithreading
+    num_threads = 5
     # Store parameters for readability
     population = ga.population
     pop_size = ga.ga_params['pop_size']
@@ -147,7 +125,7 @@ def method2(ga):
     # Instantiate objects
     selector = Selector(ga.selector_params)
     crossover = Crossover(ga.crossover_params)
-    mutator = Mutator(ga.mutate_params)
+    mutator = Mutator(ga.mutator_params)
 
     # Select parents as indices in current population
     crossover_parents = selector(num_crossover, population)
@@ -157,22 +135,40 @@ def method2(ga):
     pop_elite = population[:num_elite]
 
     # Portion of new population formed by crossover
-    pop_crossover = []
-    for i in range(0, num_crossover, 2):
+    def iter_crossover(i):
         parentindex1 = crossover_parents[i]
         parentindex2 = crossover_parents[i+1]
         parent1 = population[parentindex1]
         parent2 = population[parentindex2]
         child1, child2 = crossover(parent1, parent2)
-        pop_crossover.extend((child1, child2))
+        return child1, child2
+
+    with multiprocessing.pool.ThreadPool(num_threads) as pool:
+        pop_crossover = pool.map(iter_crossover,range(0, num_crossover, 2))
+    pop_crossover = [item for sublist in pop_crossover for item in sublist]
+    # for i in range(0, num_crossover, 2):
+    #     parentindex1 = crossover_parents[i]
+    #     parentindex2 = crossover_parents[i+1]
+    #     parent1 = population[parentindex1]
+    #     parent2 = population[parentindex2]
+    #     child1, child2 = crossover(parent1, parent2)
+    #     pop_crossover.extend((child1, child2))
 
     # Portion of new population formed by mutation
-    pop_mutation = []
-    for i in range(num_mutation):
+    def iter_mutation(i):
         parentindex = mutation_parents[i]
         parent = population[parentindex]
         child = mutator(parent)
-        pop_mutation.append(child)
+        return child
+
+    with multiprocessing.pool.ThreadPool(num_threads) as pool:
+        pop_mutation = pool.map(iter_mutation,range(num_mutation))
+
+    # for i in range(num_mutation):
+    #     parentindex = mutation_parents[i]
+    #     parent = population[parentindex]
+    #     child = mutator(parent)
+    #     pop_mutation.append(child)
 
     # Create new random trusses with remaining spots in generation
     pop_random = [ga.generate_random(2) for i in range(num_random)]
@@ -185,6 +181,9 @@ def method2(ga):
 
 pop1 = method1(ga)
 pop2 = method2(ga)
+# print(pop1,len(pop1))
+# print(pop2,len(pop2))
+
 
 test1 = '''pop1 = method1(ga)'''
 test2 = '''pop2 = method2(ga)'''
