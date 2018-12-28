@@ -9,6 +9,19 @@ style.use('fivethirtyeight')
 
 
 class GenAlg():
+    """Creates, updates, tracks, loads, and saves populations.
+
+    The GenAlg Class orchestrates all of the other functions that perform
+    functions to change the population and its elements. In this case, such
+    classes are crossover, evaluator, encoders, fitness, mutator, selector, and
+    truss.
+
+    In brief, GenAlg calls many other functions in order to create a generation
+    which is then analyzed to fully determine its relavant properties. These
+    properties are then used to create a new generation and the process repeats
+    until a final solution is reached.
+
+    """
     # Attributes:
     # Envelop Dimensions
     # Parameters needed for the GA
@@ -29,7 +42,29 @@ class GenAlg():
 
     def __init__(self, ga_params, mutate_params, random_params, crossover_params, selector_params,
                  evaluator, fitness_function):
-        # ********
+        """Creates a GenAlg object
+
+        Once created, the object will store all of the relavant information
+        about a population. The object also contains the necessary functions to
+        modify itself, evaluate its 'goodness', and then create new members for
+        the next generation.
+
+        Args:
+            ga_params (dict): Dictionary of parameters needed for the core
+                functionality of the genetic algorithm
+            mutate_params (dict): Dictionary of parameters for mutation
+            random_params (dict): Dictionary of parameters for random mutation
+            crossover_params (dict): Dictionary of parameters for crossover
+            selector_params (dict): Dictionary of parameters for selecting good
+                members of the population
+            evaluator (dict): Dictionary of parameters for evaluating which
+                members of the population have 'good' results
+            fitness_function (dict): Dictionary of parameters for evaluating the
+                fitness of a members
+
+        Returns:
+            GenAlg callable object
+        """
         self.ga_params = ga_params
         self.mutate_params = mutate_params
         self.random_params = random_params
@@ -47,6 +82,20 @@ class GenAlg():
         np.random.seed(0)
 
     def generate_random(self):  # Dan
+        '''Generates and returns new truss objects with random properties
+
+        The random method first determines the desired ranges of all values
+        that will be calculated. Then, random numbers for the node locations,
+        connections, and properties are all determined with the numpy.random
+        methods.
+
+        Args:
+            self (GenAlg object): Contains the information needed to determine
+            the ranges
+
+        Returns:
+            (Truss object): Truss object with the newly determined values
+        '''
         # Generates new random chromosomes with uniform distribution
         num_rand_nodes = self.random_params['num_rand_nodes']
         num_rand_edges = self.random_params['num_rand_edges']
@@ -54,9 +103,8 @@ class GenAlg():
         num_user_spec_nodes = user_spec_nodes.shape[0]
         domain = self.random_params['domain']
         # First, generate the new nodes:
-        Ranges = domain[1]-domain[0]
-
         # Try 1: Time: 0.579
+        # Ranges = domain[1]-domain[0]
         # new_nodes = np.random.rand(num_rand_nodes, 3)
         #
         # for j in range(3):
@@ -86,16 +134,16 @@ class GenAlg():
 
         return Truss(user_spec_nodes, new_nodes, new_edges, new_properties)
 
-        """
-        # Check to see if any nodes are unused: - Decided to move this to the solver if needed
-        check_array = np.zeros(self.num_rand_nodes,dtype=int)
-        for j in range(self.num_rand_edges):
-            check_array[new_edges[i][0]] = 1
-            check_array[new_edges[i][1]] = 1
-        for j in range(len(check_array)):
-        """
 
     def initialize_population(self, pop_size):
+        '''Initializes population with randomly creates Truss objects
+
+        Args:
+            self (GenAlg object): Object that will be updates
+
+        Returns:
+            Updated self.population
+        '''
         self.ga_params['pop_size'] = pop_size
         self.population = [self.generate_random() for i in range(pop_size)]
 
