@@ -36,7 +36,7 @@ class GenAlg():
         the next generation.
 
         Args:
-            config (dict): Configuration dictionary with parameters, such as one 
+            config (dict): Configuration dictionary with parameters, such as one
                 created by ``utilities.init_file_parser``.
             config_file_path (str): File path to config file to be parsed. Used
                 instead of passing config dictionary directly. If both are supplied,
@@ -162,12 +162,7 @@ class GenAlg():
         # Loop over all generations:
 
         # Without any parallelization:
-<<<<<<< HEAD
         # Try 1: time =
-=======
-        # # Try 1: time =
-        # for current_gen in range(num_generations): sfr
->>>>>>> dd4de6fbc8165e7fe1db1df85e51f189fbc0f40c
         for current_gen in tqdm(range(num_generations)):
             for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
                 # Run evaluator method. Will store refitness_scoresults in Truss Object
