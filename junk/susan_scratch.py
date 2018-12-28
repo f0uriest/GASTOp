@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib import style
 import time
+from tqdm import tqdm
 
 ##plt.ion() #look into multithreading this
 #style.use('fivethirtyeight')
@@ -24,11 +25,11 @@ def counter(n):
     plt.xlabel('iteration')
 
 
-    for i in range(n):
+    for i in tqdm(range(n)):
 
         y = 2.0*i
         progress(i,y,ax1)
-        print(y)
+        #print(y)
     plt.show()
 
     return y
