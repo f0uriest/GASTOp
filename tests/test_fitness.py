@@ -5,14 +5,32 @@ from gastop import FitnessFunction, Truss
 
 class TestFitness(unittest.TestCase):
 
+    def test_weighted_sum(self):
+        fitness_params = {'goal_fos': 1.5,
+                          'critical_nodes': np.array([1]),
+                          'w_fos': 100,
+                          'w_mass': 1,
+                          'w_deflection': 10}
+        f = FitnessFunction('weighted_sum', fitness_params)
+        mass = 5
+        deflection = np.array(
+            [[1, 0, 0, 0, 0, 0], [np.sqrt(2), np.sqrt(2), 0, 0, 0, 0]])
+        fos = np.array([.5, 5])
+        t1 = Truss(0, 0, 0, 0)
+        t1.mass = mass
+        t1.deflection = deflection
+        t1.fos = fos
+        t1 = f(t1)
+        self.assertAlmostEqual(t1.fitness_score, 125)
+
     def test_sphere(self):
         x = np.zeros(10)
         y = np.ones(10)
         t0 = Truss(x, x, 0, 0)
         t1 = Truss(y, y, 0, 0)
         f = FitnessFunction('sphere', 0)
-        f(t0)
-        f(t1)
+        t0 = f(t0)
+        t1 = f(t1)
         self.assertAlmostEqual(t0.fitness_score, 0)
         self.assertAlmostEqual(t1.fitness_score, 10)
 
@@ -22,8 +40,8 @@ class TestFitness(unittest.TestCase):
         t0 = Truss(x, x, 0, 0)
         t1 = Truss(y, y, 0, 0)
         f = FitnessFunction('rosenbrock', 0)
-        f(t0)
-        f(t1)
+        t0 = f(t0)
+        t1 = f(t1)
         self.assertAlmostEqual(t0.fitness_score, 5)
         self.assertAlmostEqual(t1.fitness_score, 0)
 
@@ -33,8 +51,8 @@ class TestFitness(unittest.TestCase):
         t0 = Truss(x, x, 0, 0)
         t1 = Truss(y, y, 0, 0)
         f = FitnessFunction('rastrigin', 0)
-        f(t0)
-        f(t1)
+        t0 = f(t0)
+        t1 = f(t1)
         self.assertAlmostEqual(t0.fitness_score, 0)
         self.assertAlmostEqual(t1.fitness_score, 10)
 
