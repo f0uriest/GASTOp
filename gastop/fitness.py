@@ -77,7 +77,7 @@ class FitnessFunction():
             deflections = truss.deflection[:, :3]
 
         deflection_score = np.sum(
-            self.parameters['w_deflection']*np.sqrt(np.sum(deflections**2)))
+            self.parameters['w_deflection']*np.sqrt(np.sum(deflections**2, axis=1)))
         fs = np.maximum(self.parameters['goal_fos'] - minfos, 0)
         f = self.parameters['w_mass']*truss.mass + \
             self.parameters['w_fos']*fs + deflection_score
