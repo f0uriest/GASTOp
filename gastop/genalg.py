@@ -173,36 +173,40 @@ class GenAlg():
 
         # Without any parallelization:
         # Try 1: time =
-        # for current_gen in tqdm(range(num_generations)):
-        #     for current_truss in self.population:  # Loop over all trusses -> PARALLELIZE. Later
-        #         # Run evaluator method. Will store refitness_scoresults in Truss Object
-        #         self.evaluator(current_truss)
-        #         # Assigns numerical score to each truss
-        #         self.fitness_function(current_truss)
-        #         # print(current_truss.fos)
+        if num_threads == 1:
+            for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
+                self.ga_params['current_generation'] = current_gen
+                # Loop over all trusses -> PARALLELIZE. Later
+                for current_truss in tqdm(self.population, desc='Current Generation', leave=False, position=1):
+                    # Run evaluator method. Will store refitness_scoresults in Truss Object
+                    self.evaluator(current_truss)
+                    # Assigns numerical score to each truss
+                    self.fitness_function(current_truss)
+                # print(current_truss.fos)
+                if progress_display == 2:
+                    self.progress_monitor(current_gen, progress_display, ax1)
+                self.update_population()  # Determine which members to
+                if progress_display == 2:
+                    plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+            return self.population[0], self.pop_progress
 
-        #     if progress_display == 2:
-        #         self.progress_monitor(current_gen, progress_display, ax1)
-        #     self.update_population()  # Determine which members to
-        # if progress_display == 2:
-        #     plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
-        # return self.population[0], self.pop_progress
-
-        # With parallelization
-        # Try 2: time =
-        for current_gen in tqdm(range(num_generations)):
-            self.ga_params['current_generation'] = current_gen
-            pool = Pool(num_threads)
-            self.population = pool.map(self.evaluator, self.population)
-            self.population = pool.map(self.fitness_function, self.population)
-            pool.close()
-            pool.join()
-            if progress_display == 2:
-                self.progress_monitor(current_gen, progress_display, ax1)
-            self.update_population()  # Determine which members to
-        if progress_display == 2:
-            plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
-        return self.population[0], self.pop_progress
+        else:
+            # With parallelization
+            # Try 2: time =
+            for current_gen in tqdm(range(num_generations)):
+                self.ga_params['current_generation'] = current_gen
+                pool = Pool(num_threads)
+                self.population = pool.map(self.evaluator, self.population)
+                self.population = pool.map(
+                    self.fitness_function, self.population)
+                pool.close()
+                pool.join()
+                if progress_display == 2:
+                    self.progress_monitor(current_gen, progress_display, ax1)
+                self.update_population()  # Determine which members to
+                if progress_display == 2:
+                    plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+            return self.population[0], self.pop_progress
 
     def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
         # three options: plot, progress bar ish thing, no output just append
