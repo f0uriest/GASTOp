@@ -41,7 +41,7 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
     def testUpdatePopulation(self):
         # Create GenAlg object and assign random fitness scores
         pop_size = int(1e4)
-        ga = GenAlg(config)
+        ga = GenAlg(init_file_path)
         ga.initialize_population(pop_size)
         for truss in ga.population:
             truss.fitness_score = np.random.random()
@@ -190,7 +190,46 @@ class TestGenAlg_SFR(unittest.TestCase):
 
         # fos = [i.fos for i in population] #extracts fos for each truss object in population
 
-
         # note to susan: look up map() and filter()
+
+
+class TestGenAlgRC(unittest.TestCase):
+
+    def testInvalidCrossover(self):
+        """Tests genalg when % crossover + % mutation >1"""
+
+        config = utilities.init_file_parser(init_file_path)
+        config['ga_params']['percent_crossover'] = .6
+        config['ga_params']['percent_mutation'] = .6
+        ga = GenAlg(config)
+        ga.initialize_population(100)
+        for t in ga.population:
+            t.fitness_score = np.random.random()
+        self.assertRaises(RuntimeError, ga.update_population)
+
+        bad_path = 'gastop-config/error_config.txt'
+        self.assertRaises(RuntimeError, utilities.init_file_parser, bad_path)
+
+    def testOddNumCrossover(self):
+        """Tests genalg when crossover number is odd"""
+
+        config = utilities.init_file_parser(init_file_path)
+        config['ga_params']['percent_crossover'] = 1
+        config['ga_params']['percent_mutation'] = 0
+        config['ga_params']['num_elite'] = 5
+        ga = GenAlg(config)
+        ga.initialize_population(100)
+        ga.run(num_generations=2)
+        self.assertAlmostEqual(len(ga.population), 100)
+
+        # test zero crossover
+        config['ga_params']['percent_crossover'] = 0
+        config['ga_params']['percent_mutation'] = 1
+        ga = GenAlg(config)
+        ga.initialize_population(100)
+        ga.run(num_generations=2)
+        self.assertAlmostEqual(len(ga.population), 100)
+
+
 if __name__ == "__main__":
     unittest.main()

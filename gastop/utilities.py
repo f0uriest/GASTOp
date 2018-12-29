@@ -177,6 +177,8 @@ def init_file_parser(init_file_path):  # Cristian
         config['ga_params']['percent_crossover'] = 0.4
     if not config['ga_params']['percent_mutation']:
         config['ga_params']['percent_mutation'] = 0.4
+    if (config['ga_params']['percent_mutation'] + config['ga_params']['percent_crossover']) > 1:
+        raise RuntimeError('percent_crossover + percent_mutation > 1')
 
     return config
 

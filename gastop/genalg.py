@@ -7,7 +7,7 @@ from multiprocessing import Pool
 import os
 
 
-from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders
+from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders, utilities
 # plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
 
@@ -27,7 +27,7 @@ class GenAlg():
 
     """
 
-    def __init__(self, config=None, config_file_path=None):
+    def __init__(self, config):
         """Creates a GenAlg object
 
         Once created, the object will store all of the relavant information
@@ -39,15 +39,14 @@ class GenAlg():
             Either:
             config (dict): Configuration dictionary with parameters, such as one
                 created by :meth:`gastop.utilities.init_file_parser`
-            config_file_path (str): File path to config file to be parsed. Used
-                instead of passing config dictionary directly. If both are supplied,
-                config dictionary takes precedence.
+            config (str): File path to config file to be parsed. Used
+                instead of passing config dictionary directly. 
 
         Returns:
             GenAlg callable object
         """
-        if config is None:
-            config = utilities.init_file_parser(config_file_path)
+        if type(config) is type('str'):
+            config = utilities.init_file_parser(config)
 
         self.config = config
         self.ga_params = config['ga_params']
@@ -158,7 +157,7 @@ class GenAlg():
             else:
                 num_threads = self.ga_params['num_threads']
         if num_generations is None:
-            num_generations = ga_params['num_generations']
+            num_generations = self.ga_params['num_generations']
         else:
             self.ga_params['num_generations'] = num_generations
 
@@ -284,8 +283,10 @@ class GenAlg():
 
         # Calculate parents needed for crossover, ensure even number
         num_crossover = round((pop_size-num_elite)*percent_crossover)
-        if (num_crossover % 2) != 0:  # If odd, increment by 1
-            num_crossover += 1
+        if (num_crossover % 2) != 0:  # If odd, decrement by 1
+            num_crossover -= 1
+            if num_crossover < 0:  # if that makes it negative, make 0
+                num_crossover = 0
         # Calculate parents needed for mutation
         num_mutation = round((pop_size-num_elite)*percent_mutation)
         # Calculate remaining number of trusses in next population

@@ -7,8 +7,10 @@ from gastop import GenAlg, Evaluator, FitnessFunction
 
 ga_params = {
     # ga_params
-    'pop_size': None,
-    'num_elite': 1,  # int, ~10 (the whole truss that get passed)
+    'pop_size': 1000,
+    'num_generations': 100,
+    'num_threads': None,
+    'num_elite': 10,  # int, ~10 (the whole truss that get passed)
     'percent_crossover': 0.4,  # double between 0 and 1
     'percent_mutation': 0.4  # double between 0 and 1
 }
@@ -60,24 +62,24 @@ config = {'ga_params': ga_params,
           'selector_params': selector_params,
           'evaluator_params': evaluator_params}
 
+pop_size = 1000
+
 
 class TestOptimization(unittest.TestCase):
     def test_rastrigin(self):
-        pop_size = 1000
-        num_gens = 100
         config['fitness_params'] = {'equation': 'rastrigin'}
         ga = GenAlg(config)
         ga.initialize_population(pop_size)
-        best, progress_history = ga.run(num_gens, 0, num_threads=4)
+        best, progress_history = ga.run()
         self.assertAlmostEqual(best.fitness_score, 0, places=2)
 
     def test_sphere(self):
-        pop_size = 1000
-        num_gens = 100
+        config['ga_params']['num_threads'] = 2
         config['fitness_params'] = {'equation': 'sphere'}
         ga = GenAlg(config)
         ga.initialize_population(pop_size)
-        best, progress_history = ga.run(num_gens, 0, num_threads=4)
+        best, progress_history = ga.run(
+            num_generations=100, progress_display=2)
         self.assertAlmostEqual(best.fitness_score, 0, places=4)
 
 
