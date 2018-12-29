@@ -13,12 +13,15 @@ num_gens = config['ga_params']['num_generations']
 # Create the Genetic Algorithm Object
 ga = GenAlg(config)
 ga.initialize_population(pop_size)
-best, progress_history = ga.run(num_gens, 1, num_threads=1)
+best, progress_history = ga.run(num_gens, 1, num_threads=4)
 
 
 print(best.rand_nodes)
 print(best.edges)
 print(best.properties)
 print(best.fos)
-print(best.deflection)
-utilities.truss_plot(best, config['random_params']['domain'].T)
+print(best.deflection[:, :, 0])
+best.plot(domain=config['random_params']['domain'].T,
+          loads=config['evaluator_params']['boundary_conditions']['loads'],
+          fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
+          deflection=True, load_scale=.001, def_scale=100)
