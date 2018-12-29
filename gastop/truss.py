@@ -94,9 +94,9 @@ class Truss():
                 value of zero is free.
             deflection (bool): If True, deflections will be plotted superposed on 
                 the undeformed structure. Relative size of deflections is governed
-                by *deflection_scale*.
+                by *def_scale*.
             load_scale (float): Size load vector arrows should be scaled by.
-            def_scale (float): Scaling for deflections. deflection_scale=1
+            def_scale (float): Scaling for deflections. *def_scale*=1
                 means actual size, larger than 1 magnifies.
 
         Returns:
