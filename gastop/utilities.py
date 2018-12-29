@@ -80,11 +80,11 @@ def init_file_parser(init_file_path):  # Cristian
         except ValueError:
             pass
         # Convert string to True, False, None
-        if val == 'True':
+        if val == 'True' or val == 'true' or val == 'yes':
             newval = True
-        elif val == 'False':
+        elif val == 'False' or val == 'false' or val == 'no':
             newval = False
-        elif val == 'None':
+        elif val == 'None' or val == 'none':
             newval = None
         # Convert string to numpy array
         try:

@@ -66,13 +66,13 @@ class Truss():
         self.num_joints = num_joints
         self.fitness_score = fitness_score
 
-    def sort(self):
-        """Not implemented yet.
+    # def sort(self):
+    #     """Not implemented yet.
 
-        TODO: method to sort or hash truss object so that two trusses can be
-        meaningfully compared.
-        """
-        pass
+    #     TODO: method to sort or hash truss object so that two trusses can be
+    #     meaningfully compared.
+    #     """
+    #     pass
 
     def plot(self, domain=None, loads=None, fixtures=None,
              deflection=False, load_scale=1, def_scale=1):

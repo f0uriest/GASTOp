@@ -7,7 +7,7 @@ from gastop import Truss, utilities
 
 class TestUtilities_Cristian(unittest.TestCase):  # Cristian
     def testInitFileParser(self):
-        init_file_path = 'gastop-config/struct_making_test_init.txt'
+        init_file_path = 'gastop-config/boolean_parse_test_init.txt'
         config = utilities.init_file_parser(init_file_path)
         # for key in config:
         #     print(key)
@@ -19,6 +19,9 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
                         is type(np.array([1, 1])))
         self.assertTrue(type(config['mutator_params']['node_mutator_params']['int_flag'])
                         is bool)
+        self.assertTrue(config['general']['bool0'] is False)
+        self.assertTrue(config['general']['bool1'] is True)
+        self.assertTrue(config['general']['boolnone'] is None)
 
 
 class TestTrussPlot(unittest.TestCase):

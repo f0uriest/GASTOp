@@ -285,14 +285,12 @@ class GenAlg():
         num_crossover = round((pop_size-num_elite)*percent_crossover)
         if (num_crossover % 2) != 0:  # If odd, decrement by 1
             num_crossover -= 1
-            if num_crossover < 0:  # if that makes it negative, make 0
-                num_crossover = 0
         # Calculate parents needed for mutation
         num_mutation = round((pop_size-num_elite)*percent_mutation)
         # Calculate remaining number of trusses in next population
         num_random = pop_size - num_elite - num_crossover - num_mutation
         if num_random < 0:  # Raise exception if input params are unreasonable
-            raise RuntimeError('Invalid GenAlg parameters.')
+            raise RuntimeError('percent_crossover + percent_mutation > 1')
 
         # Instantiate objects
         selector = Selector(self.selector_params)

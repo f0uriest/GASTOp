@@ -316,14 +316,14 @@ class Evaluator():
 
         return mass
 
-    def interferences_ray_tracing(self, truss):
+    def interference_ray_tracing(self, truss):
         """Not implemented yet.
 
         TODO: method to determine if truss members are crossing into 
         user specified areas. Used when a structure must be designed around
         something, such as a passenger compartment or other design components.
         """
-        pass
+        return None
 
     def blank_test(self, truss):
         """Blank function used for testing GA when no evaluation needed

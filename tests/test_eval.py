@@ -24,7 +24,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'interference_ray_tracing', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -38,6 +38,7 @@ class TestEvaluator(unittest.TestCase):
             truss.mass, A*L*beam_dict['density'][matl])
         np.testing.assert_array_almost_equal(truss.fos, fos_true)
         np.testing.assert_array_almost_equal(truss.deflection, deflection_true)
+        self.assertTrue(truss.interference is None)
 
     def test_singular_stiffness_matrix(self):
         """Tests straight beam under axial forces with no restraints
