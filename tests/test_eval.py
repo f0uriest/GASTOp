@@ -11,7 +11,7 @@ class TestEvaluator(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = np.array([[0]])
+        matl = 0
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
@@ -47,7 +47,7 @@ class TestEvaluator(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = np.array([[0]])
+        matl = 0
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
@@ -77,7 +77,7 @@ class TestEvaluator(unittest.TestCase):
         f = 1750  # transverse load in newtons
         T = 72  # torsion in newton-meters
         L = .12  # length in meters
-        matl = np.array([[4]])
+        matl = 4
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
@@ -111,7 +111,7 @@ class TestEvaluator(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = np.array([[0]])
+        matl = 0
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0],
                                     [L, 0, 0],
@@ -143,7 +143,7 @@ class TestEvaluator(unittest.TestCase):
 
         p = 10000  # load in newtons
         L = 4  # length in meters
-        matl = np.array([[2]])
+        matl = 2
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0],
                                     [L, 0, 0],
@@ -170,6 +170,40 @@ class TestEvaluator(unittest.TestCase):
         np.testing.assert_almost_equal(
             truss.mass, A*L*beam_dict['density'][matl])
         np.testing.assert_array_almost_equal(truss.fos, fos_true)
+
+    def test_duplicate_members(self):
+        """Tests a truss with duplicate members between two nodes,
+        to ensure those members are not counted"""
+
+        p = 9000  # axial load in newtons
+        f = 1750  # transverse load in newtons
+        T = 72  # torsion in newton-meters
+        L = .12  # length in meters
+        matl = 4
+        rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
+        user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
+        edges = np.array([[0, 1], [0, 1]])
+        properties = np.array([matl, matl])
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
+        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]]
+                       ).reshape(2, 6, 1)
+        load = np.array(
+            [[0, 0, 0, 0, 0, 0], [p, -f, 0, -T, 0, 0]]).reshape(2, 6, 1)
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
+        bdry = {'loads': load, 'fixtures': dof}
+        evaluator = Evaluator('mat_struct_analysis_DSM',
+                              'mass_basic', 'blank_test', bdry, beam_dict)
+        evaluator(truss)
+        A = beam_dict['x_section_area'][matl]
+        E = beam_dict['elastic_modulus'][matl]
+        Iz = beam_dict['moment_inertia_z'][matl]
+        sigma = p/A
+        fos_true = 4.57
+        epsilon = sigma/E
+
+        np.testing.assert_almost_equal(
+            truss.mass, A*L*beam_dict['density'][matl])
+        np.testing.assert_array_almost_equal(truss.fos[0], fos_true, 2)
 
     # def test_fixtures(self):
     #     """Tests applied loads with various dof fixed"""

@@ -109,22 +109,30 @@ class Evaluator():
               Deflection at node i under loading j is deflections[i, :, j] = 
               [dx, dy, dz, d_theta_x, d_theta_y, d_theta_z]
         """
+        # mark self connected nodes
+        orig_num_edges = truss.edges.shape[0]
+        truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
+
+        # mark duplicate edges
+        truss.edges.sort()
+        truss.edges = np.unique(truss.edges, axis=0)
+        truss.edges = np.concatenate(
+            (truss.edges, -1*np.ones((orig_num_edges-truss.edges.shape[0], 2))), axis=0)
 
         # make local copies of arrays in case something breaks
         nodes = np.concatenate(
             (truss.user_spec_nodes.copy(), truss.rand_nodes.copy()))
-        # mark self connected nodes
-        truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
         con = truss.edges.copy()
         matl = truss.properties.copy()
         loads = self.boundary_conditions['loads'].copy()
         fixtures = self.boundary_conditions['fixtures'].copy()
 
-        # remove self connected edges
+        # remove self connected edges and duplicate members
         matl = matl[(con[:, 0]) >= 0]
         con = con[(con[:, 0]) >= 0]
         matl = matl[(con[:, 1]) >= 0]
         con = con[(con[:, 1]) >= 0]
+        con = con.astype(int)
 
         num_nodes = nodes.shape[0]
         num_con = con.shape[0]
@@ -292,6 +300,7 @@ class Evaluator():
         con = con[(con[:, 0]) >= 0]
         matl = matl[(con[:, 1]) >= 0]
         con = con[(con[:, 1]) >= 0]
+        con = con.astype(int)
 
         # calculate member lengths
         edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]

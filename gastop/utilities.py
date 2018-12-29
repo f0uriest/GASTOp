@@ -244,6 +244,7 @@ def truss_plot(truss, domain=None, loads=None, fixtures=None):
     con = con[(con[:, 0]) >= 0]
     matl = matl[(con[:, 1]) >= 0]
     con = con[(con[:, 1]) >= 0]
+    con = con.astype(int)
 
     num_nodes = nodes.shape[0]
     num_con = con.shape[0]
