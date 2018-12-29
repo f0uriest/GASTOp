@@ -1,6 +1,7 @@
 import numpy as np
 import configobj
 import ast
+import os.path
 
 
 def beam_file_parser(properties_path):
@@ -18,8 +19,8 @@ def beam_file_parser(properties_path):
             the directory GASTOp is being executed from.
 
     Returns:
-        properties_dict (dict): Dictionary of property values. 
-        Each entry is an ndarray of the key property of each beam. For example, 
+        properties_dict (dict): Dictionary of property values.
+        Each entry is an ndarray of the key property of each beam. For example,
         properties_dict['dens'] is an ndarray of the density of each beam.
 
     """
@@ -66,8 +67,11 @@ def init_file_parser(init_file_path):  # Cristian
         config (ConfigObj object): Nested dicitonary of input parameters.
 
     """
-    # Extract inputs from the file as strings
-    config = configobj.ConfigObj(init_file_path)
+    # Extract inputs from the file as strings, if path exists
+    if os.path.isfile(init_file_path):
+        config = configobj.ConfigObj(init_file_path)
+    else:
+        raise IOError("No such path to init file.")
 
     # Function used to convert each string in config to associated type
     def transform(section, key):
@@ -196,7 +200,7 @@ def cart2sph(x, y, z):
         - **elev** (*ndarray*):  Elevation angle, in radians. Ranges from pi/2 to
           -pi/2. Elevation = 0 corresponds to a vector in the x-y plane,
           elevation = pi/2 corresponds to a vector along positive z axis.
-        - **azim** (*ndarray*): Azimuth angle, in radians. ranges from 0 to 2pi. 
+        - **azim** (*ndarray*): Azimuth angle, in radians. ranges from 0 to 2pi.
           Azimuth = 0 along the positive x axis.
     """
 
