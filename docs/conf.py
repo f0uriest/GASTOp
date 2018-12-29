@@ -20,8 +20,8 @@ sys.path.append(os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'GASTOp'
-copyright = '2018, Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amla Sinha'
-author = 'Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amla Sinha'
+copyright = '2018, Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amlan Sinha'
+author = 'Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amlan Sinha'
 
 # The short X.Y version
 version = '0.1'
@@ -206,7 +206,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'gastop.tex', 'gastop Documentation',
-     'Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amla Sinha', 'manual'),
+     'Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amlan Sinha', 'manual'),
 ]
 
 
