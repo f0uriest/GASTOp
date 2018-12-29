@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
 
 
 class Truss():
@@ -72,10 +74,83 @@ class Truss():
         """
         pass
 
-    def plot(self):
-        """Not implemented yet.
+    def plot(self, domain=None, loads=None, fixtures=None,
+             deflection=False, load_scale=1, def_scale=1):
+        """Plots a truss object as a 3D wireframe
 
-        TODO: method to plot specific views of the truss object.
-        See: :meth:`gastop.utilities.truss_plot`
+        Args:
+            self (Truss object): truss to be plotted. Must have user_spec_nodes,
+                rand_nodes, edges defined.
+            domain (ndarray): (optional) axis limits in x,y,z, specified as a
+                3x2 array: [[xmin, xmax],[ymin,ymax],[zmin,zmax]].
+            loads (ndarray): (optional) Array of loads to be plotted as arrows.
+                Specified as nx6 array, each row corresponding to the load at
+                the node matching the row #. Load format:
+                [Fx,Fy,Fz,Mx,My,Mz]
+            fixtures (ndarray): (optional) Array of fixtures to be plotted as blobs.
+                Specified as an nx6 array, each row corresponding to fixtures at
+                the node matching the row #. Format:
+                [Dx,Dy,Dz,Rx,Ry,Rz] value of 1 means fixed in that direction,
+                value of zero is free.
+            deflection (bool): If True, deflections will be plotted superposed on 
+                the undeformed structure. Relative size of deflections is governed
+                by *deflection_scale*.
+            load_scale (float): Size load vector arrows should be scaled by.
+            def_scale (float): Scaling for deflections. deflection_scale=1
+                means actual size, larger than 1 magnifies.
+
+        Returns:
+            None
         """
-        pass
+        nodes = np.concatenate(
+            (self.user_spec_nodes.copy(), self.rand_nodes.copy()))
+        # mark self connected nodes
+        self.edges[self.edges[:, 0] == self.edges[:, 1]] = -1
+        con = self.edges.copy()
+        matl = self.properties.copy()
+
+        # remove self connected edges
+        matl = matl[(con[:, 0]) >= 0]
+        con = con[(con[:, 0]) >= 0]
+        matl = matl[(con[:, 1]) >= 0]
+        con = con[(con[:, 1]) >= 0]
+        con = con.astype(int)
+
+        num_nodes = nodes.shape[0]
+        num_con = con.shape[0]
+
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+        if domain is not None:
+            ax.set_xlim(domain[0, :])
+            ax.set_ylim(domain[1, :])
+            ax.set_zlim(domain[2, :])
+
+        if deflection:
+            def_nodes = nodes + def_scale*self.deflection[:, :3, 0]
+            def_edge_vec_start = def_nodes[con[:, 0], :]
+            def_edge_vec_end = def_nodes[con[:, 1], :]
+            for i in range(num_con):
+                ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
+                        [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
+                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-')
+
+        edge_vec_start = nodes[con[:, 0], :]
+        edge_vec_end = nodes[con[:, 1], :]
+
+        for i in range(num_con):
+            ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
+                    [edge_vec_start[i, 1], edge_vec_end[i, 1]],
+                    [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
+
+        if loads is not None:
+            ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
+                      loads[:, 0, 0], loads[:, 1, 0], loads[:, 2, 0],
+                      length=load_scale, pivot='tip', color='r')
+
+        if fixtures is not None:
+            fix_nodes = nodes[fixtures[:, :, 0].any(axis=1)]
+            ax.scatter(fix_nodes[:, 0], fix_nodes[:, 1], fix_nodes[:, 2],
+                       c='g', marker='o', depthshade=False, s=100)
+
+        plt.show()

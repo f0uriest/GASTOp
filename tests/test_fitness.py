@@ -48,8 +48,8 @@ class TestFitness(unittest.TestCase):
         self.assertAlmostEqual(t1.fitness_score, 10)
 
     def test_rosenbrock(self):
-        x = np.zeros(10)
-        y = np.ones(10)
+        x = np.zeros(11)
+        y = np.ones(11)
         t0 = Truss(x, x, 0, 0)
         t1 = Truss(y, y, 0, 0)
         f = FitnessFunction('rosenbrock', 0)

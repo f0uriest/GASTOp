@@ -1,6 +1,4 @@
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
 import configobj
 import ast
 
@@ -209,60 +207,3 @@ def cart2sph(x, y, z):
     elev = np.pi/2 - np.arccos(z/r)
 
     return r, elev, azim
-
-
-def truss_plot(truss, domain=None, loads=None, fixtures=None):
-    """Plots a truss object as a 3D wireframe
-
-    Args:
-        truss (Truss object): truss to be plotted. Must have user_spec_nodes,
-            rand_nodes, edges defined.
-        domain (ndarray): (optional) axis limits in x,y,z, specified as a
-            3x2 array: [[xmin, xmax],[ymin,ymax],[zmin,zmax]].
-        loads (ndarray): (optional) Array of loads to be plotted as arrows.
-            Specified as nx6 array, each row corresponding to the load at
-            the node matching the row #. Load format:
-            [Fx,Fy,Fz,Mx,My,Mz]
-        fixtures (ndarray): (optional) Array of fixtures to be plotted as blobs.
-            Specified as an nx6 array, each row corresponding to fixtures at
-            the node matching the row #. Format:
-            [Dx,Dy,Dz,Rx,Ry,Rz] value of 1 means fixed in that direction,
-            value of zero is free.
-
-    Returns:
-        None
-    """
-    nodes = np.concatenate(
-        (truss.user_spec_nodes.copy(), truss.rand_nodes.copy()))
-    # mark self connected nodes
-    truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
-    con = truss.edges.copy()
-    matl = truss.properties.copy()
-
-    # remove self connected edges
-    matl = matl[(con[:, 0]) >= 0]
-    con = con[(con[:, 0]) >= 0]
-    matl = matl[(con[:, 1]) >= 0]
-    con = con[(con[:, 1]) >= 0]
-    con = con.astype(int)
-
-    num_nodes = nodes.shape[0]
-    num_con = con.shape[0]
-
-    # need to add stuff for plotting loads/fixtures
-
-    edge_vec_start = nodes[con[:, 0], :]
-    edge_vec_end = nodes[con[:, 1], :]
-
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    if domain is not None:
-        ax.set_xlim(domain[0, :])
-        ax.set_ylim(domain[1, :])
-        ax.set_zlim(domain[2, :])
-    for i in range(num_con):
-        ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
-                [edge_vec_start[i, 1], edge_vec_end[i, 1]],
-                [edge_vec_start[i, 2], edge_vec_end[i, 2]])
-
-    plt.show()
