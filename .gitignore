@@ -5,6 +5,6 @@
 __pycache__/
 *#
 .coverage
-save_*.json
+*.json
 docs/_build
 docs/_static
