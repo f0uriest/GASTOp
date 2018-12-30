@@ -4,4 +4,5 @@ from gastop.crossover import Crossover
 from gastop.mutator import Mutator
 from gastop.selector import Selector
 from gastop.fitness import FitnessFunction
+from gastop.progmon import ProgMon
 from gastop.genalg import GenAlg
