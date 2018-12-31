@@ -20,8 +20,12 @@ class Mutator():
 
     def __init__(self, mutator_params):
         self.params = mutator_params
+        self.node_method = getattr(self, self.params['node_mutator_method'])
+        self.edge_method = getattr(self, self.params['edge_mutator_method'])
+        self.property_method = getattr(
+            self, self.params['property_mutator_method'])
 
-    def gaussian(self, array, gaussian_params):  # Paul
+    def gaussian(self, array, std, boundaries, int_flag):  # Paul
         '''Performs a gaussian mutation on the given parent array
 
         The gaussian mutator method creates a child array by mutating the given parent
@@ -34,8 +38,11 @@ class Mutator():
         Args:
             array (array): Numpy array containing the information for the parent array that
                   is being mutated.
-            gaussian_params (dictionary): parameters containing information needed for
-                  the method.
+            std (float or array-like): Standard deviation for mutation. If array-like,
+                std[i] is used as the standard deviation for array[:,i].
+            boundaries (array-like): Domain of allowable values. If a value is mutated
+                outside this region, it is looped back around to the other side.
+            int_flat (bool): Whether output should be ints.
 
         Returns:
             new_array (array): Numpy array containing information for the mutated child
@@ -43,28 +50,27 @@ class Mutator():
         nn = np.shape(array)
         # makes an array of the same size as the one given with random values\
         # pulled from a normal distribution with mean 0 and std given
-        gauss_val = np.random.normal(0, gaussian_params['std'], nn)
+        gauss_val = np.random.normal(0, std, nn)
 
         # creates the new mutated array with values mutated at all indices
         new_array = array + gauss_val
 
-        bounds = gaussian_params['boundaries']
         # clips the numbers that are out of bounds and brings it to the boundary
         # for i in range(nn[1]):
         #    new_array[:,i] = np.clip(new_array[:,i], bounds[i,0], bounds[i,1])
 
+        # new method to handle out of bounds problem: loop around on other side
+        new_array = boundaries[0, :] + ((new_array-boundaries[0, :]) %
+                                        (boundaries[1, :]-boundaries[0, :]))
+
         # checks for flag that specifies whether output should be an integer and rounds the \
         # output arrays
-        if (gaussian_params['int_flag'] == True):
+        if (int_flag == True):
             new_array = (np.rint(new_array)).astype(int)
-
-        # new method to handle out of bounds problem: loop around on other side
-        new_array = bounds[0, :] + ((new_array-bounds[0, :]) %
-                                    (bounds[1, :]-bounds[0, :]))
 
         return new_array
 
-    def pseudo_bit_flip(self, parent, bit_flip_params):  # Amlan
+    def pseudo_bit_flip(self, parent, boundaries, proportions, int_flag):  # Amlan
         '''
 
         Mutate specific values of the parent and return the mutant child.
@@ -77,17 +83,15 @@ class Mutator():
 
         Args:
             parent (numpy array): the parent array.
-            bit_flip_params (dictionary): Parameters containing information needed for
-            the method.
+            boundaries (array-like): Domain from which to select mutated values.
+            proportions (float): Probability of a given entry being mutated.
+            int_flat (bool): Whether output should be ints.
 
         Returns:
             child (numpy array): Numpy array containing characteristics mutated
             from the parent.
 
         '''
-
-        boundaries = bit_flip_params['boundaries']
-        proportions = bit_flip_params['proportions']
 
         # Random binary matrix with a user-specified ratio of 1s and 0s
         B = np.random.choice([0, 1], size=parent.shape, p=[
@@ -101,12 +105,12 @@ class Mutator():
             B, M)+np.multiply((np.ones(parent.shape)-B), parent)
 
         # Checking for flag to force integer output
-        if (bit_flip_params['int_flag'] == True):
+        if (int_flag == True):
             child = (np.floor(child)).astype(int)
 
         return child
 
-    def shuffle_index(self, parent, shuffle_index_params):
+    def shuffle_index(self, parent):
         '''
 
         Mutate the parent by swapping an index with another in the parent array.
@@ -140,15 +144,13 @@ class Mutator():
         return child
 
     def __call__(self, truss):
-        node_method = getattr(self, self.params['node_mutator_method'])
-        edge_method = getattr(self, self.params['edge_mutator_method'])
-        property_method = getattr(self, self.params['property_mutator_method'])
+
         user_spec_nodes = self.params['user_spec_nodes']
         child = Truss(user_spec_nodes, 0, 0, 0)
-        child.rand_nodes = node_method(
-            truss.rand_nodes, self.params['node_mutator_params'])
-        child.edges = edge_method(
-            truss.edges, self.params['edge_mutator_params'])
-        child.properties = property_method(
-            truss.properties, self.params['property_mutator_params'])
+        child.rand_nodes = self.node_method(
+            truss.rand_nodes, **self.params['node_mutator_params'])
+        child.edges = self.edge_method(
+            truss.edges, **self.params['edge_mutator_params'])
+        child.properties = self.property_method(
+            truss.properties, **self.params['property_mutator_params'])
         return child

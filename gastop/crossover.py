@@ -21,8 +21,12 @@ class Crossover():
 
     def __init__(self, crossover_params):
         self.params = crossover_params
+        self.node_method = getattr(self, self.params['node_crossover_method'])
+        self.edge_method = getattr(self, self.params['edge_crossover_method'])
+        self.property_method = getattr(
+            self, self.params['property_crossover_method'])
 
-    def uniform_crossover(self, truss_1, truss_2, uniform_crossover_params=None):  # Paul
+    def uniform_crossover(self, truss_1, truss_2):  # Paul
         '''Performs a uniform crossover on the two parents
 
         The uniform crossover method creates two child arrays by randomly mixing together
@@ -35,8 +39,6 @@ class Crossover():
         Args:
             truss_1 (array): Numpy array containing information for parent 1
             truss_2 (array): Numpy array containing information for parent 2
-            uniform_crossover_params (dictionary): parameters containing any information
-                needed for the method.
 
         Returns:
             child1 (array): Numpy array containing information for child 1
@@ -58,16 +60,9 @@ class Crossover():
         child1 = (unos_and_zeros * truss_1) + (unos_and_zeros_c * truss_2)
         child2 = (unos_and_zeros_c * truss_1) + (unos_and_zeros * truss_2)
 
-        # checks for flag that specifies whether output should be an integer and rounds the \
-        # output arrays
-        if uniform_crossover_params:
-            if (uniform_crossover_params['int_flag'] == True):
-                child1 = (np.rint(child1)).astype(int)
-                child2 = (np.rint(child2)).astype(int)
-
         return child1, child2
 
-    def single_point_split(self, array_1, array_2, single_point_split_params=None):  # Amlan
+    def single_point_split(self, array_1, array_2):  # Amlan
         '''
         Performs a single point split crossover between two parents
 
@@ -78,14 +73,13 @@ class Crossover():
         half of the second parent and vice versa.
 
         Args:
-            parents (numpy arrays): the parent arrays.
-            single_point_split_params (dictionary): Dictionary containing the parameters
-            necessary for performing a single point split crossover
+            truss_1 (array): Numpy array containing information for parent 1
+            truss_2 (array): Numpy array containing information for parent 2
 
         Returns:
-            children (numpy arrays): Numpy arrays containing values from both the parents
-
-        '''
+            child1 (array): Numpy array containing information for child 1
+            child2 (array): Numpy array containing information for child 2
+       '''
 
         # Choosing a random point
         array_row = len(array_1)
@@ -95,15 +89,9 @@ class Crossover():
         child_1 = np.concatenate((array_1[:point], array_2[point:]), axis=0)
         child_2 = np.concatenate((array_2[:point], array_1[point:]), axis=0)
 
-        # Checking for flag that determines whether the output should be an integer or a float
-        if single_point_split_params:
-            if (single_point_split_params['int_flag'] == True):
-                child_1 = (np.rint(child_1)).astype(int)
-                child_2 = (np.rint(child_2)).astype(int)
-
         return child_1, child_2
 
-    def two_points_split(self, array_1, array_2, two_points_split_params=None):  # Amlan
+    def two_points_split(self, array_1, array_2):  # Amlan
         '''
 
         Takes specific values of two parents and return two children containing
@@ -114,12 +102,12 @@ class Crossover():
         parent.
 
         Args:
-            parents (numpy arrays): the parent arrays.
-            two_points_split_params (dictionary): Dictionary containing the domain
-            for which the problem is valid
+            truss_1 (array): Numpy array containing information for parent 1
+            truss_2 (array): Numpy array containing information for parent 2
 
         Returns:
-            children (numpy arrays): Numpy arrays containing values from both the parents
+            child1 (array): Numpy array containing information for child 1
+            child2 (array): Numpy array containing information for child 2
 
         '''
         # Choosing two random points
@@ -138,28 +126,18 @@ class Crossover():
         child_1[p1:p2, :], child_2[p1:p2,
                                    :] = child_2[p1:p2, :], child_1[p1:p2, :]
 
-        # Checking for flag to force integer output
-        if two_points_split_params:
-            if (two_points_split_params['int_flag'] == True):
-                child_1 = (np.rint(child_1)).astype(int)
-                child_2 = (np.rint(child_2)).astype(int)
-
         return child_1, child_2
 
     def __call__(self, truss_1, truss_2):
 
-        node_method = getattr(self, self.params['node_crossover_method'])
-        edge_method = getattr(self, self.params['edge_crossover_method'])
-        property_method = getattr(
-            self, self.params['property_crossover_method'])
         user_spec_nodes = self.params['user_spec_nodes']
         child_1 = Truss(user_spec_nodes, 0, 0, 0)
         child_2 = Truss(user_spec_nodes, 0, 0, 0)
-        child_1.rand_nodes, child_2.rand_nodes = node_method(
-            truss_1.rand_nodes, truss_2.rand_nodes, self.params['node_crossover_params'])
-        child_1.edges, child_2.edges = edge_method(
-            truss_1.edges, truss_2.edges, self.params['edge_crossover_params'])
-        child_1.properties, child_2.properties = property_method(
-            truss_1.properties, truss_2.properties, self.params['property_crossover_params'])
+        child_1.rand_nodes, child_2.rand_nodes = self.node_method(
+            truss_1.rand_nodes, truss_2.rand_nodes, **self.params['node_crossover_params'])
+        child_1.edges, child_2.edges = self.edge_method(
+            truss_1.edges, truss_2.edges, **self.params['edge_crossover_params'])
+        child_1.properties, child_2.properties = self.property_method(
+            truss_1.properties, truss_2.properties, **self.params['property_crossover_params'])
 
         return child_1, child_2

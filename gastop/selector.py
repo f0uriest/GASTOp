@@ -1,6 +1,7 @@
 import numpy as np
 
-class Selector(): # Cristian
+
+class Selector():  # Cristian
     ''' Selects parents to be used for crossover and mutation.
 
     When creating a new Selector() obejct, must be initialized with dictionary
@@ -17,10 +18,11 @@ class Selector(): # Cristian
                                     each tournament. Only needed for tournament
                                     method.
     '''
-    def __init__(self,sel_params):
+
+    def __init__(self, sel_params):
         self.sel_params = sel_params
 
-    def inverse_square_rank_probability(self,num_parents,population):
+    def inverse_square_rank_probability(self, num_parents, population):
         ''' Selects parents according to inverse square rank method.
 
         Creates a cdf, with each entry the cumulative sum of 1/sqrt(N)
@@ -42,7 +44,7 @@ class Selector(): # Cristian
         pop_size = len(population)
 
         # Build cdf (cumulative distribution function)
-        a = np.array(range(1,pop_size+1))
+        a = np.array(range(1, pop_size+1))
         pdf = 1/np.sqrt(a)
         cdf = np.cumsum(pdf)
         cdf_upperbound = cdf[-1]
@@ -52,13 +54,13 @@ class Selector(): # Cristian
         # would fall. For example, if one random value were 1.9, the corresponding
         # index would be 1 since 1.9 lies between 1+1/sqrt(2) and
         # 1+1/sqrt(2)+1/sqrt(3).
-        rand_vals = np.random.uniform(0,cdf_upperbound,num_parents)
-        parents = np.searchsorted(cdf,rand_vals,side='left')
+        rand_vals = np.random.uniform(0, cdf_upperbound, num_parents)
+        parents = np.searchsorted(cdf, rand_vals, side='left')
         parents = parents.astype(int)
 
         return parents
 
-    def tournament(self,num_parents,population):
+    def tournament(self, num_parents, population):
         ''' Selects parents according to tournament method.
 
         (ASSUMES POPULATION IS SORTED BY FITNESS) Randomly selects truss
@@ -86,28 +88,29 @@ class Selector(): # Cristian
 
         # Build ndarray of randomly selected parent indices. Each row in the
         # array corresponds to a tournament, one tournament for each parent.
-        rand_dimen = (num_parents,tourn_size)
-        rand_vals = np.random.randint(0,pop_size,rand_dimen)
+        rand_dimen = (num_parents, tourn_size)
+        rand_vals = np.random.randint(0, pop_size, rand_dimen)
         rand_vals.sort(axis=1)
         # print(rand_vals,rand_vals.shape,rand_vals.max())
 
         # Build probability array
         generator = (tourn_prob*(1-tourn_prob)**x for x in range(tourn_size))
-        a = np.fromiter(generator,float)
-        tourn_distribution = a/np.sum(a) # normalize probabilities
+        a = np.fromiter(generator, float)
+        tourn_distribution = a/np.sum(a)  # normalize probabilities
 
         # Randomly select indices from each row of rand_vals assigning the
         # corresponding probability in tourn_distribution to each element in
         # the row.
-        select_ids = np.random.choice(tourn_size,num_parents,p=tourn_distribution)
+        select_ids = np.random.choice(
+            tourn_size, num_parents, p=tourn_distribution)
         # print(select_ids,select_ids.shape,select_ids.max())
 
         # Build parents array, selecting an element from each row of rand_vals
-        parents = np.choose(select_ids,rand_vals.T)
+        parents = np.choose(select_ids, rand_vals.T)
 
         return parents
 
-    def __call__(self,num_parents,population):
-        method = getattr(self,self.sel_params['method'])
-        parents = method(num_parents,population)
+    def __call__(self, num_parents, population):
+        method = getattr(self, self.sel_params['method'])
+        parents = method(num_parents, population)
         return parents
