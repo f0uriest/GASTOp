@@ -1,5 +1,5 @@
 Selector
-----------------------
+********
 
 .. autoclass:: gastop.selector.Selector
     :members:

@@ -1,5 +1,5 @@
 Crossover
------------------------
+*********
 
 .. autoclass:: gastop.crossover.Crossover
     :members:

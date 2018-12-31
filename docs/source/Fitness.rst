@@ -1,5 +1,5 @@
 FitnessFunction
----------------------
+***************
 
 .. autoclass:: gastop.fitness.FitnessFunction
     :members:

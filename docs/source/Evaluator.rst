@@ -1,5 +1,5 @@
 Evaluator
------------------------
+*********
 
 .. autoclass:: gastop.evaluator.Evaluator
     :members:

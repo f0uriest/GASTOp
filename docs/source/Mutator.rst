@@ -1,5 +1,5 @@
 Mutator
----------------------
+*******
 
 .. autoclass:: gastop.mutator.Mutator
     :members:

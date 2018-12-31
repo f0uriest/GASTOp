@@ -1,5 +1,5 @@
-encoders module
-----------------------
+encoders
+********
 
 .. automodule:: gastop.encoders
     :members:

@@ -1,5 +1,5 @@
 GenAlg
---------------------
+******
 
 .. autoclass:: gastop.genalg.GenAlg
     :members:

@@ -1,5 +1,5 @@
 Truss
--------------------
+*****
 
 .. autoclass:: gastop.truss.Truss
     :members:

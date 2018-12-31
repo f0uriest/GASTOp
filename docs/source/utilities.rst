@@ -1,5 +1,5 @@
-utilities module
------------------------
+utilities
+*********
 
 .. automodule:: gastop.utilities
     :members:
