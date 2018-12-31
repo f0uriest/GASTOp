@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import numpy as np
 import json
-from tqdm import tqdm  # susan added
+from tqdm import tqdm, tqdm_notebook, tnrange
 from multiprocessing import Pool
 import os
 
@@ -40,7 +40,7 @@ class GenAlg():
             config (dict): Configuration dictionary with parameters, such as one
                 created by :meth:`gastop.utilities.init_file_parser`
             config (str): File path to config file to be parsed. Used
-                instead of passing config dictionary directly. 
+                instead of passing config dictionary directly.
 
         Returns:
             GenAlg callable object
@@ -194,6 +194,7 @@ class GenAlg():
             # With parallelization
             # Try 2: time =
             for current_gen in tqdm(range(num_generations)):
+            #for current_gen in tqdm_notebook(range(num_generations),desc='Generation'):
                 self.ga_params['current_generation'] = current_gen
                 pool = Pool(num_threads)
                 self.population = pool.map(self.evaluator, self.population)
