@@ -11,8 +11,8 @@ GASTOp
 .. image:: https://readthedocs.org/projects/gastop/badge/?version=latest
     :target: https://gastop.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
-.. image:: https://img.shields.io/badge/License-GPLv3-blue.sv
-    :target: https://www.gnu.org/licenses/gpl-3.0
+.. image:: https://img.shields.io/badge/License-GPLv3-blue.svg
+    :target: https://github.com/f0uriest/GASTOp/blob/master/LICENSE
     :alt: License: GPL v3
 
       
