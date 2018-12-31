@@ -1,15 +1,11 @@
 language: python
 python:
   - "3.6"
+  - "3.7"
 # command to install dependencies
 install:
-  - pip install pytest
-  - pip install pytest-cov
-  - pip install coveralls
-  - pip install numpy
-  - pip install matplotlib
-  - pip install configobj
-  - pip install tqdm
+# add new stuff to requirements file, not here
+  - pip install -r requirement.txt
 # command to run tests
 script:
   - python -m pytest --cov=gastop/

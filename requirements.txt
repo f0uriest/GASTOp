@@ -5,4 +5,7 @@ numpy
 matplotlib
 configobj
 tqdm
+pytest
+pytest-cov
+coveralls
 
