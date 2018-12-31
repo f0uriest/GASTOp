@@ -11,6 +11,10 @@ GASTOp
 .. image:: https://readthedocs.org/projects/gastop/badge/?version=latest
     :target: https://gastop.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+.. image:: https://img.shields.io/badge/License-GPLv3-blue.sv
+    :target: https://www.gnu.org/licenses/gpl-3.0
+    :alt: License: GPL v3
+
       
 GASTOp is a **G**\ enetic **A**\ lgorithm for **S**\ tructural design and **T**\ opological **Op**\ timization.
 Given a set of boundary conditions such as applied loads and fixtures, it will design a structure to support those loads while minimizing weight and deflections and maximize factor of safety. 
