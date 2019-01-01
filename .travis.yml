@@ -4,8 +4,6 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-env:
-  -DISPLAY=:0.0
 matrix:
   include:
     - python: 3.7
