@@ -197,7 +197,7 @@ class GenAlg():
         # With parallelization
         else:
             if self.ga_params['pop_size'] < 1e4:
-                chunksize = self.ga_params['pop_size']/100
+                chunksize = int(self.ga_params['pop_size']/100)
             else:
                 chunksize = int(np.sqrt(self.ga_params['pop_size']))
             for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
@@ -347,6 +347,7 @@ class GenAlg():
 
         # Append separate lists to form new generation
         population = pop_elite + pop_crossover + pop_mutation + pop_random
-
+        pbar.close()
         # Update population attribute
         self.population = population
+        return
