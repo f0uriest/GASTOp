@@ -19,7 +19,7 @@ install:
   - pip install -r requirements.txt
 # command to run tests
 script:
-  - xvfb-run make test
+  - xvfb-run
   - python -m pytest --cov=gastop/
 
 after_script:
