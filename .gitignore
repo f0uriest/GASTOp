@@ -11,3 +11,4 @@ docs/_build
 docs/_static
 .DS_Store
 .cache/
+*.egg-info

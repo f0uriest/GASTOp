@@ -1,7 +1,6 @@
 language: python
 python:
   - "2.7"
-  - "3.4"
   - "3.5"
   - "3.6"
 matrix:
@@ -11,8 +10,6 @@ matrix:
       sudo: true
   allow_failures:
     - python: "2.7"
-    - python: "3.4"
-    - python: "3.5"
 # command to install dependencies
 install:
 # add new stuff to requirements file, not here

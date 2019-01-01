@@ -2,7 +2,7 @@
 --index-url https://pypi.python.org/simple/
 
 numpy >= 1.13.0
-matplotlib >= 2.0.0
+matplotlib >= 3.0.0
 configobj >= 5.0.6
 tqdm >= 4.28.1
 pytest >=3.0.5

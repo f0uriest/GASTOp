@@ -118,7 +118,7 @@ class GenAlg():
 
         return Truss(user_spec_nodes, new_nodes, new_edges, new_properties)
 
-    def initialize_population(self, pop_size):
+    def initialize_population(self, pop_size=None):
         '''Initializes population with randomly creates Truss objects
 
         Args:
@@ -127,7 +127,10 @@ class GenAlg():
         Returns:
             Updated self.population
         '''
-        self.ga_params['pop_size'] = pop_size
+        if pop_size:
+            self.ga_params['pop_size'] = pop_size
+        else:
+            pop_size = self.ga_params['pop_size']
 
         # Try 1: t= 0.298
         # self.population = [self.generate_random() for i in range(pop_size)]
@@ -146,7 +149,8 @@ class GenAlg():
 
         # Try 4: t=0.232
         pool = Pool()
-        self.population = pool.map(self.generate_random, range(pop_size))
+        self.population = list(tqdm(pool.imap(
+            self.generate_random, range(pop_size), int(np.sqrt(pop_size))), total=pop_size, leave=False, desc='Initializing Population', position=0))
         pool.close()
         pool.join()
 
@@ -167,22 +171,22 @@ class GenAlg():
             ax1 = fig.add_subplot(1, 1, 1)
             plt.ylabel('fos')
             plt.xlabel('iteration')
-        #
+
+        # wrapper function for evaluation and scoring
+        def score(truss):
+            return self.fitness_function(self.evaluator(truss))
 
         # Loop over all generations:
 
         # Without any parallelization:
-        # Try 1: time =
         if num_threads == 1:
             for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
                 self.ga_params['current_generation'] = current_gen
                 # Loop over all trusses -> PARALLELIZE. Later
-                for current_truss in tqdm(self.population, desc='Current Generation', leave=False, position=1):
-                    # Run evaluator method. Will store refitness_scoresults in Truss Object
+                for current_truss in tqdm(self.population, desc='Evaluating', position=1):
                     self.evaluator(current_truss)
-                    # Assigns numerical score to each truss
+                for current_truss in tqdm(self.population, desc='Scoring', position=1):
                     self.fitness_function(current_truss)
-                # print(current_truss.fos)
                 if progress_display == 2:
                     self.progress_monitor(current_gen, progress_display, ax1)
                 self.update_population()  # Determine which members to
@@ -190,16 +194,20 @@ class GenAlg():
                     plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
             return self.population[0], self.pop_progress
 
+        # With parallelization
         else:
-            # With parallelization
-            # Try 2: time =
-            for current_gen in tqdm(range(num_generations)):
-            #for current_gen in tqdm_notebook(range(num_generations),desc='Generation'):
+            if self.ga_params['pop_size'] < 1e4:
+                chunksize = self.ga_params['pop_size']/100
+            else:
+                chunksize = int(np.sqrt(self.ga_params['pop_size']))
+            for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
+                # for current_gen in tqdm_notebook(range(num_generations),desc='Generation'):
                 self.ga_params['current_generation'] = current_gen
                 pool = Pool(num_threads)
-                self.population = pool.map(self.evaluator, self.population)
-                self.population = pool.map(
-                    self.fitness_function, self.population)
+                self.population = list(tqdm(pool.imap(
+                    self.evaluator, self.population, chunksize), total=self.ga_params['pop_size'], desc='Evaluating', position=1))
+                self.population = list(tqdm(pool.imap(
+                    self.fitness_function, self.population, chunksize), total=self.ga_params['pop_size'], desc='Scoring', position=1))
                 pool.close()
                 pool.join()
                 if progress_display == 2:
@@ -309,6 +317,8 @@ class GenAlg():
         # Save most fit trusses as elites
         pop_elite = population[:num_elite]
 
+        pbar = tqdm(total=(num_crossover+num_mutation+num_random),
+                    desc='Updating', position=1)
         # Portion of new population formed by crossover
         pop_crossover = []
         for i in range(0, num_crossover, 2):
@@ -318,6 +328,7 @@ class GenAlg():
             parent2 = population[parentindex2]
             child1, child2 = crossover(parent1, parent2)
             pop_crossover.extend((child1, child2))
+            pbar.update(2)
 
         # Portion of new population formed by mutation
         pop_mutation = []
@@ -326,9 +337,13 @@ class GenAlg():
             parent = population[parentindex]
             child = mutator(parent)
             pop_mutation.append(child)
+            pbar.update()
 
         # Create new random trusses with remaining spots in generation
-        pop_random = [self.generate_random(2) for i in range(num_random)]
+        pop_random = []
+        for i in range(num_random):
+            pop_random.append(self.generate_random(2))
+            pbar.update()
 
         # Append separate lists to form new generation
         population = pop_elite + pop_crossover + pop_mutation + pop_random
