@@ -113,9 +113,9 @@ def init_file_parser(init_file_path):  # Cristian
     loads = config['general']['loads']
     fixtures = config['general']['fixtures']
     if loads.ndim < 3:
-        loads = np.reshape(loads, (*loads.shape, 1))
+        loads = np.reshape(loads, (loads.shape + (1,)))
     if fixtures.ndim < 3:
-        fixtures = np.reshape(fixtures, (*fixtures.shape, 1))
+        fixtures = np.reshape(fixtures, (fixtures.shape + (1,)))
     num_loads = loads.shape[2]
     fixtures = np.concatenate((fixtures, np.zeros(
         (num_rand_nodes, 6, num_loads))), axis=0)
