@@ -12,7 +12,7 @@ def beam_file_parser(properties_path):
 
     Property entries should be formatted as:
     beam #, material name, OD (m), ID (m), elastic_modulus (Pa),
-    yield_strength (Pa), density (kg/m^3), poisson_ratio
+    yield_strength (Pa), density (kg/m^3), poisson_ratio, cost
 
     Args:
         properties_path (str): Path to the properties csv file, relative to
@@ -31,6 +31,7 @@ def beam_file_parser(properties_path):
     YS = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=5)
     dens = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=6)
     nu = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=7)
+    cost = np.loadtxt(properties_path, delimiter=',', skiprows=1, usecols=8)
     G = E/(2*(1+nu))
     A = np.pi/4*(OD**2 - ID**2)
     Iz = np.pi/64*(OD**4 - ID**4)
@@ -47,7 +48,8 @@ def beam_file_parser(properties_path):
                        'polar_moment_inertia': J,
                        'outer_diameter': OD,
                        'inner_diameter': ID,
-                       'density': dens}
+                       'density': dens,
+                       'cost': cost}
 
     return properties_dict
 
