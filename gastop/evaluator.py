@@ -269,11 +269,11 @@ class Evaluator():
             # currently acts weird and gives wrong results if a node is fixed in one direction and free in another
             # calculate displacements
         for j in range(num_loads):
-            # set unconnected nodes to fixed
-            unconnected = np.setdiff1d(range(num_nodes), con.flatten())
+            # set unconnected unloaded nodes to fixed
+            unconnected = np.setdiff1d(
+                range(num_nodes), np.concatenate((con.flatten(), np.nonzero(loads[:, :, j].any(axis=1))[0])))
             fixtures[unconnected, :, j] = 1
-            # make sure loaded nodes are not fixed
-            fixtures[:, :, j][loads[:, :, j].any(axis=1)] = 0
+
             # get indices of free nodes
             f = np.nonzero(
                 1-np.ravel(fixtures[:, :, j]))

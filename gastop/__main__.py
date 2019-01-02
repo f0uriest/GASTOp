@@ -97,6 +97,7 @@ def main(args=sys.argv[1:]):
     print('FoS:')
     print(best.fos)
 
+    np.set_printoptions(formatter={'float': lambda x: format(x, ' 6.2E')})
     print('\n')
     print('Deflections (m): ')
     print('      Dx        Dy        Dz        Rx        Ry        Rz        ')
@@ -106,7 +107,7 @@ def main(args=sys.argv[1:]):
         best.plot(domain=config['random_params']['domain'].T,
                   loads=config['evaluator_params']['boundary_conditions']['loads'],
                   fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
-                  deflection=True, load_scale=.001, def_scale=100)
+                  deflection=True)
 
 
 if __name__ == '__main__':

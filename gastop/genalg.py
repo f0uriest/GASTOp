@@ -5,11 +5,11 @@ import json
 from tqdm import tqdm, tqdm_notebook, tnrange
 from multiprocessing import Pool
 import os
-
-
+import colorama
 from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders, utilities
 # plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
+colorama.init()  # for progress bars on ms windows
 
 
 class GenAlg():
