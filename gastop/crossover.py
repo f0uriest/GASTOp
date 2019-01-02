@@ -14,7 +14,7 @@ class Crossover():
     function that produces children according to the specified method.
 
     Attributes:
-        crossover_params(dict of str: ): Dictionary of parameters required by crossover objects.
+        crossover_params(dict of str): Dictionary of parameters required by crossover objects.
         crossover_params['method'](str): Name of chosen crossover method.
 
     '''
