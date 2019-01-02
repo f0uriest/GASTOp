@@ -31,15 +31,15 @@ def parse_args(args):
     return parser.parse_args(args)
 
 
-def main(args):
+def main(args=sys.argv[1:]):
 
     args = parse_args(args)
     config = utilities.init_file_parser(args.config_path)
 
     if args.display:
-        progress_display == 2
+        progress_display = 2
     elif args.quiet:
-        progress_display == 1
+        progress_display = 1
     else:
         progress_display = None
 

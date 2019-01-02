@@ -69,8 +69,9 @@ class TestOptimization(unittest.TestCase):
     def test_rastrigin(self):
         config['fitness_params'] = {
             'equation': 'rastrigin', 'parameters': {}}
+        config['ga_params']['pop_size'] = 1000
         ga = GenAlg(config)
-        ga.initialize_population(pop_size)
+        ga.initialize_population()
         best, progress_history = ga.run()
         self.assertAlmostEqual(best.fitness_score, 0, places=2)
 
