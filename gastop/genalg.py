@@ -172,10 +172,6 @@ class GenAlg():
             plt.ylabel('fos')
             plt.xlabel('iteration')
 
-        # wrapper function for evaluation and scoring
-        def score(truss):
-            return self.fitness_function(self.evaluator(truss))
-
         # Loop over all generations:
 
         # Without any parallelization:

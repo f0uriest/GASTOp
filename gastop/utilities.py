@@ -185,31 +185,3 @@ def init_file_parser(init_file_path):  # Cristian
         raise RuntimeError('percent_crossover + percent_mutation > 1')
 
     return config
-
-
-def cart2sph(x, y, z):
-    """Converts cartesian coordinates to spherical coordinates
-
-    Args:
-        x,y,z (array like): cartesian coordinates. Arrays must all have same shape
-
-    Returns:
-        3-element tuple containing:
-
-        - **r** (*ndarray*): Radial coordinate. computed as L2 norm of x,y,z vector.
-        - **elev** (*ndarray*):  Elevation angle, in radians. Ranges from pi/2 to
-          -pi/2. Elevation = 0 corresponds to a vector in the x-y plane,
-          elevation = pi/2 corresponds to a vector along positive z axis.
-        - **azim** (*ndarray*): Azimuth angle, in radians. ranges from 0 to 2pi.
-          Azimuth = 0 along the positive x axis.
-    """
-
-    x = np.array(x)
-    y = np.array(y)
-    z = np.array(z)
-
-    r = np.sqrt(x**2+y**2+z**2)
-    azim = np.arctan2(y, x)
-    elev = np.pi/2 - np.arccos(z/r)
-
-    return r, elev, azim

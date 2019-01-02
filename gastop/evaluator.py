@@ -203,22 +203,23 @@ class Evaluator():
         k4 = np.zeros((3, 3, num_con))  # stiffness matrix components
         FoS = np.zeros((num_con, num_loads))  # factor of safety
 
-        # calculate vectors of members in global coords
+        # calculate length and direction sines/cosines of members in global coords
         edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]
-        L, b, a = utilities.cart2sph(
-            edge_vec[:, 0], edge_vec[:, 1], edge_vec[:, 2])
-        ca = np.cos(a)  # a is azimuthal angle
-        sa = np.sin(a)
-        cb = np.cos(b)  # b is elevation angle
-        sb = np.sin(b)
+        rho = np.sqrt(edge_vec[:, 0]**2+edge_vec[:, 1]
+                      ** 2)  # length in x-y plane
+        L = np.sqrt(rho**2 + edge_vec[:, 2]**2)  # total length of member
+        ca = edge_vec[:, 0]/rho  # cosine of azimuthal angle
+        sa = edge_vec[:, 1]/rho  # sine of azimuthal angle
+        cp = rho/L  # cosine of polar angle
+        sp = edge_vec[:, 2]/L  # sine of polar angle
 
         # populate transformation matrices
-        r[0, 0, :] = cb*ca
-        r[0, 1, :] = sb
-        r[0, 2, :] = sa*cb
-        r[1, 0, :] = -sb*ca
-        r[1, 1, :] = cb
-        r[1, 2, :] = -sb*sa
+        r[0, 0, :] = cp*ca
+        r[0, 1, :] = sp
+        r[0, 2, :] = sa*cp
+        r[1, 0, :] = -sp*ca
+        r[1, 1, :] = cp
+        r[1, 2, :] = -sp*sa
         r[2, 0, :] = -sa
         r[2, 2, :] = ca
         T[0:3, 0:3, :] = r
