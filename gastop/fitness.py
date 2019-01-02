@@ -12,7 +12,7 @@ class FitnessFunction():
     from the class may also be called directly.
     """
 
-    def __init__(self, equation, parameters=None):
+    def __init__(self, equation, parameters):
         """Creates a FitnessFunction object
 
         Once created, the object acts like a function and can be called on a Truss
@@ -32,26 +32,24 @@ class FitnessFunction():
         self.equation = getattr(self, equation)
         self.parameters = parameters  # dictionary
 
-    def weighted_sum(self, truss, parameters):
+    def weighted_sum(self, truss, goal_fos, critical_nodes, w_fos, w_mass, w_deflection):
         """Computes fitness score using a weighted sum of parameters.
 
         Args:
-            truss (Truss object): truss to be scored. Must have mass
-                fos attributes defined (for example, by using evaluator).
-            parameters (dict): Dictionary with the following entries:
-
-                - ``'goal_fos'`` *(float >= 0)*: Desired factor of safety. Trusses with
-                  a smaller fos will be penalized according to *'w_fos'*.
-                - ``'critical_nodes'`` *(int, array)*: Array of nodes #s for which 
-                  deflection should be minimized. If empty, defaults to all.
-                - ``'w_fos'`` *(float >= 0)*: Penalty weight for low fos. Only applied
-                  if truss.fos < *'goal_fos'*.
-                - ``'w_mass'`` *(float >= 0)*: Penalty applied to mass. Relative
-                  magnitude of *'w_mass'* and *'w_fos'* determines importance of
+            truss (Truss object): truss to be scored. Must have *mass*,
+                *fos*, and *deflections* attributes defined (for example, by using evaluator).
+            goal_fos (float >= 0): Desired factor of safety. Trusses with
+                a smaller fos will be penalized according to *w_fos*.
+            critical_nodes (int, array): Array of nodes #s for which 
+                deflection should be minimized. If empty, defaults to all.
+            w_fos (float >= 0): Penalty weight for low fos. Only applied
+                if truss.fos < *goal_fos*.
+            w_mass (float >= 0): Penalty applied to mass. Relative
+                magnitude of *w_mass* and *w_fos* determines importance of
                   minimizing mass vs maximizing fos.
-                - ``'w_deflection'`` *(float >=0, array)*: Penalty applied to deflections.
+            w_deflection (float >=0, array): Penalty applied to deflections.
                   If scalar, applies the same penalty to all critical nodes.
-                  Can also be an array the same size as *'critical_nodes'* in 
+                  Can also be an array the same size as *critical_nodes* in 
                   which case different penalties will be applied to each node.
 
         Returns:
@@ -71,19 +69,18 @@ class FitnessFunction():
         else:
             minfos = 0
 
-        if self.parameters['critical_nodes'].size:
-            deflections = truss.deflection[self.parameters['critical_nodes']][:, :3]
+        if critical_nodes.size:
+            deflections = truss.deflection[critical_nodes][:, :3]
         else:
             deflections = truss.deflection[:, :3]
 
         deflection_score = np.sum(
-            self.parameters['w_deflection']*np.sqrt(np.sum(deflections**2, axis=1)))
-        fs = np.maximum(self.parameters['goal_fos'] - minfos, 0)
-        f = self.parameters['w_mass']*truss.mass + \
-            self.parameters['w_fos']*fs + deflection_score
+            w_deflection*np.sqrt(np.sum(deflections**2, axis=1)))
+        fs = np.maximum(goal_fos - minfos, 0)
+        f = w_mass*truss.mass + w_fos*fs + deflection_score
         return f
 
-    def sphere(self, truss, parameters=None):
+    def sphere(self, truss):
         """Sum of squares of node array elements. aka, sphere function.
 
         Global min at x = 0 where f = 0.
@@ -93,7 +90,6 @@ class FitnessFunction():
         Args: 
             truss (Truss object): only uses truss object as container for 
                 nodes. No other attributes needed.
-            parameters (dict): None needed for this method.
 
         Returns:
             float: Fitness score. Computed as
@@ -107,7 +103,7 @@ class FitnessFunction():
         f = np.sum(x**2)
         return f
 
-    def rosenbrock(self, truss, parameters=None):
+    def rosenbrock(self, truss):
         """n-dimensional Rosenbrock function.
 
         Sum of n/2 2D Rosenbrock functions.
@@ -118,7 +114,6 @@ class FitnessFunction():
         Args: 
             truss (Truss object): only uses truss object as container for 
                 nodes. No other attributes needed.
-            parameters (dict): None needed for this method.
 
         Returns:
             float: Fitness score. Computed as
@@ -137,7 +132,7 @@ class FitnessFunction():
             f += 100*(x[2*i]**2 - x[2*i+1])**2 + (x[2*i] - 1)**2
         return f
 
-    def rastrigin(self, truss, parameters=None):
+    def rastrigin(self, truss):
         """n-dimensional Restrigin function.
 
         Global min at x=0 where f=0.
@@ -147,7 +142,6 @@ class FitnessFunction():
         Args: 
             truss (Truss object): only uses truss object as container for 
                 nodes. No other attributes needed.
-            parameters (dict): None needed for this method.
 
         Returns:
             float: fitness score. Computed as
@@ -179,6 +173,6 @@ class FitnessFunction():
 
         """
 
-        f = self.equation(truss, self.parameters)
+        f = self.equation(truss, **self.parameters)
         truss.fitness_score = f
         return truss

@@ -75,7 +75,7 @@ class Truss():
     #     pass
 
     def plot(self, domain=None, loads=None, fixtures=None,
-             deflection=False, load_scale=1, def_scale=1):
+             deflection=False, load_scale=None, def_scale=100):
         """Plots a truss object as a 3D wireframe
 
         Args:
@@ -118,6 +118,10 @@ class Truss():
 
         num_nodes = nodes.shape[0]
         num_con = con.shape[0]
+
+        size_scale = (nodes.max(axis=0)-nodes.min(axis=0)).max()
+        if load_scale is None and loads is not None:
+            load_scale = size_scale/np.abs(loads).max()/5
 
         fig = plt.figure()
         ax = fig.gca(projection='3d')

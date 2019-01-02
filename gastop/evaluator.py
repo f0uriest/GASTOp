@@ -76,7 +76,7 @@ class Evaluator():
         self.boundary_conditions = boundary_conditions
         self.properties_dict = properties_dict
 
-    def mat_struct_analysis_DSM(self, truss):
+    def mat_struct_analysis_DSM(self, truss, boundary_conditions, properties_dict):
         """Calculates deflections and stresses using direct stiffness method.
 
         Constructs global stiffness matrix from nodes and connections, 
@@ -87,6 +87,43 @@ class Evaluator():
         Args:
             truss (Truss object): Truss to be evaluated. Must have nodes,
                 edges, and properties defined.
+            boundary_conditions (dict): Dictionary containing:
+
+                - ``'loads'`` *(ndarray)*: Array of loads applied to the structure.
+                  First index corresponds to the node where the load is applied,
+                  second index is the force in x,y,z and moment about x,y,z,
+                  third index is for multiple loading scenarios.
+                - ``'fixtures'`` *(ndarray)*: Array of flags denoting whether a node
+                  is fixed or free. First index corresponds to the node, the
+                  second index corresponds to fixing displacements in x,y,z
+                  and rotations about x,y,z. The third index corresponds to
+                  multiple loading scenarios with different fixtures for each.
+                  Values of the array are 0 (free) or 1 (fixed).
+
+            properties_dict (dict): Dictionary containing beam properties.
+            Entries should be 1D arrays, with length equal to the number of
+            beam options. Each entry in the array is the value of the key
+            property for the specified beam type. Properties include:
+
+                - ``'OD'``: Outer diameter of the beam, in meters.
+                - ``'ID'``: Inner diameter of the beam, in meters.
+                - ``'elastic_modulus'``: Elastic or Young's modulus of the
+                  material, in Pascals.
+                - ``'yield_strength'``: Yield or failure strength of the 
+                  material, in Pascals.
+                - ``'shear_modulus'``: Shear modulus of the material, 
+                  in Pascals.
+                - ``'poisson_ratio'``: Poisson ratio of the material,
+                  dimensionless.
+                - ``'x_section_area'``: Cross sectional area of the beam,
+                  in square meters.
+                - ``'moment_inertia_y'``: Area moment of inertia about beams
+                  y axis, in meters^4.
+                - ``'moment_inertia_z'``: Area moment of inertia about beams
+                  z axis, in meters^4.  
+                - ``'polar_moment_inertia'``: Area moment of inertia about beams
+                  polar axis, in meters^4. 
+                - ``'dens'``: Density of the material, in kilograms per cubic meter.
 
         Returns:
             2-element tuple containing:
@@ -124,8 +161,8 @@ class Evaluator():
             (truss.user_spec_nodes.copy(), truss.rand_nodes.copy()))
         con = truss.edges.copy()
         matl = truss.properties.copy()
-        loads = self.boundary_conditions['loads'].copy()
-        fixtures = self.boundary_conditions['fixtures'].copy()
+        loads = boundary_conditions['loads'].copy()
+        fixtures = boundary_conditions['fixtures'].copy()
 
         # remove self connected edges and duplicate members
         matl = matl[(con[:, 0]) >= 0]
@@ -139,14 +176,14 @@ class Evaluator():
         num_loads = loads.shape[2]
 
         # get material properties etc
-        E = self.properties_dict['elastic_modulus'][matl]
-        G = self.properties_dict['shear_modulus'][matl]
-        YS = self.properties_dict['yield_strength'][matl]
-        A = self.properties_dict['x_section_area'][matl]
-        Iz = self.properties_dict['moment_inertia_z'][matl]
-        Iy = self.properties_dict['moment_inertia_y'][matl]
-        J = self.properties_dict['polar_moment_inertia'][matl]
-        OD = self.properties_dict['outer_diameter'][matl]
+        E = properties_dict['elastic_modulus'][matl]
+        G = properties_dict['shear_modulus'][matl]
+        YS = properties_dict['yield_strength'][matl]
+        A = properties_dict['x_section_area'][matl]
+        Iz = properties_dict['moment_inertia_z'][matl]
+        Iy = properties_dict['moment_inertia_y'][matl]
+        J = properties_dict['polar_moment_inertia'][matl]
+        OD = properties_dict['outer_diameter'][matl]
 
         # initialize empty matrices
         # member stiffness matrices in local coords
@@ -166,22 +203,23 @@ class Evaluator():
         k4 = np.zeros((3, 3, num_con))  # stiffness matrix components
         FoS = np.zeros((num_con, num_loads))  # factor of safety
 
-        # calculate vectors of members in global coords
+        # calculate length and direction sines/cosines of members in global coords
         edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]
-        L, b, a = utilities.cart2sph(
-            edge_vec[:, 0], edge_vec[:, 1], edge_vec[:, 2])
-        ca = np.cos(a)  # a is azimuthal angle
-        sa = np.sin(a)
-        cb = np.cos(b)  # b is elevation angle
-        sb = np.sin(b)
+        rho = np.sqrt(edge_vec[:, 0]**2+edge_vec[:, 1]
+                      ** 2)  # length in x-y plane
+        L = np.sqrt(rho**2 + edge_vec[:, 2]**2)  # total length of member
+        ca = edge_vec[:, 0]/rho  # cosine of azimuthal angle
+        sa = edge_vec[:, 1]/rho  # sine of azimuthal angle
+        cp = rho/L  # cosine of polar angle
+        sp = edge_vec[:, 2]/L  # sine of polar angle
 
         # populate transformation matrices
-        r[0, 0, :] = cb*ca
-        r[0, 1, :] = sb
-        r[0, 2, :] = sa*cb
-        r[1, 0, :] = -sb*ca
-        r[1, 1, :] = cb
-        r[1, 2, :] = -sb*sa
+        r[0, 0, :] = cp*ca
+        r[0, 1, :] = sp
+        r[0, 2, :] = sa*cp
+        r[1, 0, :] = -sp*ca
+        r[1, 1, :] = cp
+        r[1, 2, :] = -sp*sa
         r[2, 0, :] = -sa
         r[2, 2, :] = ca
         T[0:3, 0:3, :] = r
@@ -231,11 +269,11 @@ class Evaluator():
             # currently acts weird and gives wrong results if a node is fixed in one direction and free in another
             # calculate displacements
         for j in range(num_loads):
-            # set unconnected nodes to fixed
-            unconnected = np.setdiff1d(range(num_nodes), con.flatten())
+            # set unconnected unloaded nodes to fixed
+            unconnected = np.setdiff1d(
+                range(num_nodes), np.concatenate((con.flatten(), np.nonzero(loads[:, :, j].any(axis=1))[0])))
             fixtures[unconnected, :, j] = 1
-            # make sure loaded nodes are not fixed
-            fixtures[:, :, j][loads[:, :, j].any(axis=1)] = 0
+
             # get indices of free nodes
             f = np.nonzero(
                 1-np.ravel(fixtures[:, :, j]))
@@ -273,7 +311,7 @@ class Evaluator():
 
         return FoS, V
 
-    def mass_basic(self, truss):
+    def mass_basic(self, truss, properties_dict):
         """Calculates mass of structure
 
         Considers only members, does not account for additional mass due
@@ -282,6 +320,14 @@ class Evaluator():
         Args:
             truss (Truss object): Truss to be evaluated. Must have nodes,
                 edges, and properties defined.
+           properties_dict (dict): Dictionary containing beam properties.
+            Entries should be 1D arrays, with length equal to the number of
+            beam options. Each entry in the array is the value of the key
+            property for the specified beam type. Properties include:
+
+                - ``'x_section_area'``: Cross sectional area of the beam,
+                  in square meters.
+                - ``'dens'``: Density of the material, in kilograms per cubic meter.
 
         Returns:
             mass (float): Mass of the structure in kilograms.
@@ -310,8 +356,8 @@ class Evaluator():
             edge_vec[:, 2]**2)
 
         # get material properties
-        A = self.properties_dict['x_section_area'][matl]
-        dens = self.properties_dict['density'][matl]
+        A = properties_dict['x_section_area'][matl]
+        dens = properties_dict['density'][matl]
         mass = np.sum(A*L*dens)
 
         return mass
@@ -325,7 +371,7 @@ class Evaluator():
         """
         return None
 
-    def blank_test(self, truss):
+    def blank_test(self, truss, *args, **kwargs):
         """Blank function used for testing GA when no evaluation needed
 
         Args:
@@ -351,8 +397,9 @@ class Evaluator():
 
         """
 
-        fos, deflection = self.struct_solver(truss)
-        mass = self.mass_solver(truss)
+        fos, deflection = self.struct_solver(
+            truss, self.boundary_conditions, self.properties_dict)
+        mass = self.mass_solver(truss, self.properties_dict)
         interferences = self.interferences_solver(truss)
         truss.fos = fos
         truss.deflection = deflection

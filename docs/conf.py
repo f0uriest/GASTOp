@@ -46,7 +46,9 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
-    #    'recommonmark'
+    #    'sphinx_selective_exclude.eager_only',
+    #    'sphinx_selective_exclude.search_auto_exclude',
+    #    'sphinx_selective_exclude.modindex_exclude',
 ]
 
 # Napoleon settings
@@ -124,17 +126,17 @@ html_static_path = ['_static']
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = "demo/static/logo-wordmark-light.svg"
+# html_logo = "demo/static/logo-wordmark-light.svg"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-#html_favicon = None
+# html_favicon = None
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-#html_static_path = ['_static']
+# html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -145,11 +147,11 @@ html_last_updated_fmt = '%b %d, %Y'
 html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-#html_sidebars = {}
+# html_sidebars = {}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
-#html_additional_pages = {}
+# html_additional_pages = {}
 
 # If false, no module index is generated.
 html_domain_indices = True
@@ -172,10 +174,10 @@ html_show_copyright = True
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
-#html_use_opensearch = ''
+# html_use_opensearch = ''
 
 # This is the file name suffix for HTML files (e.g. ".xhtml").
-#html_file_suffix = None
+# html_file_suffix = None
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'gastopdoc'
@@ -183,32 +185,148 @@ htmlhelp_basename = 'gastopdoc'
 
 # -- Options for LaTeX output ------------------------------------------------
 
+# -- Options for LaTeX output ---------------------------------------------
+latex_engine = 'pdflatex'
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
-    # 'papersize': 'letterpaper',
+    'papersize': 'letterpaper',
 
+    'fncychap': '\\usepackage{fncychap}',
+    'fontpkg': '\\usepackage{amsmath,amsfonts,amssymb,amsthm}',
+    'figure_align': 'htbp',
     # The font size ('10pt', '11pt' or '12pt').
     #
-    # 'pointsize': '10pt',
-
+    'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
     #
-    # 'preamble': '',
+    'preamble': r'''
+    %% %% %% %% %% %% %% %% %% %% Meher %% %% %% %% %% %% %% %% %%
+    %% %add number to subsubsection 2=subsection, 3=subsubsection
+    %% % below subsubsection is not good idea.
+    \setcounter{secnumdepth}{3}
 
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
+    %% %% Table of content upto 2=subsection, 3=subsubsection
+    \setcounter{tocdepth}{3}
+
+    \usepackage{amsmath,amsfonts,amssymb,amsthm}
+    \usepackage{graphicx}
+    
+    %% % reduce spaces for Table of contents, figures and tables
+    %% % it is used "\addtocontents{toc}{\vskip -1.2cm}" etc. in the document
+    \usepackage[notlot,nottoc,notlof]{}
+    
+    \usepackage{color}
+    \usepackage{transparent}
+    \usepackage{eso-pic}
+    \usepackage{lipsum}
+    \usepackage{hyperref}
+    \usepackage{footnotebackref} %% link at the footnote to go to the place of footnote in the text
+
+    %% spacing between line
+    \usepackage{setspace}
+    %% %% \onehalfspacing
+    %% %% \doublespacing
+    \singlespacing
+    %% %% %% %% %% % datetime
+    \usepackage{datetime}
+
+    %% RO, LE will not work for 'oneside' layout.
+    %% Change oneside to twoside in document class
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \fancyhf{}
+    %% % Alternating Header for oneside
+    \fancyhead[L]{\ifthenelse{\isodd{\value{page}}}{ \small \nouppercase{\leftmark} }{}}
+    \fancyhead[R]{\ifthenelse{\isodd{\value{page}}}{}{ \small \nouppercase{\rightmark} }}
+    %% % Alternating Header for two side
+    %\fancyhead[RO]{\small \nouppercase{\rightmark}}
+    %\fancyhead[LE]{\small \nouppercase{\leftmark}}
+    %% for oneside: change footer at right side. If you want to use Left and right then use same as header defined above.
+    %% % Alternating Footer for two side
+    %\fancyfoot[RO, RE]{\scriptsize Meher Krishna Patel (mekrip@gmail.com)}
+    %% % page number
+    \fancyfoot[CO, CE]{\thepage}
+    \renewcommand{\headrulewidth}{0.5pt}
+    \renewcommand{\footrulewidth}{0.5pt}
+    %\RequirePackage{tocbibind} %%% comment this to remove page number for following
+    \addto\captionsenglish{\renewcommand{\contentsname}{Table of contents}}
+    %\addto\captionsenglish{\renewcommand{\listfigurename}{List of figures}}
+    %\addto\captionsenglish{\renewcommand{\listtablename}{List of tables}}
+     \addto\captionsenglish{\renewcommand{\chaptername}{Chapter}}
+    %% reduce spacing for itemize
+    \usepackage{enumitem}
+    \setlist{nosep}
+    %% %% %% %% %% % Quote Styles at the top of chapter
+    \usepackage{epigraph}
+    \setlength{\epigraphwidth}{0.8\columnwidth}
+    \newcommand{\chapterquote}[2]{\epigraphhead[60]{\epigraph{\textit{#1}}{\textbf {\textit{--#2}}}}}
+    %% %% %% %% %% % Quote for all places except Chapter
+    \newcommand{\sectionquote}[2]{{\quote{\textit{``#1''}}{\textbf {\textit{--#2}}}}}
+    ''',
+
+    'maketitle': r'''
+    \pagenumbering{Roman} %% % to avoid page 1 conflict with actual page 1
+    \begin{titlepage}
+    
+        \vspace*{80mm} %% % * is used to give space from top
+    
+        \centering
+        \textbf{\Huge {GASTOp Documentation}}
+            
+        \vspace*{2mm}
+        
+        \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.3]{logo.jpg}
+        \end{figure}
+            
+        \vspace*{10mm}
+        
+        \centering
+        \textbf{ \Large {Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond,}}
+        
+        \vspace{1mm}
+        
+        \centering
+        \textbf{ \Large {Dan Shaw, Amlan Sinha}}
+            
+        \vspace*{10mm}
+        
+        \centering
+        \small {Created: \today}
+        %% \vfill adds at the bottom
+        
+        \vfill
+        
+    \end{titlepage}
+    \clearpage
+    %\pagenumbering{roman}
+    %\sphinxtableofcontents
+    %\clearpage
+    \pagenumbering{arabic}
+    ''',
+
+    'sphinxsetup': \
+    'hmargin={0.7in,0.7in}, vmargin={1in,1in}, \
+    verbatimwithframe=true, \
+    TitleColor={rgb}{0,0,0}, \
+    HeaderFamily=\\rmfamily\\bfseries, \
+    InnerLinkColor={rgb}{0,0,1}, \
+    OuterLinkColor={rgb}{0,0,1}',
+
+    #   'tableofcontents': '',
+
 }
-
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'gastop.tex', 'gastop Documentation',
-     'Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amlan Sinha', 'manual'),
+    (master_doc, 'gastop.tex', 'GASTOp Documentation',
+     'Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amlan Sinha', 'report', True),
 ]
 
+latex_toplevel_sectioning = 'chapter'
 
 # -- Options for manual page output ------------------------------------------
 

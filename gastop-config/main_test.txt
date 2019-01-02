@@ -1,9 +1,9 @@
 [general]
 user_spec_nodes = '[[0,-.5,0],[0,.5,0],[0,0,1],[2,0,0]]'
-loads = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-10000,0,0,0]]'
+loads = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-1000,0,0,0]]'
 fixtures = '[[1,1,1,0,0,0],[1,1,1,0,0,0],[1,1,1,0,0,0],[0,0,0,0,0,0]]'
 num_rand_nodes = 10 # int
-num_rand_edges = 10 # int
+num_rand_edges = 15 # int
 properties_path = 'gastop-config/properties.csv'
 domain = '[[-1, -1, -1], [5, 1, 2]]'
 
@@ -22,9 +22,9 @@ mass_solver = mass_basic
 interferences_solver = blank_test
 
 [ga_params]
-num_threads = 4
-pop_size = 1000
-num_generations = 30
+num_threads = 1
+pop_size = 100
+num_generations = 5
 num_elite =
 percent_mutation =
 percent_crossover = 

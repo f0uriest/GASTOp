@@ -1,20 +1,24 @@
 language: python
 python:
+  - "2.7"
+  - "3.5"
   - "3.6"
+matrix:
+  include:
+    - python: 3.7
+      dist: xenial
+      sudo: true
+  allow_failures:
+    - python: "2.7"
 # command to install dependencies
 install:
-  - pip install pytest
-  - pip install pytest-cov
-  - pip install coveralls
-  - pip install numpy
-  - pip install matplotlib
-  - pip install configobj
-  - pip install tqdm
+# add new stuff to requirements file, not here
+  - pip install -r requirements.txt
 # command to run tests
 script:
   - python -m pytest --cov=gastop/
 
-after_success:
+after_script:
   - coveralls
 
 notifications:

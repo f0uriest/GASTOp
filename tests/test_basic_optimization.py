@@ -41,9 +41,9 @@ mutator_params = {
     'edge_mutator_method': 'pseudo_bit_flip',
     'property_mutator_method': 'gaussian',
 
-    'node_mutator_params': {'boundaries': np.array([[-5, -5, -5], [5, 5, 5]]), 'std': 0.01, 'int_flag': False},
+    'node_mutator_params': {'std': 0.01, 'boundaries': np.array([[-5, -5, -5], [5, 5, 5]]), 'int_flag': False},
     'edge_mutator_params': {'boundaries': np.array([[-1, -1], [10, 10]]), 'proportions': 0.5, 'int_flag': False},
-    'property_mutator_params': {'boundaries': np.array([[-1], [10]]), 'std': 2, 'int_flag': False},
+    'property_mutator_params': {'std': 2, 'boundaries': np.array([[-1], [10]]), 'int_flag': False},
     'user_spec_nodes': np.array([[]]).reshape(0, 3)
 
 }
@@ -67,15 +67,17 @@ pop_size = 1000
 
 class TestOptimization(unittest.TestCase):
     def test_rastrigin(self):
-        config['fitness_params'] = {'equation': 'rastrigin'}
+        config['fitness_params'] = {
+            'equation': 'rastrigin', 'parameters': {}}
+        config['ga_params']['pop_size'] = 1000
         ga = GenAlg(config)
-        ga.initialize_population(pop_size)
+        ga.initialize_population()
         best, progress_history = ga.run()
         self.assertAlmostEqual(best.fitness_score, 0, places=2)
 
     def test_sphere(self):
         config['ga_params']['num_threads'] = 2
-        config['fitness_params'] = {'equation': 'sphere'}
+        config['fitness_params'] = {'equation': 'sphere', 'parameters': {}}
         ga = GenAlg(config)
         ga.initialize_population(pop_size)
         best, progress_history = ga.run(

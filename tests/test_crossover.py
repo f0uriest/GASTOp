@@ -14,22 +14,19 @@ class TestCrossover_singlepointsplit(unittest.TestCase):  # Amlan
         array2 = np.ones((10, 1))
         check = np.ones((10, 1))
 
-        myCrossover = Crossover([])
-        children = myCrossover.single_point_split(array1, array2)
+        children = Crossover.single_point_split(None, array1, array2)
 
         np.testing.assert_array_equal(children[0], check)
         np.testing.assert_array_equal(children[1], check)
 
     def test_datatype(self):
 
-        array1 = np.ones((10, 1), dtype=np.float64)
-        array2 = np.ones((10, 1), dtype=np.float64)
+        array1 = np.ones((10, 1), dtype=int)
+        array2 = np.ones((10, 1), dtype=int)
         check = np.ones((10, 1), dtype=int)
 
-        myCrossover = Crossover([])
-        single_point_split_params = {'int_flag': True}
-        children = myCrossover.single_point_split(
-            array1, array2, single_point_split_params)
+        children = Crossover.single_point_split(None,
+                                                array1, array2)
 
         np.testing.assert_array_equal(children[0], check)
         np.testing.assert_array_equal(children[1], check)
@@ -45,21 +42,18 @@ class TestCrossoverPaul(unittest.TestCase):
         truss_1 = np.zeros(10, dtype=int)
         truss_2 = np.zeros(10, dtype=int)
 
-        my_uniform_crossover = Crossover([])
-        result = my_uniform_crossover.uniform_crossover(truss_1, truss_2)
+        result = Crossover.uniform_crossover(None, truss_1, truss_2)
 
         np.testing.assert_array_equal(result[0], truss_1)
         np.testing.assert_array_equal(result[1], truss_2)
 
     def testOutputTypeInt(self):
-        truss_1 = np.zeros(10, dtype=np.float64)
-        truss_2 = np.zeros(10, dtype=np.float64)
+        truss_1 = np.zeros(10, dtype=int)
+        truss_2 = np.zeros(10, dtype=int)
         check = np.zeros(10, dtype=int)
-        crossover_params = {'int_flag': True}
 
-        my_uniform_crossover = Crossover([])
-        result = my_uniform_crossover.uniform_crossover(
-            truss_1, truss_2, crossover_params)
+        result = Crossover.uniform_crossover(None,
+                                             truss_1, truss_2)
 
         np.testing.assert_array_equal(result[0], check)
         np.testing.assert_array_equal(result[1], check)
@@ -77,8 +71,7 @@ class TestCrossover_twopointssplit(unittest.TestCase):  # Amlan
         array2 = np.ones((10, 1))
         check = np.ones((10, 1))
 
-        myCrossover = Crossover([])
-        children = myCrossover.two_points_split(array1, array2)
+        children = Crossover.two_points_split(None, array1, array2)
 
         np.testing.assert_array_equal(children[0], check)
         np.testing.assert_array_equal(children[1], check)
@@ -87,12 +80,10 @@ class TestCrossover_twopointssplit(unittest.TestCase):  # Amlan
 
         array1 = np.ones((10, 1), dtype=np.float64)
         array2 = np.ones((10, 1), dtype=np.float64)
-        check = np.ones((10, 1), dtype=int)
+        check = np.ones((10, 1), dtype=np.float64)
 
-        myCrossover = Crossover([])
-        two_points_split_params = {'int_flag': True}
-        children = myCrossover.two_points_split(
-            array1, array2, two_points_split_params)
+        children = Crossover.two_points_split(None,
+                                              array1, array2)
 
         np.testing.assert_array_equal(children[0], check)
         np.testing.assert_array_equal(children[1], check)

@@ -1,10 +1,10 @@
-
 import matplotlib.pyplot as plt
 from matplotlib import style
 import numpy as np
 
 ##plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
+
 
 class ProgMon():
 
@@ -13,7 +13,7 @@ class ProgMon():
         self.progress_display = progress_display
         self.pop_progress = []
 
-        if self.progress_display == 2: #check if figure method of progress monitoring is requested
+        if self.progress_display == 2:  # check if figure method of progress monitoring is requested
             # initialize plot:
             fig = plt.figure()
             self.ax1 = fig.add_subplot(1,1,1) #does this need self.?
@@ -23,9 +23,7 @@ class ProgMon():
             plt.xlim(0,num_generations)
         #
 
-
-
-    def progress_monitor(self,current_gen,population):
+    def progress_monitor(self, current_gen, population):
 
         # three options: plot, progress bar ish thing, no output just append
         # calc population diversity and plot stuff or show current results
