@@ -1,7 +1,18 @@
-def main():
-    import numpy as np
-    import argparse
-    from gastop import GenAlg, utilities
+import numpy as np
+import argparse
+import sys
+from gastop import GenAlg, utilities
+
+
+def parse_args(args):
+    """Parses command line arguments
+
+    Args:
+        args (list): List of arguments to parse, ie sys.argv
+
+    Returns:
+        parsed_args (argparse object): argparse object containing parsed arguments.
+    """
 
     parser = argparse.ArgumentParser(prog='gastop',
                                      description="A Genetic Algorithm for Structural Design and Topological Optimization. See full documentation at gastop.readthedocs.io")
@@ -17,8 +28,12 @@ def main():
                        help="hide progress display window")
     group.add_argument("-d", "--display", action='store_true',
                        help="show progress display window")
-    args = parser.parse_args()
+    return parser.parse_args(args)
 
+
+def main(args):
+
+    args = parse_args(args)
     config = utilities.init_file_parser(args.config_path)
 
     if args.display:
@@ -95,4 +110,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

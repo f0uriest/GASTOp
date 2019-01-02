@@ -197,7 +197,7 @@ class GenAlg():
         # With parallelization
         else:
             if self.ga_params['pop_size'] < 1e4:
-                chunksize = int(self.ga_params['pop_size']/100)
+                chunksize = np.amax((int(self.ga_params['pop_size']/100), 1))
             else:
                 chunksize = int(np.sqrt(self.ga_params['pop_size']))
             for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
