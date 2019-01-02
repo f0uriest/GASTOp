@@ -23,6 +23,10 @@ class ProgMon():
             plt.xlim(0, self.num_gens)
             plt.ylabel('Minimum Fitness Score')
             plt.xlabel('Iteration')
+        elif self.progress_display == 3:
+            self.fig = plt.figure()
+            self.ax3 = self.fig.gca(projection='3d')
+
 
             #plt.yscale('log')
             #
@@ -70,3 +74,9 @@ class ProgMon():
 
             #self.ax1.scatter(current_gen,np.amin(fitscore),c=[0,0,0]) #plot minimum fitscore for current gen in black
             plt.pause(0.0001) #pause for 0.0001s to allow plot to update, can potentially remove this
+        elif self.progress_display == 3: #does not work yet
+            population.sort(key=lambda x: x.fitness_score)
+            best_truss = population[0]
+            best_truss.plot(ax=self.ax3,fig = self.fig)
+            #self.fig.canvas.draw()
+            #self.fig.canvas.flush_events()
