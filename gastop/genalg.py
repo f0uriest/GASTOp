@@ -10,7 +10,10 @@ import os
 from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders, utilities, ProgMon
 # plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
-colorama.init()  # for progress bars on ms windows
+try:
+    colorama.init()  # for progress bars on ms windows
+except:
+    pass
 
 
 class GenAlg():
