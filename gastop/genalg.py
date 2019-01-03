@@ -184,40 +184,21 @@ class GenAlg():
         # initialize progress monitor object
         progress = ProgMon(progress_display, num_generations)
         # ***
-
+        if self.ga_params['pop_size'] < 1e4:
+            chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))
+        else:
+            chunksize = int(np.sqrt(self.ga_params['pop_size']))
         # Loop over all generations:
 
-        # Without any parallelization:
-        if num_threads == 1:
-            for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
-                self.ga_params['current_generation'] = current_gen
-                # Loop over all trusses -> PARALLELIZE. Later
+        for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
+            self.ga_params['current_generation'] = current_gen
+            # no parallelization
+            if num_threads == 1:
                 for current_truss in tqdm(self.population, desc='Evaluating', position=1):
                     self.evaluator(current_truss)
                 for current_truss in tqdm(self.population, desc='Scoring', position=1):
                     self.fitness_function(current_truss)
-                # **
-
-                self.population.sort(key=lambda x: x.fitness_score)
-                progress.progress_monitor(current_gen, self.population)
-
-                self.update_population()  # Determine which members to
-                # if progress_display == 2:
-                # plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
-                if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
-                    self.save_state(
-                        dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
-            return self.population[0], self.pop_progress
-
-        # With parallelization
-        else:
-            if self.ga_params['pop_size'] < 1e4:
-                chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))
             else:
-                chunksize = int(np.sqrt(self.ga_params['pop_size']))
-            for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
-                # for current_gen in tqdm_notebook(range(num_generations),desc='Generation'):
-                self.ga_params['current_generation'] = current_gen
                 pool = Pool(num_threads)
                 self.population = list(tqdm(pool.imap(
                     self.evaluator, self.population, chunksize), total=self.ga_params['pop_size'], desc='Evaluating', position=1))
@@ -226,17 +207,16 @@ class GenAlg():
                 pool.close()
                 pool.join()
 
-                self.population.sort(key=lambda x: x.fitness_score)
-                # ************** uncomment
-                progress.progress_monitor(current_gen, self.population)
-                # **
+            self.population.sort(key=lambda x: x.fitness_score)
+            progress.progress_monitor(current_gen, self.population)
 
-                self.update_population()  # Determine which members to
-
-                if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
-                    self.save_state(
-                        dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
-            return self.population[0], self.pop_progress
+            self.update_population()  # Determine which members to
+            # if progress_display == 2:
+            # plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+            if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
+                self.save_state(
+                    dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
+        return self.population[0], progress.pop_progress
 
     # def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
     #     # three options: plot, progress bar ish thing, no output just append
