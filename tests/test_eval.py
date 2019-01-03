@@ -24,7 +24,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'interference_ray_tracing', bdry, beam_dict)
+                              'mass_basic', 'interference_ray_tracing','cost_calc', bdry, beam_dict)
         print(evaluator.properties_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
@@ -63,7 +63,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
         fos_true = 0
 
@@ -93,7 +93,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -132,7 +132,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
         fos_true = 0
 
@@ -164,7 +164,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -198,7 +198,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -234,7 +234,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
 
         fos_true = np.zeros((edges.shape[0], 1))

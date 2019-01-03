@@ -20,6 +20,7 @@ equation = weighted_sum
 struct_solver = mat_struct_analysis_DSM
 mass_solver = mass_basic
 interferences_solver = blank_test
+cost_solver = cost_calc
 
 [ga_params]
 num_threads = 4
@@ -42,27 +43,26 @@ progress_display = 1
 
 
 [crossover_params]
-node_crossover_method = 
-edge_crossover_method = 
-property_crossover_method = 
+node_crossover_method =
+edge_crossover_method =
+property_crossover_method =
       [[node_crossover_params]]
       [[edge_crossover_params]]
       [[property_crossover_params]]
 
 
 [mutator_params]
-node_mutator_method = 
-edge_mutator_method = 
-property_mutator_method = 
+node_mutator_method =
+edge_mutator_method =
+property_mutator_method =
       [[node_mutator_params]]
-      std = 
+      std =
       [[edge_mutator_params]]
-      proportions = 
+      proportions =
       [[property_mutator_params]]
-      proportions = 
+      proportions =
 
 [selector_params]
-method = 
+method =
 tourn_size = 31 # Must be less than 32
 tourn_prob = 0.5
-

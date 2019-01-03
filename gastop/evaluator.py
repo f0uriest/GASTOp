@@ -12,7 +12,7 @@ class Evaluator():
     fully evaluate a Truss object using specified methods and parameters.
     """
 
-    def __init__(self, struct_solver, mass_solver, interferences_solver, boundary_conditions, properties_dict):
+    def __init__(self, struct_solver, mass_solver, interferences_solver, cost_solver, boundary_conditions, properties_dict):
         """Creates an Evaluator callable object.
 
         Once created, the Evaluator can be called on a Truss object to
@@ -64,6 +64,8 @@ class Evaluator():
                 - ``'polar_moment_inertia'``: Area moment of inertia about beams
                   polar axis, in meters^4.
                 - ``'dens'``: Density of the material, in kilograms per cubic meter.
+            cost_solver (str): Name of the method to be used to calculate cost.
+                e.g. ``'cost_calc'``.
 
         Returns:
             callable Evaluator object.
@@ -74,6 +76,7 @@ class Evaluator():
         self.mass_solver = getattr(self, mass_solver)
         self.interferences_solver = getattr(self, interferences_solver)
         self.boundary_conditions = boundary_conditions
+        self.cost_solver = getattr(self, cost_solver)
         self.properties_dict = properties_dict
 
     def mat_struct_analysis_DSM(self, truss, boundary_conditions, properties_dict):
@@ -452,8 +455,7 @@ class Evaluator():
         fos, deflection = self.struct_solver(
             truss, self.boundary_conditions, self.properties_dict)
         mass = self.mass_solver(truss, self.properties_dict)
-        if (self.properties_dict != 0):
-            truss.cost = self.cost_calc(truss, self.properties_dict)
+        truss.cost = self.cost_solver(truss, self.properties_dict)
         interferences = self.interferences_solver(truss)
         truss.fos = fos
         truss.deflection = deflection

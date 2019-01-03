@@ -20,6 +20,7 @@ equation = weighted_sum
 struct_solver = mat_struct_analysis_DSM
 mass_solver = mass_basic
 interferences_solver = blank_test
+cost_solver = cost_calc
 
 [ga_params]
 num_threads = 4
