@@ -57,7 +57,8 @@ mutator_params = {
 
 }
 
-selector_params = {'method': 'inverse_square_rank_probability'}
+selector_params = {
+    'method': 'inverse_square_rank_probability', 'method_params': {}}
 evaluator_params = {'struct_solver': 'blank_test',
                     'mass_solver': 'blank_test',
                     'interferences_solver': 'blank_test',

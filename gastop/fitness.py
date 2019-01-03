@@ -39,7 +39,8 @@ class FitnessFunction():
         self.equation = getattr(self, equation)
         self.parameters = parameters  # dictionary
 
-    def weighted_sum(self, truss, goal_fos, critical_nodes, w_fos, w_mass, w_deflection):
+    @staticmethod
+    def weighted_sum(truss, goal_fos, critical_nodes, w_fos, w_mass, w_deflection):
         """Computes fitness score using a weighted sum of parameters.
 
         Args:
@@ -87,7 +88,8 @@ class FitnessFunction():
         f = w_mass*truss.mass + w_fos*fs + deflection_score
         return f
 
-    def sphere(self, truss):
+    @staticmethod
+    def sphere(truss):
         """Sum of squares of node array elements. aka, sphere function.
 
         Global min at x = 0 where f = 0.
@@ -110,7 +112,8 @@ class FitnessFunction():
         f = np.sum(x**2)
         return f
 
-    def rosenbrock(self, truss):
+    @staticmethod
+    def rosenbrock(truss):
         """n-dimensional Rosenbrock function.
 
         Sum of n/2 2D Rosenbrock functions.
@@ -139,7 +142,8 @@ class FitnessFunction():
             f += 100*(x[2*i]**2 - x[2*i+1])**2 + (x[2*i] - 1)**2
         return f
 
-    def rastrigin(self, truss):
+    @staticmethod
+    def rastrigin(truss):
         """n-dimensional Restrigin function.
 
         Global min at x=0 where f=0.

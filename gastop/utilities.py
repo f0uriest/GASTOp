@@ -201,6 +201,7 @@ def init_file_parser(init_file_path):  # Cristian
 
     if not config['selector_params']['method']:
         config['selector_params']['method'] = 'inverse_square_rank_probability'
+        config['selector_params']['method_params'] = {}
 
     if not config['ga_params']['num_elite']:
         config['ga_params']['num_elite'] = int(np.ceil(
