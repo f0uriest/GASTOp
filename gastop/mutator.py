@@ -55,13 +55,43 @@ class Mutator():
         # creates the new mutated array with values mutated at all indices
         new_array = array + gauss_val
 
-        # clips the numbers that are out of bounds and brings it to the boundary
-        # for i in range(nn[1]):
-        #    new_array[:,i] = np.clip(new_array[:,i], bounds[i,0], bounds[i,1])
-
         # new method to handle out of bounds problem: loop around on other side
         new_array = boundaries[0, :] + ((new_array-boundaries[0, :]) %
                                         (boundaries[1, :]-boundaries[0, :]))
+
+        # checks for flag that specifies whether output should be an integer and rounds the \
+        # output arrays
+        if (int_flag == True):
+            new_array = (np.rint(new_array)).astype(int)
+
+        return new_array
+
+    def gaussian_old(self, array, std, boundaries, int_flag):  # Paul
+
+        nn = np.shape(array)
+        # makes an array of the same size as the one given with random values\
+        # pulled from a normal distribution with mean 0 and std given
+        gauss_val = np.random.normal(0, std, nn)
+
+        # creates the new mutated array with values mutated at all indices
+        new_array = array + gauss_val
+        
+        # new method to handle out of bounds problem: loop around on other side
+        for j in range(nn[-1]):
+            for i in range(nn[0]):
+                while (new_array[i, j] < boundaries[0, j]):
+                    if (new_array[i, j] < boundaries[0, j] and boundaries[0,j] != 0):
+                        new_array[i, j] = boundaries[1, j] - \
+                                        abs(new_array[i, j] % boundaries[0, j])
+                    elif (new_array[i, j] < boundaries[0, j] and boundaries[0, j] == 0):
+                        new_array[i, j] = boundaries[1, j] - abs(new_array[i, j])
+
+                while (new_array[i, j] > boundaries[1, j]):
+                    if (new_array[i, j] > boundaries[1, j] and boundaries[1, j] != 0):
+                        new_array[i, j] = boundaries[0, j] + \
+                                        abs(new_array[i, j] % boundaries[1, j])
+                    elif (new_array[i, j] > boundaries[1, j] and boundaries[1, j] == 0):
+                        new_array[i, j] = boundaries[0, j] + abs(new_array[i, j])
 
         # checks for flag that specifies whether output should be an integer and rounds the \
         # output arrays
