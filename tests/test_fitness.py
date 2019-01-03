@@ -12,8 +12,11 @@ from gastop import FitnessFunction, Truss
 
 
 class TestFitness(unittest.TestCase):
+    """Test cases for fitness functions"""
 
     def test_weighted_sum(self):
+        """Tests weighted sum to make sure weights are implemented correctly"""
+
         fitness_params = {'goal_fos': 1.5,
                           'critical_nodes': np.array([1]),
                           'w_fos': 100,
@@ -41,6 +44,8 @@ class TestFitness(unittest.TestCase):
         self.assertAlmostEqual(t0.fitness_score, 185)
 
     def test_sphere(self):
+        """Tests to make sure min is where it should be."""
+
         x = np.zeros(10)
         y = np.ones(10)
         t0 = Truss(x, x, 0, 0)
@@ -52,6 +57,10 @@ class TestFitness(unittest.TestCase):
         self.assertAlmostEqual(t1.fitness_score, 10)
 
     def test_rosenbrock(self):
+        """Tests to make sure min for rosenbrock function
+        is where it should be.
+        """
+
         x = np.zeros(11)
         y = np.ones(11)
         t0 = Truss(x, x, 0, 0)
@@ -63,6 +72,10 @@ class TestFitness(unittest.TestCase):
         self.assertAlmostEqual(t1.fitness_score, 0)
 
     def test_rastrigin(self):
+        """Tests to make sure min for rastrigin function
+        is where it should be.
+        """
+
         x = np.zeros(10)
         y = np.ones(10)
         t0 = Truss(x, x, 0, 0)

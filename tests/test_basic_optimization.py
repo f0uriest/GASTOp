@@ -76,7 +76,15 @@ pop_size = 1000
 
 
 class TestOptimization(unittest.TestCase):
+    """Tests genetic algorithm's ability to solve basic 
+    convex and non-convex test cases.
+    """
+
     def test_rastrigin(self):
+        """Test GA using rastrigin function,
+        highly non-convex optimization test function.
+        """
+
         config['fitness_params'] = {
             'equation': 'rastrigin', 'parameters': {}}
         config['ga_params']['pop_size'] = 1000
@@ -86,6 +94,10 @@ class TestOptimization(unittest.TestCase):
         self.assertAlmostEqual(best.fitness_score, 0, places=2)
 
     def test_sphere(self):
+        """Tests GA using sphere function, 
+        ie sum of squares. Simple convex test case.
+        """
+
         config['ga_params']['num_threads'] = 2
         config['fitness_params'] = {'equation': 'sphere', 'parameters': {}}
         ga = GenAlg(config)

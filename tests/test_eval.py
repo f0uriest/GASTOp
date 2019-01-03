@@ -12,12 +12,15 @@ from gastop import Truss, Evaluator, utilities
 
 
 class TestEvaluator(unittest.TestCase):
+    """Tests Evaluator class, including structural solver,
+    mass solver, and cost solver.
+    """
 
     def test_axial_load(self):
         """Tests simple straight beam under axial forces"""
 
-        p = 10000  # load in newtons
-        L = 4  # length in meters
+        p = 1000  # load in newtons
+        L = 2  # length in meters
         matl = 0
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
@@ -32,22 +35,21 @@ class TestEvaluator(unittest.TestCase):
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
                               'mass_basic', 'interference_ray_tracing', 'cost_calc', bdry, beam_dict)
-        print(evaluator.properties_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
         sigma = p/A
         fos_true = beam_dict['yield_strength'][matl]/sigma
-        epsilon = sigma/E
+        strain = sigma/E
         deflection_true = np.array([[[0], [0], [0], [0], [0], [0]],
-                                    [[epsilon*L], [0], [0], [0], [0], [0]]])
+                                    [[strain*L], [0], [0], [0], [0], [0]]])
 
         np.testing.assert_almost_equal(
             truss.mass, A*L*beam_dict['density'][matl])
         np.testing.assert_array_almost_equal(truss.fos, fos_true)
         np.testing.assert_array_almost_equal(truss.deflection, deflection_true)
         self.assertTrue(truss.interference is None)
-        #np.testing.assert_almost_equal(truss.cost, L*beam_dict['cost'][matl])
+        np.testing.assert_almost_equal(truss.cost, L*beam_dict['cost'][matl])
 
     def test_singular_stiffness_matrix(self):
         """Tests straight beam under axial forces with no restraints
@@ -103,11 +105,8 @@ class TestEvaluator(unittest.TestCase):
                               'mass_basic', 'blank_test', 'cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
-        E = beam_dict['elastic_modulus'][matl]
-        Iz = beam_dict['moment_inertia_z'][matl]
-        sigma = p/A
+
         fos_true = 4.57
-        epsilon = sigma/E
 
         np.testing.assert_almost_equal(
             truss.mass, A*L*beam_dict['density'][matl])
@@ -120,8 +119,8 @@ class TestEvaluator(unittest.TestCase):
         Should return fos = 0, as stiffness matrix is singular
         """
 
-        p = 10000  # load in newtons
-        L = 4  # length in meters
+        p = 50000  # load in newtons
+        L = 10  # length in meters
         matl = 0
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0],
@@ -207,8 +206,6 @@ class TestEvaluator(unittest.TestCase):
                               'mass_basic', 'blank_test', 'cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
-        E = beam_dict['elastic_modulus'][matl]
-        sigma = p/A
         fos_true = 4.57
 
         np.testing.assert_almost_equal(
