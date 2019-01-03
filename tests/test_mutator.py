@@ -44,29 +44,6 @@ class TestMutator_gaussian(unittest.TestCase):  # Paul
         gaussian_params = {'boundaries': np.array(
             [[0, -10, -5], [10, 0, 5]]), 'int_flag': False, 'std': 0.5}
         child = Mutator.gaussian(None, array, **gaussian_params)
-
-
-        TEST_CODE = '''
-array = np.random.uniform(-10.0, 10.0, [10, 3])
-gaussian_params = {'boundaries': np.array(
-[[0, -10, -5], [10, 0, 5]]), 'int_flag': False, 'std': 0.5}
-child = Mutator.gaussian(None, array, **gaussian_params)
-        '''
-        t_new = timeit.timeit(stmt = TEST_CODE,
-                              number = 100, globals=globals())
-        print("tnew: \n", t_new)
-
-
-        TEST_CODE_OLD = '''
-array = np.random.uniform(-10.0, 10.0, [10, 3])
-gaussian_params = {'boundaries': np.array(
-[[0, -10, -5], [10, 0, 5]]), 'int_flag': False, 'std': 0.5}
-child = Mutator.gaussian_old(None, array, **gaussian_params)
-        '''
-        t_old = timeit.timeit(stmt = TEST_CODE_OLD,
-                              number = 100, globals=globals())
-        print("told: \n", t_old)
-
         
         bounds = gaussian_params['boundaries']
         if (np.any(child[:, 0] < bounds[0, 0]) or np.any(child[:, 0] > bounds[1, 0])):
