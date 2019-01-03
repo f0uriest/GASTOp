@@ -31,7 +31,7 @@ def counter(n):
     plt.xlabel('iteration')
     #plt.yscale('log')
     #plt.text(2,4,"0")
-    plt.xlim(0,n)
+    plt.xlim(0,2)
     #plt.ylim(0,12)
     test  = []
 
@@ -42,14 +42,15 @@ def counter(n):
             test = np.min(y)
         # else:
         #     test.append(test[i-1])
-        progress(i,y,ax1,ax2,n,test)
+        #fig.clf()
+        progress(i,y,ax1,ax2,n,test,fig)
         print(np.min(y))
     plt.show()
 
     return y
 
 
-def progress(i,y,ax1,ax2,n,test):
+def progress(i,y,ax1,ax2,n,test,fig):
 #    if i==1:
         #style.use('fivethirtyeight')
         #fig = plt.figure()
@@ -58,11 +59,18 @@ def progress(i,y,ax1,ax2,n,test):
         #plt.xlabel('iteration')
 #    else:
     err_range = (np.amax(y) - np.amin(y))/2.0
+
+
+    ax2.cla()
     ax1.errorbar(i, np.mean(y), yerr=err_range, fmt='o')
     #ax2.text(n,4,np.amin(y),bbox=dict(facecolor='white', alpha=1))
+
     ax2.text(n-1, test-1, np.amin(y),
         bbox=dict(facecolor='white', alpha=1))
-    ax2.scatter(i,np.amin(y),c=[0,0,0])
+    ax2.plot(range(3),y,c=[0,0,0])
+
+    #fig.clf()
+    #ax2.draw()
 
 
     #ax2.text()

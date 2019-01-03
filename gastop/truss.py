@@ -77,7 +77,7 @@ class Truss():
     def mark_duplicates(self):
         """Checks truss for duplicate edges or self connected nodes and marks them.
 
-        Any edge that connects a node to itself, or any duplicate edges are 
+        Any edge that connects a node to itself, or any duplicate edges are
         changed to -1.
         """
 
@@ -123,7 +123,7 @@ class Truss():
     def __str__(self):
         """Prints the truss to the terminal as a formatted array.
 
-        Prints node numbers and locations, edge numbers and connections, and 
+        Prints node numbers and locations, edge numbers and connections, and
         beam material property ID's
 
         If deflections, mass, fos, or cost are defined, they will be printed as well.
@@ -213,6 +213,10 @@ class Truss():
         num_con = con.shape[0]
 
         size_scale = (nodes.max(axis=0)-nodes.min(axis=0)).max()
+
+        edge_vec_start = nodes[con[:, 0], :] #sfr
+        edge_vec_end = nodes[con[:, 1], :] #sfr
+
         if load_scale is None and loads is not None:
             load_scale = size_scale/np.abs(loads).max()/5
 
@@ -220,42 +224,44 @@ class Truss():
             fig = plt.figure()
             ax = fig.gca(projection='3d')
 
-        if domain is not None:
-            ax.set_xlim(domain[0, :])
-            ax.set_ylim(domain[1, :])
-            ax.set_zlim(domain[2, :])
+            if domain is not None:
+                ax.set_xlim(domain[0, :])
+                ax.set_ylim(domain[1, :])
+                ax.set_zlim(domain[2, :])
 
-        if deflection:
-            def_nodes = nodes + def_scale*self.deflection[:, :3, 0]
-            def_edge_vec_start = def_nodes[con[:, 0], :]
-            def_edge_vec_end = def_nodes[con[:, 1], :]
+            if deflection:
+                def_nodes = nodes + def_scale*self.deflection[:, :3, 0]
+                def_edge_vec_start = def_nodes[con[:, 0], :]
+                def_edge_vec_end = def_nodes[con[:, 1], :]
+                for i in range(num_con):
+                    ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
+                            [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
+                            [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-')
+
+            #edge_vec_start = nodes[con[:, 0], :] #sfr
+            #edge_vec_end = nodes[con[:, 1], :] #sfr
+
+            # ****
             for i in range(num_con):
-                ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
-                        [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
-                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-')
+                # fig.canvas.flush_events()
+                ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
+                        [edge_vec_start[i, 1], edge_vec_end[i, 1]],
+                        [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
+                # fig.canvas.draw()
 
-        edge_vec_start = nodes[con[:, 0], :]
-        edge_vec_end = nodes[con[:, 1], :]
+                # ax.draw() #sfr
+            # ****
 
-        # ****
-        for i in range(num_con):
-            # fig.canvas.flush_events()
-            ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
-                    [edge_vec_start[i, 1], edge_vec_end[i, 1]],
-                    [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
-            # fig.canvas.draw()
+            if loads is not None:
+                ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
+                          loads[:, 0, 0], loads[:, 1, 0], loads[:, 2, 0],
+                          length=load_scale, pivot='tip', color='r')
 
-            # ax.draw() #sfr
-        # ****
-
-        if loads is not None:
-            ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
-                      loads[:, 0, 0], loads[:, 1, 0], loads[:, 2, 0],
-                      length=load_scale, pivot='tip', color='r')
-
-        if fixtures is not None:
-            fix_nodes = nodes[fixtures[:, :, 0].any(axis=1)]
-            ax.scatter(fix_nodes[:, 0], fix_nodes[:, 1], fix_nodes[:, 2],
-                       c='g', marker='o', depthshade=False, s=100)
+            if fixtures is not None:
+                fix_nodes = nodes[fixtures[:, :, 0].any(axis=1)]
+                ax.scatter(fix_nodes[:, 0], fix_nodes[:, 1], fix_nodes[:, 2],
+                           c='g', marker='o', depthshade=False, s=100)
 
         # plt.show()
+        else:
+            return edge_vec_start, edge_vec_end, num_con
