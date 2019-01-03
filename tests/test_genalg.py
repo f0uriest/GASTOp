@@ -177,11 +177,11 @@ class TestGenAlg_SFR(unittest.TestCase):
 
         #t = tqdm(total=num_generations,leave=False)
         # Loop over all generations:
-        for current_gen in tqdm_notebook(range(num_generations),desc='Generation'):
+        for current_gen in tqdm(range(num_generations),desc='Generation',position=0):
             progress.progress_monitor(current_gen,population)
             # t.update(current_gen)
             time.sleep(0.05)
-            for truss in tqdm_notebook(GA.population,desc='truss'):
+            for truss in tqdm(GA.population,desc='truss',position=1):
                 #truss.fos = np.random.random()
                 truss.fitness_score = truss.fitness_score + 5.0
         # t.close()
