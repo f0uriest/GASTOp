@@ -65,7 +65,7 @@ def main(args=sys.argv[1:]):
                                     progress_display=progress_display,
                                     num_threads=num_threads)
 
-    best.pprint()
+    best.printinfo()
 
     if progress_display == 2:
         best.plot(domain=config['random_params']['domain'].T,
