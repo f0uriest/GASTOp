@@ -153,4 +153,5 @@ class Mutator():
             truss.edges, **self.params['edge_mutator_params'])
         child.properties = self.property_method(
             truss.properties, **self.params['property_mutator_params'])
+
         return child

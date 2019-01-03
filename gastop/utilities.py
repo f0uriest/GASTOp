@@ -137,11 +137,13 @@ def init_file_parser(init_file_path):  # Cristian
     config['ga_params']['current_generation'] = 0
     if config['ga_params']['save_filename_prefix']:
         config['ga_params']['config_save_name'] = config['ga_params']['save_filename_prefix'] + '_config.json'
-        config['ga_params']['pop_save_name'] = config['ga_params']['save_filename_prefix'] + '_population.json'
+        config['ga_params']['pop_save_name'] = config['ga_params']['save_filename_prefix'] + \
+            '_population.json'
     else:
         config['ga_params']['config_save_name'] = 'config.json'
         config['ga_params']['pop_save_name'] = 'population.json'
-
+    if not config['ga_params']['save_frequency']:
+        config['ga_params']['save_frequency'] = 0
 
     # evaluator_params
     config['evaluator_params']['boundary_conditions'] = {}
