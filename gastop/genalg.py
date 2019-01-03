@@ -272,7 +272,8 @@ class GenAlg():
             pop_dumped = json.dumps(population, cls=encoders.PopulationEncoder)
             json.dump(pop_dumped, f)
 
-    def load_state(self, dest_config='config.json',
+    @staticmethod
+    def load_state(dest_config='config.json',
                    dest_pop='population.json'):  # Cristian
         # Load config data
         with open(dest_config, 'r') as f:
@@ -285,7 +286,9 @@ class GenAlg():
         population = json.loads(pop_loaded, object_hook=encoders.numpy_decoder)
         population = (Truss(**dct) for dct in population)
 
-        return config, population
+        ga = GenAlg(config)
+        ga.population = population
+        return ga
 
     def update_population(self):  # Cristian
         ''' Creates new population by performing crossover and mutation, as well
