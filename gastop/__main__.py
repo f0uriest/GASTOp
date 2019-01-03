@@ -65,43 +65,7 @@ def main(args=sys.argv[1:]):
                                     progress_display=progress_display,
                                     num_threads=num_threads)
 
-    con = best.edges.copy()
-    matl = best.properties.copy()
-
-    # remove self connected edges and duplicate members
-    matl = matl[(con[:, 0]) >= 0]
-    con = con[(con[:, 0]) >= 0]
-    matl = matl[(con[:, 1]) >= 0]
-    con = con[(con[:, 1]) >= 0]
-    con = con.astype(int)
-
-    np.set_printoptions(precision=2)
-
-    print('\n')
-    print('Nodes:')
-    print('     x     y     z   ')
-    print(best.rand_nodes)
-
-    print('\n')
-    print('Edges:')
-    print(con)
-
-    print('\n')
-    print('Properties:')
-    print(matl)
-
-    print('\n')
-    print('Mass: %.3f kg' % best.mass)
-
-    print('\n')
-    print('FoS:')
-    print(best.fos)
-
-    np.set_printoptions(formatter={'float': lambda x: format(x, ' 6.2E')})
-    print('\n')
-    print('Deflections (m): ')
-    print('      Dx        Dy        Dz        Rx        Ry        Rz        ')
-    print(best.deflection[:, :, 0])
+    best.pprint()
 
     if progress_display == 2:
         best.plot(domain=config['random_params']['domain'].T,

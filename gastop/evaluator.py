@@ -304,10 +304,10 @@ class Evaluator():
                 sigmaVM = np.amax((np.sqrt((sigmaXbending+sigmaXaxial)**2 +
                                            3*tauTorsion**2), np.sqrt(sigmaXaxial**2 + 3*tauXY**2)))
                 # factor of safety in each beam under each loading condition
-                if sigmaVM > 1e-6:
+                if sigmaVM > YS[i]/1000:
                     FoS[i, j] = YS[i]/sigmaVM
                 else:
-                    FoS[i, j] = 1e6
+                    FoS[i, j] = 1000
 
         return FoS, V
 

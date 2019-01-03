@@ -74,6 +74,74 @@ class Truss():
     #     """
     #     pass
 
+    def printinfo(self):
+        """Prints the truss to the terminal as a formatted array.
+
+        Prints node numbers and locations, edge numbers and connections, and 
+        beam material property ID's
+
+        If deflections, mass, fos, or cost are defined, they will be printed as well.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
+
+        nodes = np.concatenate((self.user_spec_nodes, self.rand_nodes), axis=0)
+        con = self.edges.copy()
+        matl = self.properties.copy()
+
+        # remove self connected edges and duplicate members
+        matl = matl[(con[:, 0]) >= 0]
+        con = con[(con[:, 0]) >= 0]
+        matl = matl[(con[:, 1]) >= 0]
+        con = con[(con[:, 1]) >= 0]
+
+        print('\n')
+        if self.deflection is not None:
+            print('                Nodes                           Deflections          ')
+            print(
+                '   #      x       y       z            dx           dy           dz       ')
+            for i, line in enumerate(np.concatenate((nodes, self.deflection[:, :3, 0]), axis=1)):
+                print(
+                    f' {i:>3d}    {line[0]: .2f}   {line[1]: .2f}   {line[2]: .2f}       {line[3]: .3e}   {line[4]: .3e}   {line[5]: .3e}')
+        else:
+            print('                Nodes                           Deflections          ')
+            print(
+                '   #      x       y       z            dx           dy           dz       ')
+            for i, line in enumerate(nodes):
+                print(
+                    f' {i:>3d}    {line[0]: .2f}   {line[1]: .2f}   {line[2]: .2f}                    Undefined')
+
+        print('\n')
+        if self.fos is not None:
+            print('                    Edges     ')
+            print('        Start    End    Property      ')
+            print('   #    Node     Node     Type       FoS    ')
+            for i, line in enumerate(np.concatenate((con, matl.reshape(matl.shape[0], 1), self.fos), axis=1)):
+                print(
+                    f' {i:>3d}    {line[0].astype(int):>3d}     {line[1].astype(int):>3d}     {line[2].astype(int):>3d}       {line[3]:>7.2f}      ')
+        else:
+            print('                    Edges     ')
+            print('        Start    End    Property      ')
+            print('   #    Node     Node     Type       FoS    ')
+            for i, line in enumerate(np.concatenate((con, matl.reshape(matl.shape[0], 1)), axis=1)):
+                print(
+                    f' {i:>3d}    {line[0].astype(int):>3d}     {line[1].astype(int):>3d}      {line[2].astype(int):>3d}      Undefined      ')
+
+        print('\n')
+        if self.mass is not None:
+            print('Mass: %.3f kg' % self.mass)
+        else:
+            print('Mass: Undefined')
+
+        if self.cost is not None:
+            print('Cost: $ %.2f ' % self.cost)
+        else:
+            print('Cost: Undefined')
+
     def plot(self, domain=None, loads=None, fixtures=None,
              deflection=False, load_scale=None, def_scale=100):
         """Plots a truss object as a 3D wireframe

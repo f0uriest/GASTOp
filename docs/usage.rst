@@ -2,23 +2,23 @@
 Usage
 =====
 
+gastop can either be run from the command line, or used in a python script.
+
 Command Line
 ************
-
-gastop can either be run from the command line, or used in a python script.
 
 If it was installed from PyPI using pip, it can be run from the command line as:
 
 .. code-block:: bash
 
-	gastop <config_file_path>
+	$ gastop <config_file_path>
 
 If the code was cloned from github instead, the normal commandline shortcut will not be installed.
 It can still be run from the repository main directory as:
 
 .. code-block:: bash
 
-	python -m gastop <config_file_path>
+	$ python -m gastop <config_file_path>
 
 In either case, additional arguments can be passed via the command line:
 
