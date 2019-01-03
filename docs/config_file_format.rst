@@ -2,4 +2,121 @@
 Config File Formatting and Options
 ==================================
 
+The config file includes all the input parameters used to instantiate a
+GenAlg() object. Certain parameters must be specified by the user, while other
+more advanced parameters can be left blank for simplicity and will default to
+reasonable values.
+
+The config file is parsed as a nested dictionary. Each dictionary is
+indicated by :code:`[dict]`, and nested dictionaries are indicated by nested
+squared brackets, :code:`[[nested dict]]`. Each dictionary contains multiple
+arguments indicated by :code:`key: value`. If the value is an integer, float,
+or string, simply input the value without quotation marks. For instance,
+:code:`key: 3`, :code:`key: 3.14`, or :code:`key: pi`. If the value
+is a numpy array, input the value as a the array in list format, within single
+quotes, like :code:`key: '[[3.14 3.14],[3.14 3.14]]'`.
+
+Required Parameters
+*******************
+
+General
+=======
+:code:`[general]` contains the following parameters:
+
+:user_spec_nodes: User-specified nodes as an nx3 numpy array in the format :code:`key: '[[x1 y1 z1],[x2 y2 z2],...,[xn yn zn]]'`.
+
+:loads: = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-10000,0,0,0]]'
+
+:fixtures: = '[[1,1,1,0,0,0],[1,1,1,0,0,0],[1,1,1,0,0,0],[0,0,0,0,0,0]]'
+
+:num_rand_nodes: = 10 # int
+
+:num_rand_edges: = 10 # int
+
+:properties_path: = 'gastop-config/properties.csv'
+
+:domain: = '[[-1, -1, -1], [5, 1, 2]]'
+
+Fitness Function Parameters
+===========================
+:code:`[fitness_params]` contains the following parameters:
+
+:equation: = weighted_sum
+       [[parameters]]
+       goal_fos = 4
+       critical_nodes = '[3]'
+       w_fos = 10000
+       w_mass = 1
+       w_deflection = 100
+
+Evaluator Parameters
+====================
+:code:`[evaluator_params]` contains the following parameters:
+
+:struct_solver: = mat_struct_analysis_DSM
+:mass_solver: = mass_basic
+:interferences_solver: = blank_test
+:cost_solver: = cost_calc
+
+Genetic Algorithm Parameters
+============================
+:code:`[ga_params]` contains the following parameters:
+
+:num_threads: = 4
+:pop_size: = 1000
+:num_generations: = 30
+:num_elite: =
+:percent_mutation: =
+:percent_crossover: =
+:save_frequency: = 5
+:save_filename_prefix: = Recorded_States_
+
+Progress Monitor Parameters
+===========================
+:code:`[monitor_params]` contains the following parameters:
+
+:progress_display: = 1
+
+
+Advanced Parameters
+*******************
+
 explain different headings and options, with references to API docs
+
+Random Generation Parameters
+============================
+:code:`[random_params]` contains the following parameters:
+
+
+Crossover Parameters
+====================
+:code:`[crossover_params]` contains the following parameters:
+
+:node_crossover_method: =
+:edge_crossover_method: =
+:property_crossover_method: =
+      [[node_crossover_params]]
+      [[edge_crossover_params]]
+      [[property_crossover_params]]
+
+Mutator Parameters
+==================
+:code:`[mutator_params]` contains the following parameters:
+
+:node_mutator_method: =
+:edge_mutator_method: =
+:property_mutator_method: =
+      [[node_mutator_params]]
+      std =
+      [[edge_mutator_params]]
+      proportions =
+      [[property_mutator_params]]
+      proportions =
+      
+Selector Parameters
+===================
+:code:`[selector_params]` contains the following parameters:
+
+:method: =
+:tourn_size: = 31 # Must be less than 32
+:tourn_prob: = 0.5
