@@ -80,8 +80,7 @@ class GenAlg():
         methods.
 
         Args:
-            self (GenAlg object): Contains the information needed to determine
-            the ranges
+            None
 
         Returns:
             (Truss object): Truss object with the newly determined values
@@ -129,7 +128,8 @@ class GenAlg():
         '''Initializes population with randomly creates Truss objects
 
         Args:
-            self (GenAlg object): Object that will be updates
+            pop_size (int): size of the population. If not specified, it
+                            defaults to whatever was in the init file
 
         Returns:
             Updated self.population
@@ -172,7 +172,15 @@ class GenAlg():
             num_threads (int): number of threads the multiprocessing should employ
 
         Returns:
-            Finished Populations (self.population)
+            2-element tuple containing:
+
+            - **self.population[0]** *(Truss)*: The Truss with the best Factor
+              of safety.
+
+            - **propgress.pop_progress** (dict): Dictionary containing:
+
+                - ``'Item 1'`` *(blah)*: blah
+                - ``'Item 2'`` *(blah)*: blah 
         '''
         if num_threads is None:
             if self.ga_params['num_threads'] is None:
