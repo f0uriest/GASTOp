@@ -25,10 +25,10 @@ cost_solver = cost_calc
 [ga_params]
 num_threads = 4
 pop_size = 1000
-num_generations = 30
+num_generations = 5
 num_elite =
-percent_mutation = .7
-percent_crossover = .8
+percent_mutation =
+percent_crossover =
 
 [monitor_params]
 progress_display = 1

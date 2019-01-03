@@ -13,7 +13,7 @@ class Mutator():
     function that mutates parents according to the specified method.
 
     Attributes:
-        mutator_params(dict of str: ): Dictionary of parameters required by mutator objects.
+        mutator_params(dict of str): Dictionary of parameters required by mutator objects.
         mutator_params['method'](str): Name of chosen mutation method.
 
     '''

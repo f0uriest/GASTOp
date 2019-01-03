@@ -6,10 +6,14 @@ from tqdm import tqdm, tqdm_notebook, tnrange
 from multiprocessing import Pool
 import os
 import colorama
-from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders, utilities
+
+
+from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders, utilities, ProgMon
 # plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
+
 colorama.init()  # for progress bars on ms windows
+
 
 
 class GenAlg():
@@ -165,12 +169,17 @@ class GenAlg():
         else:
             self.ga_params['num_generations'] = num_generations
 
-        if progress_display == 2:  # check if figure method of progress monitoring is requested
+        #***
+        #if progress_display == 2:  # check if figure method of progress monitoring is requested
             # initialize plot:
-            fig = plt.figure()
-            ax1 = fig.add_subplot(1, 1, 1)
-            plt.ylabel('fos')
-            plt.xlabel('iteration')
+        #    fig = plt.figure()
+        #    ax1 = fig.add_subplot(1, 1, 1)
+        #    plt.ylabel('fos')
+        #    plt.xlabel('iteration')
+        progress = ProgMon(progress_display,num_generations) #initialize progress monitor object
+        #***
+
+
 
         # Loop over all generations:
 
@@ -183,11 +192,15 @@ class GenAlg():
                     self.evaluator(current_truss)
                 for current_truss in tqdm(self.population, desc='Scoring', position=1):
                     self.fitness_function(current_truss)
-                if progress_display == 2:
-                    self.progress_monitor(current_gen, progress_display, ax1)
+                #**
+                progress.progress_monitor(current_gen,self.population)
+                #if progress_display == 2:
+                    #self.progress_monitor(current_gen, progress_display, ax1)
+                #**
+
                 self.update_population()  # Determine which members to
-                if progress_display == 2:
-                    plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+                #if progress_display == 2:
+                    #plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
             return self.population[0], self.pop_progress
 
         # With parallelization
@@ -206,27 +219,32 @@ class GenAlg():
                     self.fitness_function, self.population, chunksize), total=self.ga_params['pop_size'], desc='Scoring', position=1))
                 pool.close()
                 pool.join()
-                if progress_display == 2:
-                    self.progress_monitor(current_gen, progress_display, ax1)
+
+                #**
+                #if progress_display == 2:
+                #    self.progress_monitor(current_gen, progress_display, ax1)
+                progress.progress_monitor(current_gen,self.population)
+                #**
+
                 self.update_population()  # Determine which members to
-                if progress_display == 2:
-                    plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+                #if progress_display == 2:
+                    #plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
             return self.population[0], self.pop_progress
 
-    def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
-        # three options: plot, progress bar ish thing, no output just append
-        # calc population diversity and plot stuff or show current results
-        # extract factor of safety from each truss object in population
-        fitscore = [i.fitness_score for i in self.population]
-        self.pop_progress.append(self.population)  # append to history
-        if progress_display == 1:
-            print(current_gen, np.amin(fitscore))
-        elif progress_display == 2:
-            # print(current_gen,min(fitscore))
-            # plot minimum fitscore for current gen in black
-            ax1.scatter(current_gen, np.amin(fitscore), c=[0, 0, 0])
-            # pause for 0.0001s to allow plot to update, can potentially remove this
-            plt.pause(0.0001)
+    # def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
+    #     # three options: plot, progress bar ish thing, no output just append
+    #     # calc population diversity and plot stuff or show current results
+    #     # extract factor of safety from each truss object in population
+    #     fitscore = [i.fitness_score for i in self.population]
+    #     self.pop_progress.append(self.population)  # append to history
+    #     if progress_display == 1:
+    #         print(current_gen, np.amin(fitscore))
+    #     elif progress_display == 2:
+    #         # print(current_gen,min(fitscore))
+    #         # plot minimum fitscore for current gen in black
+    #         ax1.scatter(current_gen, np.amin(fitscore), c=[0, 0, 0])
+    #         # pause for 0.0001s to allow plot to update, can potentially remove this
+    #         plt.pause(0.0001)
 
         # could make population a numpy structured array
         # fitness = population(:).fos

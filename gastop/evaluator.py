@@ -12,10 +12,10 @@ class Evaluator():
     fully evaluate a Truss object using specified methods and parameters.
     """
 
-    def __init__(self, struct_solver, mass_solver, interferences_solver, boundary_conditions, properties_dict):
+    def __init__(self, struct_solver, mass_solver, interferences_solver, cost_solver, boundary_conditions, properties_dict):
         """Creates an Evaluator callable object.
 
-        Once created, the Evaluator can be called on a Truss object to 
+        Once created, the Evaluator can be called on a Truss object to
         calculate and assign mass, factor of safety, deflections, etc
         to the truss.
 
@@ -49,9 +49,9 @@ class Evaluator():
                 - ``'ID'``: Inner diameter of the beam, in meters.
                 - ``'elastic_modulus'``: Elastic or Young's modulus of the
                   material, in Pascals.
-                - ``'yield_strength'``: Yield or failure strength of the 
+                - ``'yield_strength'``: Yield or failure strength of the
                   material, in Pascals.
-                - ``'shear_modulus'``: Shear modulus of the material, 
+                - ``'shear_modulus'``: Shear modulus of the material,
                   in Pascals.
                 - ``'poisson_ratio'``: Poisson ratio of the material,
                   dimensionless.
@@ -60,10 +60,12 @@ class Evaluator():
                 - ``'moment_inertia_y'``: Area moment of inertia about beams
                   y axis, in meters^4.
                 - ``'moment_inertia_z'``: Area moment of inertia about beams
-                  z axis, in meters^4.  
+                  z axis, in meters^4.
                 - ``'polar_moment_inertia'``: Area moment of inertia about beams
-                  polar axis, in meters^4. 
+                  polar axis, in meters^4.
                 - ``'dens'``: Density of the material, in kilograms per cubic meter.
+            cost_solver (str): Name of the method to be used to calculate cost.
+                e.g. ``'cost_calc'``.
 
         Returns:
             callable Evaluator object.
@@ -74,14 +76,15 @@ class Evaluator():
         self.mass_solver = getattr(self, mass_solver)
         self.interferences_solver = getattr(self, interferences_solver)
         self.boundary_conditions = boundary_conditions
+        self.cost_solver = getattr(self, cost_solver)
         self.properties_dict = properties_dict
 
     def mat_struct_analysis_DSM(self, truss, boundary_conditions, properties_dict):
         """Calculates deflections and stresses using direct stiffness method.
 
-        Constructs global stiffness matrix from nodes and connections, 
+        Constructs global stiffness matrix from nodes and connections,
         and computes deflections under each loading scenario.
-        From deflections, calculates internal forces, stresses, and factor 
+        From deflections, calculates internal forces, stresses, and factor
         of safety in each member under each loading scenario
 
         Args:
@@ -109,9 +112,9 @@ class Evaluator():
                 - ``'ID'``: Inner diameter of the beam, in meters.
                 - ``'elastic_modulus'``: Elastic or Young's modulus of the
                   material, in Pascals.
-                - ``'yield_strength'``: Yield or failure strength of the 
+                - ``'yield_strength'``: Yield or failure strength of the
                   material, in Pascals.
-                - ``'shear_modulus'``: Shear modulus of the material, 
+                - ``'shear_modulus'``: Shear modulus of the material,
                   in Pascals.
                 - ``'poisson_ratio'``: Poisson ratio of the material,
                   dimensionless.
@@ -120,15 +123,15 @@ class Evaluator():
                 - ``'moment_inertia_y'``: Area moment of inertia about beams
                   y axis, in meters^4.
                 - ``'moment_inertia_z'``: Area moment of inertia about beams
-                  z axis, in meters^4.  
+                  z axis, in meters^4.
                 - ``'polar_moment_inertia'``: Area moment of inertia about beams
-                  polar axis, in meters^4. 
+                  polar axis, in meters^4.
                 - ``'dens'``: Density of the material, in kilograms per cubic meter.
 
         Returns:
             2-element tuple containing:
 
-            - **fos** *(ndarray)*: 2D array of factor of safety values. First index 
+            - **fos** *(ndarray)*: 2D array of factor of safety values. First index
               corresponds to members, second index corresponds to different
               loading scenarios. Factor of safety is defined as the materials
               yield strength divided by the von Mises stress in the member.
@@ -143,7 +146,7 @@ class Evaluator():
               coordinates, and rotations about global x,y,z axes. The third
               axis corresponds to different loading scenarios.
 
-              Deflection at node i under loading j is deflections[i, :, j] = 
+              Deflection at node i under loading j is deflections[i, :, j] =
               [dx, dy, dz, d_theta_x, d_theta_y, d_theta_z]
         """
         # mark self connected nodes
@@ -356,16 +359,68 @@ class Evaluator():
             edge_vec[:, 2]**2)
 
         # get material properties
+        #print(properties_dict['x_section_area'])
         A = properties_dict['x_section_area'][matl]
         dens = properties_dict['density'][matl]
         mass = np.sum(A*L*dens)
 
         return mass
 
+    def cost_calc(self, truss, properties_dict):
+        """Calculates cost of structure
+
+        Considers only members, does not account for additional cost due
+        to welds or connection hardware.
+
+        Args:
+            truss (Truss object): Truss to be evaluated. Must have nodes,
+                edges, and properties defined.
+           properties_dict (dict): Dictionary containing beam properties.
+            Entries should be 1D arrays, with length equal to the number of
+            beam options. Each entry in the array is the value of the key
+            property for the specified beam type. Properties include:
+
+                - ``'x_section_area'``: Cross sectional area of the beam,
+                  in square meters.
+                - ``'cost'``: Cost of the material, in $ per meter.
+
+        Returns:
+            cost (float): Cost of the structure in $.
+        """
+
+        # make local copy of arrays in case something breaks
+        nodes = np.concatenate(
+            (truss.user_spec_nodes.copy(), truss.rand_nodes.copy()))
+        # mark self connected nodes
+        truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
+        con = truss.edges.copy()
+        matl = truss.properties.copy()
+
+        # remove self connected edges
+        matl = matl[(con[:, 0]) >= 0]
+        con = con[(con[:, 0]) >= 0]
+        matl = matl[(con[:, 1]) >= 0]
+        con = con[(con[:, 1]) >= 0]
+        con = con.astype(int)
+
+        # calculate member lengths
+        edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]
+        L = np.sqrt(
+            edge_vec[:, 0]**2 +
+            edge_vec[:, 1]**2 +
+            edge_vec[:, 2]**2)
+
+        # get material properties
+        cost_per_len = properties_dict['cost'][matl]
+
+        mass = np.sum(L*cost_per_len)
+
+        return mass
+
     def interference_ray_tracing(self, truss):
         """Not implemented yet.
 
-        TODO: method to determine if truss members are crossing into 
+        TODO: method to determine if truss members are crossing into
         user specified areas. Used when a structure must be designed around
         something, such as a passenger compartment or other design components.
         """
@@ -390,7 +445,7 @@ class Evaluator():
         methods to be used and any necessary parameters.
 
         Args:
-            truss (Truss object): truss to be evaluated. 
+            truss (Truss object): truss to be evaluated.
 
         Returns:
            None
@@ -400,6 +455,7 @@ class Evaluator():
         fos, deflection = self.struct_solver(
             truss, self.boundary_conditions, self.properties_dict)
         mass = self.mass_solver(truss, self.properties_dict)
+        truss.cost = self.cost_solver(truss, self.properties_dict)
         interferences = self.interferences_solver(truss)
         truss.fos = fos
         truss.deflection = deflection

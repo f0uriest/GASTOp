@@ -7,7 +7,7 @@ class Truss():
     """Implements the Truss object, which is the fundamental object/data
     type in GASTOp.
 
-    Each truss is defined by a collection of nodes (points in x,y,z space), 
+    Each truss is defined by a collection of nodes (points in x,y,z space),
     edges (connections between nodes), and properties (material and geometric
     properties of the connections between nodes).
 
@@ -37,11 +37,11 @@ class Truss():
                 number of the starting node and the second being the ending node.
                 A value of -1 indicates no connection, and will be ignored.
             properties (ndarray): Array of indices for beam properties. Array
-                shape should be a 1d array of length k, where k is the number of 
+                shape should be a 1d array of length k, where k is the number of
                 connections or beams in the structure. Each entry should be an
-                integer index into the properties dictionary, with values 
+                integer index into the properties dictionary, with values
                 between [0, number of beam types].
-            fos (ndarray): Array of factor of safety values. Default None. 
+            fos (ndarray): Array of factor of safety values. Default None.
             deflection (ndarray): Array of node deflections under load,
                 in meters. Default None.
             mass (float): Mass of the structure, in kilograms. Default None.
@@ -143,7 +143,7 @@ class Truss():
             print('Cost: Undefined')
 
     def plot(self, domain=None, loads=None, fixtures=None,
-             deflection=False, load_scale=None, def_scale=100):
+             deflection=False, load_scale=None, def_scale=100, ax=None, fig=None):
         """Plots a truss object as a 3D wireframe
 
         Args:
@@ -160,7 +160,7 @@ class Truss():
                 the node matching the row #. Format:
                 [Dx,Dy,Dz,Rx,Ry,Rz] value of 1 means fixed in that direction,
                 value of zero is free.
-            deflection (bool): If True, deflections will be plotted superposed on 
+            deflection (bool): If True, deflections will be plotted superposed on
                 the undeformed structure. Relative size of deflections is governed
                 by *def_scale*.
             load_scale (float): Size load vector arrows should be scaled by.
@@ -191,8 +191,10 @@ class Truss():
         if load_scale is None and loads is not None:
             load_scale = size_scale/np.abs(loads).max()/5
 
-        fig = plt.figure()
-        ax = fig.gca(projection='3d')
+        if ax is None:
+            fig = plt.figure()
+            ax = fig.gca(projection='3d')
+
         if domain is not None:
             ax.set_xlim(domain[0, :])
             ax.set_ylim(domain[1, :])
@@ -207,13 +209,20 @@ class Truss():
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
                         [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-')
 
+
         edge_vec_start = nodes[con[:, 0], :]
         edge_vec_end = nodes[con[:, 1], :]
 
+        #****
         for i in range(num_con):
+            #fig.canvas.flush_events()
             ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
                     [edge_vec_start[i, 1], edge_vec_end[i, 1]],
                     [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
+            #fig.canvas.draw()
+
+            #ax.draw() #sfr
+        #****
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
@@ -225,4 +234,4 @@ class Truss():
             ax.scatter(fix_nodes[:, 0], fix_nodes[:, 1], fix_nodes[:, 2],
                        c='g', marker='o', depthshade=False, s=100)
 
-        plt.show()
+        #plt.show()

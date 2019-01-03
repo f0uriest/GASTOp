@@ -63,7 +63,22 @@ class TestCrossoverPaul(unittest.TestCase):
         np.testing.assert_string_equal(
             str((result[1]).dtype), str(check.dtype))
 
+    def testChildInParents(self):
+        truss_1 = np.random.randint(10, size=25)
+        truss_2 = np.random.randint(10, size=25)
+        parents_combined = np.concatenate((truss_1, truss_2))
+        
+        result = Crossover.uniform_crossover(None,
+                                             truss_1, truss_2)
 
+        child1_status = str(np.all(np.in1d(result[0],
+                                       parents_combined)))
+        child2_status = str(np.all(np.in1d(result[1],
+                                       parents_combined)))
+
+        np.testing.assert_string_equal(child1_status, str(True))
+        np.testing.assert_string_equal(child2_status, str(True))
+        
 class TestCrossover_twopointssplit(unittest.TestCase):  # Amlan
     def test_sanity(self):
 

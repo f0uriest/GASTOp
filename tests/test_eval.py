@@ -24,7 +24,8 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'interference_ray_tracing', bdry, beam_dict)
+                              'mass_basic', 'interference_ray_tracing','cost_calc', bdry, beam_dict)
+        print(evaluator.properties_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -39,6 +40,7 @@ class TestEvaluator(unittest.TestCase):
         np.testing.assert_array_almost_equal(truss.fos, fos_true)
         np.testing.assert_array_almost_equal(truss.deflection, deflection_true)
         self.assertTrue(truss.interference is None)
+        #np.testing.assert_almost_equal(truss.cost, L*beam_dict['cost'][matl])
 
     def test_singular_stiffness_matrix(self):
         """Tests straight beam under axial forces with no restraints
@@ -61,7 +63,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
         fos_true = 0
 
@@ -91,7 +93,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -103,6 +105,7 @@ class TestEvaluator(unittest.TestCase):
         np.testing.assert_almost_equal(
             truss.mass, A*L*beam_dict['density'][matl])
         np.testing.assert_array_almost_equal(truss.fos, fos_true, 2)
+        np.testing.assert_almost_equal(truss.cost, L*beam_dict['cost'][matl])
 
     def test_unsupported_load(self):
         """Tests straight beam under axial forces with additional unsupported load
@@ -129,7 +132,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
         fos_true = 0
 
@@ -161,7 +164,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -171,6 +174,8 @@ class TestEvaluator(unittest.TestCase):
         np.testing.assert_almost_equal(
             truss.mass, A*L*beam_dict['density'][matl])
         np.testing.assert_array_almost_equal(truss.fos, fos_true)
+        np.testing.assert_almost_equal(truss.cost, L*beam_dict['cost'][matl])
+        np.testing.assert_almost_equal(truss.cost, L*beam_dict['cost'][matl])
 
     def test_duplicate_members(self):
         """Tests a truss with duplicate members between two nodes,
@@ -193,7 +198,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -205,6 +210,7 @@ class TestEvaluator(unittest.TestCase):
         np.testing.assert_almost_equal(
             truss.mass, A*L*beam_dict['density'][matl])
         np.testing.assert_array_almost_equal(truss.fos[0], fos_true, 2)
+        np.testing.assert_almost_equal(truss.cost, L*beam_dict['cost'][matl])
 
     def test_fixtures(self):
         """Tests applied loads with various dof fixed"""
@@ -228,7 +234,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test', bdry, beam_dict)
+                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
         evaluator(truss)
 
         fos_true = np.zeros((edges.shape[0], 1))
