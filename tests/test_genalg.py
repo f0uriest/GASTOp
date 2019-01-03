@@ -72,7 +72,10 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
 
         # Save and reload
         ga.save_state()
-        config, population = ga.load_state()
+        # config, population = ga.load_state()
+        ga_loaded = ga.load_state()
+        config = ga_loaded.config
+        population = ga_loaded.population
 
         # Test config
         self.assertTrue(type(config['ga_params']['num_elite']) is int)
