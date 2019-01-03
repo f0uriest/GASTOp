@@ -74,7 +74,7 @@ class Truss():
     #     """
     #     pass
 
-    def printinfo(self):
+    def __str__(self):
         """Prints the truss to the terminal as a formatted array.
 
         Prints node numbers and locations, edge numbers and connections, and 
@@ -99,48 +99,43 @@ class Truss():
         matl = matl[(con[:, 1]) >= 0]
         con = con[(con[:, 1]) >= 0]
 
-        print('\n')
+        s = '\n'
         if self.deflection is not None:
-            print('                Nodes                           Deflections          ')
-            print(
-                '   #      x       y       z            dx           dy           dz       ')
+            s += '                Nodes                           Deflections              \n'
+            s += '   #       x       y       z            dx           dy           dz      \n'
             for i, line in enumerate(np.concatenate((nodes, self.deflection[:, :3, 0]), axis=1)):
-                print(
-                    f' {i:>3d}    {line[0]: .2f}   {line[1]: .2f}   {line[2]: .2f}       {line[3]: .3e}   {line[4]: .3e}   {line[5]: .3e}')
+                s += f' {i:>3d}    {line[0]: .2f}   {line[1]: .2f}   {line[2]: .2f}       {line[3]: .3e}   {line[4]: .3e}   {line[5]: .3e} \n'
         else:
-            print('                Nodes                           Deflections          ')
-            print(
-                '   #      x       y       z            dx           dy           dz       ')
+            s += '                Nodes                           Deflections          \n'
+            s += '   #       x       y       z            dx           dy           dz       \n'
             for i, line in enumerate(nodes):
-                print(
-                    f' {i:>3d}    {line[0]: .2f}   {line[1]: .2f}   {line[2]: .2f}                    Undefined')
+                s += f' {i:>3d}    {line[0]: .2f}   {line[1]: .2f}   {line[2]: .2f}                    Undefined \n'
 
-        print('\n')
+        s += '\n'
         if self.fos is not None:
-            print('                    Edges     ')
-            print('        Start    End    Property      ')
-            print('   #    Node     Node     Type       FoS    ')
+            s += '                    Edges  \n'
+            s += '        Start    End    Property \n'
+            s += '   #    Node     Node     Type       FoS \n'
             for i, line in enumerate(np.concatenate((con, matl.reshape(matl.shape[0], 1), self.fos), axis=1)):
-                print(
-                    f' {i:>3d}    {line[0].astype(int):>3d}     {line[1].astype(int):>3d}     {line[2].astype(int):>3d}       {line[3]:>7.2f}      ')
+                s += f' {i:>3d}    {line[0].astype(int):>3d}     {line[1].astype(int):>3d}      {line[2].astype(int):>3d}       {line[3]:>7.2f} \n'
         else:
-            print('                    Edges     ')
-            print('        Start    End    Property      ')
-            print('   #    Node     Node     Type       FoS    ')
+            s += '                    Edges     \n'
+            s += '        Start    End    Property      \n'
+            s += '   #    Node     Node     Type       FoS    \n'
             for i, line in enumerate(np.concatenate((con, matl.reshape(matl.shape[0], 1)), axis=1)):
-                print(
-                    f' {i:>3d}    {line[0].astype(int):>3d}     {line[1].astype(int):>3d}      {line[2].astype(int):>3d}      Undefined      ')
+                s += f' {i:>3d}    {line[0].astype(int):>3d}     {line[1].astype(int):>3d}       {line[2].astype(int):>3d}      Undefined      \n'
 
-        print('\n')
+        s += '\n'
         if self.mass is not None:
-            print('Mass: %.3f kg' % self.mass)
+            s += f'Mass: {self.mass:.3f} kg \n'
         else:
-            print('Mass: Undefined')
+            s += 'Mass: Undefined \n'
 
         if self.cost is not None:
-            print('Cost: $ %.2f ' % self.cost)
+            s += f'Cost: $ {self.cost:.2f} \n '
         else:
-            print('Cost: Undefined')
+            s += 'Cost: Undefined \n'
+        return s
 
     def plot(self, domain=None, loads=None, fixtures=None,
              deflection=False, load_scale=None, def_scale=100, ax=None, fig=None):
@@ -209,20 +204,19 @@ class Truss():
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
                         [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-')
 
-
         edge_vec_start = nodes[con[:, 0], :]
         edge_vec_end = nodes[con[:, 1], :]
 
-        #****
+        # ****
         for i in range(num_con):
-            #fig.canvas.flush_events()
+            # fig.canvas.flush_events()
             ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
                     [edge_vec_start[i, 1], edge_vec_end[i, 1]],
                     [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
-            #fig.canvas.draw()
+            # fig.canvas.draw()
 
-            #ax.draw() #sfr
-        #****
+            # ax.draw() #sfr
+        # ****
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
@@ -234,4 +228,4 @@ class Truss():
             ax.scatter(fix_nodes[:, 0], fix_nodes[:, 1], fix_nodes[:, 2],
                        c='g', marker='o', depthshade=False, s=100)
 
-        #plt.show()
+        # plt.show()
