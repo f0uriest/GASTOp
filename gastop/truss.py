@@ -74,6 +74,52 @@ class Truss():
     #     """
     #     pass
 
+    def mark_duplicates(self):
+        """Checks truss for duplicate edges or self connected nodes and marks them.
+
+        Any edge that connects a node to itself, or any duplicate edges are 
+        changed to -1.
+        """
+
+        orig_num_edges = self.edges.shape[0]
+
+        # mark self connected edges
+        self.edges[self.edges[:, 0] == self.edges[:, 1]] = -1
+
+        # mark duplicate edges
+        self.edges.sort()
+        self.edges = np.unique(self.edges, axis=0)
+        self.edges = np.concatenate(
+            (self.edges, -1*np.ones((orig_num_edges-self.edges.shape[0], 2))), axis=0)
+        return
+
+    def cleaned_params(self):
+        """Returns cleaned copies of node, edge, and property arrays.
+
+        Args:
+            None
+
+        Returns:
+            3-element tuple containing:
+
+            -**nodes** *(ndarray)*: Concatenation of user_spec_nodes and rand_nodes.
+            -**edges** *(ndarray)*: Edges array after removing rows with -1 values.
+            -**properties** *(ndarray)*: Properties corresponding to remaining edges.
+
+        """
+        # make local copies of arrays in case something breaks
+        nodes = np.concatenate((self.user_spec_nodes, self.rand_nodes))
+        edges = self.edges.copy()
+        properties = self.properties.copy()
+
+        # remove self connected edges and duplicate members
+        properties = properties[(edges[:, 0]) >= 0]
+        edges = edges[(edges[:, 0]) >= 0]
+        properties = properties[(edges[:, 1]) >= 0]
+        edges = edges[(edges[:, 1]) >= 0]
+
+        return nodes, edges.astype(int), properties.astype(int)
+
     def __str__(self):
         """Prints the truss to the terminal as a formatted array.
 
@@ -89,15 +135,7 @@ class Truss():
             None
         """
 
-        nodes = np.concatenate((self.user_spec_nodes, self.rand_nodes), axis=0)
-        con = self.edges.copy()
-        matl = self.properties.copy()
-
-        # remove self connected edges and duplicate members
-        matl = matl[(con[:, 0]) >= 0]
-        con = con[(con[:, 0]) >= 0]
-        matl = matl[(con[:, 1]) >= 0]
-        con = con[(con[:, 1]) >= 0]
+        nodes, con, matl = self.cleaned_params()
 
         s = '\n'
         if self.deflection is not None:
@@ -169,21 +207,9 @@ class Truss():
         Returns:
             None
         """
-        nodes = np.concatenate(
-            (self.user_spec_nodes.copy(), self.rand_nodes.copy()))
-        # mark self connected nodes
-        self.edges[self.edges[:, 0] == self.edges[:, 1]] = -1
-        con = self.edges.copy()
-        matl = self.properties.copy()
 
-        # remove self connected edges
-        matl = matl[(con[:, 0]) >= 0]
-        con = con[(con[:, 0]) >= 0]
-        matl = matl[(con[:, 1]) >= 0]
-        con = con[(con[:, 1]) >= 0]
-        con = con.astype(int)
+        nodes, con, matl = self.cleaned_params()
 
-        num_nodes = nodes.shape[0]
         num_con = con.shape[0]
 
         size_scale = (nodes.max(axis=0)-nodes.min(axis=0)).max()

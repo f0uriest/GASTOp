@@ -1,5 +1,4 @@
 import numpy as np
-from gastop import utilities
 
 
 class Evaluator():
@@ -149,30 +148,11 @@ class Evaluator():
               Deflection at node i under loading j is deflections[i, :, j] =
               [dx, dy, dz, d_theta_x, d_theta_y, d_theta_z]
         """
-        # mark self connected nodes
-        orig_num_edges = truss.edges.shape[0]
-        truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
 
-        # mark duplicate edges
-        truss.edges.sort()
-        truss.edges = np.unique(truss.edges, axis=0)
-        truss.edges = np.concatenate(
-            (truss.edges, -1*np.ones((orig_num_edges-truss.edges.shape[0], 2))), axis=0)
+        nodes, con, matl = truss.cleaned_params()
 
-        # make local copies of arrays in case something breaks
-        nodes = np.concatenate(
-            (truss.user_spec_nodes.copy(), truss.rand_nodes.copy()))
-        con = truss.edges.copy()
-        matl = truss.properties.copy()
         loads = boundary_conditions['loads'].copy()
         fixtures = boundary_conditions['fixtures'].copy()
-
-        # remove self connected edges and duplicate members
-        matl = matl[(con[:, 0]) >= 0]
-        con = con[(con[:, 0]) >= 0]
-        matl = matl[(con[:, 1]) >= 0]
-        con = con[(con[:, 1]) >= 0]
-        con = con.astype(int)
 
         num_nodes = nodes.shape[0]
         num_con = con.shape[0]
@@ -336,20 +316,7 @@ class Evaluator():
             mass (float): Mass of the structure in kilograms.
         """
 
-        # make local copy of arrays in case something breaks
-        nodes = np.concatenate(
-            (truss.user_spec_nodes.copy(), truss.rand_nodes.copy()))
-        # mark self connected nodes
-        truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
-        con = truss.edges.copy()
-        matl = truss.properties.copy()
-
-        # remove self connected edges
-        matl = matl[(con[:, 0]) >= 0]
-        con = con[(con[:, 0]) >= 0]
-        matl = matl[(con[:, 1]) >= 0]
-        con = con[(con[:, 1]) >= 0]
-        con = con.astype(int)
+        nodes, con, matl = truss.cleaned_params()
 
         # calculate member lengths
         edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]
@@ -359,7 +326,7 @@ class Evaluator():
             edge_vec[:, 2]**2)
 
         # get material properties
-        #print(properties_dict['x_section_area'])
+        # print(properties_dict['x_section_area'])
         A = properties_dict['x_section_area'][matl]
         dens = properties_dict['density'][matl]
         mass = np.sum(A*L*dens)
@@ -388,20 +355,7 @@ class Evaluator():
             cost (float): Cost of the structure in $.
         """
 
-        # make local copy of arrays in case something breaks
-        nodes = np.concatenate(
-            (truss.user_spec_nodes.copy(), truss.rand_nodes.copy()))
-        # mark self connected nodes
-        truss.edges[truss.edges[:, 0] == truss.edges[:, 1]] = -1
-        con = truss.edges.copy()
-        matl = truss.properties.copy()
-
-        # remove self connected edges
-        matl = matl[(con[:, 0]) >= 0]
-        con = con[(con[:, 0]) >= 0]
-        matl = matl[(con[:, 1]) >= 0]
-        con = con[(con[:, 1]) >= 0]
-        con = con.astype(int)
+        nodes, con, matl = truss.cleaned_params()
 
         # calculate member lengths
         edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]
@@ -451,13 +405,12 @@ class Evaluator():
            None
 
         """
+        truss.mark_duplicates()
 
-        fos, deflection = self.struct_solver(
+        truss.fos, truss.deflection = self.struct_solver(
             truss, self.boundary_conditions, self.properties_dict)
-        mass = self.mass_solver(truss, self.properties_dict)
+        truss.mass = self.mass_solver(truss, self.properties_dict)
         truss.cost = self.cost_solver(truss, self.properties_dict)
-        interferences = self.interferences_solver(truss)
-        truss.fos = fos
-        truss.deflection = deflection
-        truss.mass = mass
+        truss.interferences = self.interferences_solver(truss)
+
         return truss
