@@ -16,11 +16,14 @@ best, progress_history = ga.run(
     num_generations=num_gens, progress_display=3, num_threads=4)
 
 
-print(best.rand_nodes)
-print(best.edges)
-print(best.properties)
-print(best.fos)
-print(best.deflection[:, :, 0])
+# print(best.rand_nodes)
+# print(best.edges)
+# print(best.properties)
+# print(best.fos)
+# print(best.deflection[:, :, 0])
+
+print(best)
+
 best.plot(domain=config['random_params']['domain'].T,
           loads=config['evaluator_params']['boundary_conditions']['loads'],
           fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
