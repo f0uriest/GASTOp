@@ -137,7 +137,7 @@ class GenAlg():
             pop_size = self.ga_params['pop_size']
 
         # Try 1: t= 0.298
-        # self.population = [self.generate_random() for i in range(pop_size)]
+        self.population = [self.generate_random() for i in range(pop_size)]
 
         # Try 2: t= 0.352
         # pool = Pool()
@@ -152,11 +152,11 @@ class GenAlg():
         # pool.join()
 
         # Try 4: t=0.232
-        pool = Pool()
-        self.population = list(tqdm(pool.imap(
-            self.generate_random, range(pop_size), int(np.sqrt(pop_size))), total=pop_size, leave=False, desc='Initializing Population', position=0))
-        pool.close()
-        pool.join()
+        # pool = Pool()
+        # self.population = list(tqdm(pool.imap(
+        #     self.generate_random, range(pop_size), int(np.sqrt(pop_size))), total=pop_size, leave=False, desc='Initializing Population', position=0))
+        # pool.close()
+        # pool.join()
 
     def run(self, num_generations=None, progress_display=1, num_threads=None):
         if num_threads is None:
