@@ -1,3 +1,10 @@
+"""selector.py
+This file is a part of GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements the Selector class.
+
+"""
 import numpy as np
 
 

@@ -29,6 +29,8 @@ num_generations = 5
 num_elite =
 percent_mutation =
 percent_crossover =
+save_frequency = 5
+save_filename_prefix = Recorded_States_
 
 [monitor_params]
 progress_display = 1

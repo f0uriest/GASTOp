@@ -13,8 +13,6 @@ import time
 # print(sys.path)
 
 
-#from gastop import GenAlg, Truss, Evaluator, FitnessFunction, utilities
-
 from gastop import GenAlg, Truss, Evaluator, FitnessFunction, utilities, ProgMon
 
 
@@ -77,17 +75,15 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
         population = ga_loaded.population
 
         # Test config
-        self.assertTrue(type(config['ga_params']['num_elite']) is int)
-        self.assertTrue(
-            type(config['ga_params']['percent_crossover']) is float)
+        self.assertTrue(isinstance(config['ga_params']['num_elite'], int))
+        self.assertTrue(isinstance(config['ga_params']['percent_crossover'],float))
         self.assertTrue(type(config['mutator_params']['node_mutator_params']['boundaries'])
                         is type(np.array([1, 1])))
-        self.assertTrue(type(config['mutator_params']['node_mutator_params']['int_flag'])
-                        is bool)
+        self.assertTrue(isinstance(config['mutator_params']['node_mutator_params']['int_flag'], bool))
 
         # Test population
         for truss in population:
-            self.assertTrue(type(truss) is Truss)
+            self.assertTrue(isinstance(truss, Truss))
             self.assertTrue(type(truss.user_spec_nodes) is np.ndarray)
             self.assertTrue(type(truss.rand_nodes) is np.ndarray)
             self.assertTrue(type(truss.edges) is np.ndarray)

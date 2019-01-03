@@ -1,3 +1,11 @@
+"""progmon.py
+This file is a part of GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements the ProgMon class.
+
+"""
+
 import matplotlib.pyplot as plt
 from matplotlib import style
 import numpy as np
@@ -7,12 +15,42 @@ style.use('fivethirtyeight')
 
 
 class ProgMon():
+    """Plots fitness score or truss evolution and stores population statistics.
+
+    The GenAlg Class orchestrates all of the other functions that perform
+    functions to change the population and its elements. In this case, such
+    classes are crossover, evaluator, encoders, fitness, mutator, selector, and
+    truss.
+
+    In brief, GenAlg calls many other functions in order to create a generation
+    which is then analyzed to fully determine its relavant properties. These
+    properties are then used to create a new generation and the process repeats
+    until a final solution is reached.
+
+    """
 
     def __init__(self,progress_display,num_generations):
+        """Creates a ProgMon object
+
+        Once created, the object will store all of the relavant information
+        about a population. The object also contains the necessary functions to
+        modify itself, evaluate its 'goodness', and then create new members for
+        the next generation.
+
+        Args:
+            Either:
+            config (dict): Configuration dictionary with parameters, such as one
+                created by :meth:`gastop.utilities.init_file_parser`
+            config (str): File path to config file to be parsed. Used
+                instead of passing config dictionary directly.
+
+        Returns:
+            GenAlg callable object
+        """
 
         self.progress_display = progress_display
         self.num_gens = num_generations
-        self.orderofgen = int(np.log10(self.num_gens))*10
+        self.orderofgen = 10**(int(np.log10(self.num_gens))) # is this doing what i want it to
         self.pop_progress = []
         self.pop_start = []
 
@@ -45,9 +83,10 @@ class ProgMon():
         # three options: plot, progress bar ish thing, no output just append
         # calc population diversity and plot stuff or show current results
         fitscore = [i.fitness_score for i in population] #extract factor of safety from each truss object in population
-        fitscore_min = np.amin(fitscore)
+        fitscore_min = fitscore[0]
+        #fitscore_min = np.amin(fitscore)
 
-        self.pop_progress.append(population) #append to history
+        self.pop_progress.append(population) #change to be pop stats not population, change to dictionary
         #if self.progress_display == 1:
         #    test = np.amin(fitscore)
         if self.progress_display == 2:
@@ -79,7 +118,7 @@ class ProgMon():
             plt.pause(0.0001) #pause for 0.0001s to allow plot to update, can potentially remove this
 
         elif self.progress_display == 3: #does not work yet
-            population.sort(key=lambda x: x.fitness_score)
+            #population.sort(key=lambda x: x.fitness_score)
             best_truss = population[0]
 
             edge_vec_start, edge_vec_end, num_con = best_truss.plot(ax=self.ax3,fig = self.fig)

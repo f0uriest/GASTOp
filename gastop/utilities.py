@@ -1,3 +1,11 @@
+"""utilities.py
+This file is a part of GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements the utilities class.
+
+"""
+
 import numpy as np
 import configobj
 import ast
@@ -127,6 +135,13 @@ def init_file_parser(init_file_path):  # Cristian
 
     # ga_params
     config['ga_params']['current_generation'] = 0
+    if config['ga_params']['save_filename_prefix']:
+        config['ga_params']['config_save_name'] = config['ga_params']['save_filename_prefix'] + '_config.json'
+        config['ga_params']['pop_save_name'] = config['ga_params']['save_filename_prefix'] + '_population.json'
+    else:
+        config['ga_params']['config_save_name'] = 'config.json'
+        config['ga_params']['pop_save_name'] = 'population.json'
+
 
     # evaluator_params
     config['evaluator_params']['boundary_conditions'] = {}

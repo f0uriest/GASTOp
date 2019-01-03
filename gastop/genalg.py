@@ -1,3 +1,11 @@
+"""genalg.py
+This file is a part of GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements the GenAlg class.
+
+"""
+
 import matplotlib.pyplot as plt
 from matplotlib import style
 import numpy as np
@@ -6,12 +14,7 @@ from tqdm import tqdm, tqdm_notebook, tnrange
 from multiprocessing import Pool
 import os
 import colorama
-
-
 from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders, utilities, ProgMon
-# plt.ion() #look into multithreading this
-style.use('fivethirtyeight')
-
 colorama.init()  # for progress bars on ms windows
 
 
@@ -137,7 +140,9 @@ class GenAlg():
             pop_size = self.ga_params['pop_size']
 
         # Try 1: t= 0.298
-        self.population = [self.generate_random() for i in range(pop_size)]
+        self.population = []
+        for i in tqdm(range(pop_size),total=pop_size, leave=False, desc='Initializing Population', position=0):
+            self.population.append(self.generate_random())
 
         # Try 2: t= 0.352
         # pool = Pool()
@@ -193,15 +198,15 @@ class GenAlg():
                 for current_truss in tqdm(self.population, desc='Scoring', position=1):
                     self.fitness_function(current_truss)
                 #**
+
+                self.population.sort(key=lambda x: x.fitness_score)
                 progress.progress_monitor(current_gen,self.population)
-                #if progress_display == 2:
-                    #self.progress_monitor(current_gen, progress_display, ax1)
-                #**
 
                 self.update_population()  # Determine which members to
                 #if progress_display == 2:
                     #plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
-                
+                if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']):
+                    self.save_state(dest_config=self.ga_params['config_save_name'],dest_pop=self.ga_params['pop_save_name'])
             return self.population[0], self.pop_progress
 
         # With parallelization
@@ -221,13 +226,14 @@ class GenAlg():
                 pool.close()
                 pool.join()
 
-                #**
-                #if progress_display == 2:
-                #    self.progress_monitor(current_gen, progress_display, ax1)
+                self.population.sort(key=lambda x: x.fitness_score)
                 progress.progress_monitor(current_gen,self.population) #************** uncomment
                 #**
 
                 self.update_population()  # Determine which members to
+
+                if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']):
+                    self.save_state(dest_config=self.ga_params['config_save_name'],dest_pop=self.ga_params['pop_save_name'])
             return self.population[0], self.pop_progress
 
     # def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
@@ -308,7 +314,7 @@ class GenAlg():
         num_elite = self.ga_params['num_elite']
 
         # Sort population by fitness score (lowest score = most fit)
-        population.sort(key=lambda x: x.fitness_score)
+        # population.sort(key=lambda x: x.fitness_score) #remove
 
         # Calculate parents needed for crossover, ensure even number
         num_crossover = round((pop_size-num_elite)*percent_crossover)
