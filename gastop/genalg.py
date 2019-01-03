@@ -6,8 +6,8 @@ This module implements the GenAlg class.
 
 """
 
-import matplotlib.pyplot as plt
-from matplotlib import style
+#import matplotlib.pyplot as plt
+#from matplotlib import style
 import numpy as np
 import json
 from tqdm import tqdm, tqdm_notebook, tnrange
@@ -164,6 +164,16 @@ class GenAlg():
         # pool.join()
 
     def run(self, num_generations=None, progress_display=1, num_threads=None):
+        '''Runs the genetic algorithm over all populations and generations
+
+        Args:
+            num_generations (int): number of generations to be performed
+            progress_display (1,2,or 3): Determines what the progress monitor should display
+            num_threads (int): number of threads the multiprocessing should employ
+
+        Returns:
+            Finished Populations (self.population)
+        '''
         if num_threads is None:
             if self.ga_params['num_threads'] is None:
                 num_threads = 1
@@ -233,7 +243,8 @@ class GenAlg():
                 self.update_population()  # Determine which members to
 
                 if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']):
-                    self.save_state(dest_config=self.ga_params['config_save_name'],dest_pop=self.ga_params['pop_save_name'])
+                    self.save_state(dest_config=self.ga_params['config_save_name'],
+                                    dest_pop=self.ga_params['pop_save_name'])
             return self.population[0], self.pop_progress
 
     # def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
@@ -262,6 +273,15 @@ class GenAlg():
 
     def save_state(self, dest_config='config.json',
                    dest_pop='population.json'):  # Cristian
+        '''Saves the current population and config settings
+
+        Args:
+            dest_config (string): filename to be saved for the config
+            dest_pop (string): filename to be saved
+
+        Returns:
+            Nothing
+        '''
         # Save rng_seed for reloading
         self.config['random_params']['rng_seed'] = np.random.get_state()
 
@@ -281,6 +301,15 @@ class GenAlg():
     @staticmethod
     def load_state(dest_config='config.json',
                    dest_pop='population.json'):  # Cristian
+        '''Loads the current population and config settings
+
+        Args:
+            dest_config (string): filename to be uploaded from for the config
+            dest_pop (string): filename to be uploaded from
+
+        Returns:
+            GenAlg Object
+        '''
         # Load config data
         with open(dest_config, 'r') as f:
             config_loaded = json.load(f)

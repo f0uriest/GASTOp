@@ -83,8 +83,17 @@ def init_file_parser(init_file_path):  # Cristian
     else:
         raise IOError("No such path to init file.")
 
-    # Function used to convert each string in config to associated type
     def transform(section, key):
+        """convert each string in config to associated type
+
+        Args:
+            section: section of the file
+            key: key for dictionary
+
+        Returns:
+            Returns each string
+
+        """
         val = section[key]
         newval = val
         # Convert string to float or int

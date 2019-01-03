@@ -18,7 +18,13 @@ class Evaluator():
     fully evaluate a Truss object using specified methods and parameters.
     """
 
-    def __init__(self, struct_solver, mass_solver, interferences_solver, cost_solver, boundary_conditions, properties_dict):
+    def __init__(   self,
+                    struct_solver,
+                    mass_solver,
+                    interferences_solver,
+                    cost_solver,
+                    boundary_conditions,
+                    properties_dict):
         """Creates an Evaluator callable object.
 
         Once created, the Evaluator can be called on a Truss object to

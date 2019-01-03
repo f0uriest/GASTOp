@@ -16,7 +16,7 @@ class Selector():  # Cristian
     function that selects parents according to the specified method.
 
     Attributes:
-        sel_params(dict of str: ): Dictionary of parameters required by selector
+        sel_params(dict of str): Dictionary of parameters required by selector
                                     objects.
         sel_params['method'](str): Name of chosen selection methodself.
         sel_params['tourn_size'](int): Number of indices in each tournament.
