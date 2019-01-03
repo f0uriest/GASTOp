@@ -220,14 +220,6 @@ class GenAlg():
             self.population.sort(key=lambda x: x.fitness_score)
             progress.progress_monitor(current_gen, self.population)
 
-<<<<<<< HEAD
-                self.update_population()  # Determine which members to
-
-                if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']):
-                    self.save_state(dest_config=self.ga_params['config_save_name'],
-                                    dest_pop=self.ga_params['pop_save_name'])
-            return self.population[0], self.pop_progress
-=======
             self.update_population()  # Determine which members to
             # if progress_display == 2:
             # plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
@@ -235,7 +227,6 @@ class GenAlg():
                 self.save_state(
                     dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
         return self.population[0], progress.pop_progress
->>>>>>> 80c5df58394dbd60569c09233c1993a350fe4045
 
     # def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
     #     # three options: plot, progress bar ish thing, no output just append
