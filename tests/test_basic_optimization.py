@@ -18,7 +18,10 @@ ga_params = {
     'num_threads': None,
     'num_elite': 10,  # int, ~10 (the whole truss that get passed)
     'percent_crossover': 0.4,  # double between 0 and 1
-    'percent_mutation': 0.4  # double between 0 and 1
+    'percent_mutation': 0.4,  # double between 0 and 1
+    'save_frequency': 0,
+    'save_filename_prefix': 'Recorded_States_'
+
 }
 
 random_params = {

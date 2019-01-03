@@ -418,6 +418,7 @@ class Evaluator():
            None
 
         """
+
         truss.mark_duplicates()
 
         truss.fos, truss.deflection = self.struct_solver(

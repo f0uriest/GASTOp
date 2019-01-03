@@ -12,11 +12,11 @@ import numpy as np
 import json
 from tqdm import tqdm, tqdm_notebook, tnrange
 from multiprocessing import Pool
+import copy
 import os
 import colorama
 from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders, utilities, ProgMon
 colorama.init()  # for progress bars on ms windows
-
 
 
 class GenAlg():
@@ -141,7 +141,7 @@ class GenAlg():
 
         # Try 1: t= 0.298
         self.population = []
-        for i in tqdm(range(pop_size),total=pop_size, leave=False, desc='Initializing Population', position=0):
+        for i in tqdm(range(pop_size), total=pop_size, leave=False, desc='Initializing Population', position=0):
             self.population.append(self.generate_random())
 
         # Try 2: t= 0.352
@@ -184,50 +184,31 @@ class GenAlg():
         else:
             self.ga_params['num_generations'] = num_generations
 
-        #***
-        #if progress_display == 2:  # check if figure method of progress monitoring is requested
+        # ***
+        # if progress_display == 2:  # check if figure method of progress monitoring is requested
             # initialize plot:
         #    fig = plt.figure()
         #    ax1 = fig.add_subplot(1, 1, 1)
         #    plt.ylabel('fos')
         #    plt.xlabel('iteration')
-        progress = ProgMon(progress_display,num_generations) #initialize progress monitor object
-        #***
-
-
-
+        # initialize progress monitor object
+        progress = ProgMon(progress_display, num_generations)
+        # ***
+        if self.ga_params['pop_size'] < 1e4:
+            chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))
+        else:
+            chunksize = int(np.sqrt(self.ga_params['pop_size']))
         # Loop over all generations:
 
-        # Without any parallelization:
-        if num_threads == 1:
-            for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
-                self.ga_params['current_generation'] = current_gen
-                # Loop over all trusses -> PARALLELIZE. Later
+        for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
+            self.ga_params['current_generation'] = current_gen
+            # no parallelization
+            if num_threads == 1:
                 for current_truss in tqdm(self.population, desc='Evaluating', position=1):
                     self.evaluator(current_truss)
                 for current_truss in tqdm(self.population, desc='Scoring', position=1):
                     self.fitness_function(current_truss)
-                #**
-
-                self.population.sort(key=lambda x: x.fitness_score)
-                progress.progress_monitor(current_gen,self.population)
-
-                self.update_population()  # Determine which members to
-                #if progress_display == 2:
-                    #plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
-                if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']):
-                    self.save_state(dest_config=self.ga_params['config_save_name'],dest_pop=self.ga_params['pop_save_name'])
-            return self.population[0], self.pop_progress
-
-        # With parallelization
-        else:
-            if self.ga_params['pop_size'] < 1e4:
-                chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))
             else:
-                chunksize = int(np.sqrt(self.ga_params['pop_size']))
-            for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
-                # for current_gen in tqdm_notebook(range(num_generations),desc='Generation'):
-                self.ga_params['current_generation'] = current_gen
                 pool = Pool(num_threads)
                 self.population = list(tqdm(pool.imap(
                     self.evaluator, self.population, chunksize), total=self.ga_params['pop_size'], desc='Evaluating', position=1))
@@ -236,16 +217,25 @@ class GenAlg():
                 pool.close()
                 pool.join()
 
-                self.population.sort(key=lambda x: x.fitness_score)
-                progress.progress_monitor(current_gen,self.population) #************** uncomment
-                #**
+            self.population.sort(key=lambda x: x.fitness_score)
+            progress.progress_monitor(current_gen, self.population)
 
+<<<<<<< HEAD
                 self.update_population()  # Determine which members to
 
                 if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']):
                     self.save_state(dest_config=self.ga_params['config_save_name'],
                                     dest_pop=self.ga_params['pop_save_name'])
             return self.population[0], self.pop_progress
+=======
+            self.update_population()  # Determine which members to
+            # if progress_display == 2:
+            # plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+            if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
+                self.save_state(
+                    dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
+        return self.population[0], progress.pop_progress
+>>>>>>> 80c5df58394dbd60569c09233c1993a350fe4045
 
     # def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
     #     # three options: plot, progress bar ish thing, no output just append
@@ -286,7 +276,7 @@ class GenAlg():
         self.config['random_params']['rng_seed'] = np.random.get_state()
 
         config = self.config
-        population = self.population
+        population = copy.deepcopy(self.population)
 
         # Save config data
         with open(dest_config, 'w') as f:
