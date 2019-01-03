@@ -1,3 +1,10 @@
+"""test_mutator.py
+This file is a part of the testing scripts for GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements testing for the Mutator class
+
+"""
 #!/usr/bin/env python3
 
 import unittest
@@ -44,7 +51,7 @@ class TestMutator_gaussian(unittest.TestCase):  # Paul
         gaussian_params = {'boundaries': np.array(
             [[0, -10, -5], [10, 0, 5]]), 'int_flag': False, 'std': 0.5}
         child = Mutator.gaussian(None, array, **gaussian_params)
-        
+
         bounds = gaussian_params['boundaries']
         if (np.any(child[:, 0] < bounds[0, 0]) or np.any(child[:, 0] > bounds[1, 0])):
             raise Exception(

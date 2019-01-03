@@ -1,3 +1,10 @@
+"""test_genalg.py
+This file is a part of the testing scripts for GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements testing for the GenAlg class
+
+"""
 #!/usr/bin/env python3
 
 import unittest
@@ -43,6 +50,7 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
         for truss in ga.population:
             truss.fitness_score = np.random.random()
 
+        ga.population.sort(key=lambda x: x.fitness_score)
         ga.update_population()
 
         # Check that population is sorted by fitness_score

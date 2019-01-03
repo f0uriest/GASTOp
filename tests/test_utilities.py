@@ -1,3 +1,10 @@
+"""test_utilities.py
+This file is a part of the testing scripts for GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements testing for the Utilities class
+
+"""
 #!/usr/bin/env python3
 
 import unittest

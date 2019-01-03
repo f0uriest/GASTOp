@@ -1,3 +1,10 @@
+"""test_crossover.py
+This file is a part of the testing scripts for GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements testing for the crossover class
+
+"""
 #!/usr/bin/env python3
 
 import unittest
@@ -67,7 +74,7 @@ class TestCrossoverPaul(unittest.TestCase):
         truss_1 = np.random.randint(10, size=25)
         truss_2 = np.random.randint(10, size=25)
         parents_combined = np.concatenate((truss_1, truss_2))
-        
+
         result = Crossover.uniform_crossover(None,
                                              truss_1, truss_2)
 
@@ -78,7 +85,7 @@ class TestCrossoverPaul(unittest.TestCase):
 
         np.testing.assert_string_equal(child1_status, str(True))
         np.testing.assert_string_equal(child2_status, str(True))
-        
+
 class TestCrossover_twopointssplit(unittest.TestCase):  # Amlan
     def test_sanity(self):
 

@@ -1,3 +1,9 @@
+"""Runs the gastop program
+This file runs scripts for GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+
+"""
 import argparse
 import sys
 from matplotlib import pyplot as plt

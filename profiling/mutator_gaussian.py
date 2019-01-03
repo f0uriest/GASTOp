@@ -1,8 +1,15 @@
+"""mutator_gaussian.py
+This file is a part of the profiling scripts for GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements testing for the fastest way to mutate with a gaussian distribution
+
+"""
 import numpy as np
 import timeit
 
 def gaussian(self, array, std, boundaries, int_flag):
-    
+
     nn = np.shape(array)
     # makes an array of the same size as the one given with random values\
     # pulled from a normal distribution with mean 0 and std given
@@ -31,7 +38,7 @@ def gaussian_old(self, array, std, boundaries, int_flag):  # Paul
 
     # creates the new mutated array with values mutated at all indices
     new_array = array + gauss_val
-        
+
     # new method to handle out of bounds problem: loop around on other side
     for j in range(nn[-1]):
         for i in range(nn[0]):
@@ -41,7 +48,7 @@ def gaussian_old(self, array, std, boundaries, int_flag):  # Paul
                                       abs(new_array[i, j] % boundaries[0, j])
                 elif (new_array[i, j] < boundaries[0, j] and boundaries[0, j] == 0):
                     new_array[i, j] = boundaries[1, j] - abs(new_array[i, j])
-                    
+
             while (new_array[i, j] > boundaries[1, j]):
                 if (new_array[i, j] > boundaries[1, j] and boundaries[1, j] != 0):
                     new_array[i, j] = boundaries[0, j] + \
@@ -53,7 +60,7 @@ def gaussian_old(self, array, std, boundaries, int_flag):  # Paul
     # output arrays
     if (int_flag == True):
         new_array = (np.rint(new_array)).astype(int)
-        
+
     return new_array
 
 TEST_CODE = '''
