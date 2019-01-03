@@ -43,6 +43,7 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
         for truss in ga.population:
             truss.fitness_score = np.random.random()
 
+        ga.population.sort(key=lambda x: x.fitness_score)
         ga.update_population()
 
         # Check that population is sorted by fitness_score
