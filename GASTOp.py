@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from gastop import GenAlg, utilities
 
@@ -25,5 +24,5 @@ print(best.deflection[:, :, 0])
 best.plot(domain=config['random_params']['domain'].T,
           loads=config['evaluator_params']['boundary_conditions']['loads'],
           fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
-          deflection=True, load_scale=.001, def_scale=100) #must be followed by plt.show()
+          deflection=True, load_scale=.001, def_scale=100)  # must be followed by plt.show()
 plt.show()

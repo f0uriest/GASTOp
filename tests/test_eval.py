@@ -24,7 +24,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'interference_ray_tracing','cost_calc', bdry, beam_dict)
+                              'mass_basic', 'interference_ray_tracing', 'cost_calc', bdry, beam_dict)
         print(evaluator.properties_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
@@ -63,7 +63,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
+                              'mass_basic', 'blank_test', 'cost_calc', bdry, beam_dict)
         evaluator(truss)
         fos_true = 0
 
@@ -93,7 +93,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
+                              'mass_basic', 'blank_test', 'cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
@@ -132,7 +132,7 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
+                              'mass_basic', 'blank_test', 'cost_calc', bdry, beam_dict)
         evaluator(truss)
         fos_true = 0
 
@@ -164,10 +164,9 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
+                              'mass_basic', 'blank_test', 'cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
-        E = beam_dict['elastic_modulus'][matl]
         sigma = p/A
         fos_true = beam_dict['yield_strength'][matl]/sigma
 
@@ -198,14 +197,12 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
+                              'mass_basic', 'blank_test', 'cost_calc', bdry, beam_dict)
         evaluator(truss)
         A = beam_dict['x_section_area'][matl]
         E = beam_dict['elastic_modulus'][matl]
-        Iz = beam_dict['moment_inertia_z'][matl]
         sigma = p/A
         fos_true = 4.57
-        epsilon = sigma/E
 
         np.testing.assert_almost_equal(
             truss.mass, A*L*beam_dict['density'][matl])
@@ -234,10 +231,10 @@ class TestEvaluator(unittest.TestCase):
         beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
         bdry = {'loads': load, 'fixtures': dof}
         evaluator = Evaluator('mat_struct_analysis_DSM',
-                              'mass_basic', 'blank_test','cost_calc', bdry, beam_dict)
+                              'mass_basic', 'blank_test', 'cost_calc', bdry, beam_dict)
         evaluator(truss)
 
-        fos_true = np.zeros((edges.shape[0], 1))
+#        fos_true = np.zeros((edges.shape[0], 1))
         # fos should be zero, structure is statically indeterminate,
         # but member releases aren't working
 #        np.testing.assert_array_almost_equal(truss.fos, fos_true)

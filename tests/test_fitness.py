@@ -25,10 +25,6 @@ class TestFitness(unittest.TestCase):
 
         t0 = Truss(0, 0, 0, 0)
         fitness_params['critical_nodes'] = np.array([])
-        f = FitnessFunction('weighted_sum', fitness_params)
-        mass = 5
-        deflection = np.array(
-            [[1, 0, 0, 0, 0, 0], [np.sqrt(2), np.sqrt(2), 0, 0, 0, 0]])
         fos = np.array([])
         t0.mass = mass
         t0.deflection = deflection

@@ -2,8 +2,7 @@
 
 import unittest
 import numpy as np
-import matplotlib.pyplot as plt
-from gastop import GenAlg, Evaluator, FitnessFunction
+from gastop import GenAlg
 
 ga_params = {
     # ga_params

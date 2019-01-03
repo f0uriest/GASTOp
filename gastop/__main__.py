@@ -1,6 +1,6 @@
-import numpy as np
 import argparse
 import sys
+from matplotlib import pyplot as plt
 from gastop import GenAlg, utilities
 
 
@@ -72,6 +72,7 @@ def main(args=sys.argv[1:]):
                   loads=config['evaluator_params']['boundary_conditions']['loads'],
                   fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
                   deflection=True)
+        plt.show()
 
 
 if __name__ == '__main__':

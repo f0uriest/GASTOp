@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import unittest
-import numpy as np
 import gastop.__main__
 
 
