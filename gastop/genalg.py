@@ -68,7 +68,7 @@ class GenAlg():
         # [0,1,2] = [no display, terminal display, plot display], change to text later
         np.random.seed(0)
 
-    def generate_random(self, _):  # Dan
+    def generate_random(self):  # Dan
         '''Generates and returns new truss objects with random properties
 
         The random method first determines the desired ranges of all values
@@ -354,7 +354,7 @@ class GenAlg():
         # Create new random trusses with remaining spots in generation
         pop_random = []
         for i in range(num_random):
-            pop_random.append(self.generate_random(2))
+            pop_random.append(self.generate_random())
             pbar.update()
 
         # Append separate lists to form new generation
