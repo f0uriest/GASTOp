@@ -104,12 +104,14 @@ class Truss():
             s += '                Nodes                           Deflections              \n'
             s += '   #       x       y       z            dx           dy           dz      \n'
             for i, line in enumerate(np.concatenate((nodes, self.deflection[:, :3, 0]), axis=1)):
-                s += f' {i:>3d}    {line[0]: .2f}   {line[1]: .2f}   {line[2]: .2f}       {line[3]: .3e}   {line[4]: .3e}   {line[5]: .3e} \n'
+                s += ' {:>3d}    {: .2f}   {: .2f}   {: .2f}       {: .3e}   {: .3e}   {: .3e} \n'.format(
+                    i, line[0], line[1], line[2], line[3], line[4], line[5])
         else:
             s += '                Nodes                           Deflections          \n'
             s += '   #       x       y       z            dx           dy           dz       \n'
             for i, line in enumerate(nodes):
-                s += f' {i:>3d}    {line[0]: .2f}   {line[1]: .2f}   {line[2]: .2f}                    Undefined \n'
+                s += ' {:>3d}    {: .2f}   {: .2f}   {: .2f}                    Undefined \n'.format(
+                    i, line[0], line[1], line[2])
 
         s += '\n'
         if self.fos is not None:
@@ -117,22 +119,24 @@ class Truss():
             s += '        Start    End    Property \n'
             s += '   #    Node     Node     Type       FoS \n'
             for i, line in enumerate(np.concatenate((con, matl.reshape(matl.shape[0], 1), self.fos), axis=1)):
-                s += f' {i:>3d}    {line[0].astype(int):>3d}     {line[1].astype(int):>3d}      {line[2].astype(int):>3d}       {line[3]:>7.2f} \n'
+                s += ' {:>3d}    {:>3d}     {:>3d}      {:>3d}       {:>7.2f} \n'.format(
+                    i, line[0].astype(int), line[1].astype(int), line[2].astype(int), line[3])
         else:
             s += '                    Edges     \n'
             s += '        Start    End    Property      \n'
             s += '   #    Node     Node     Type       FoS    \n'
             for i, line in enumerate(np.concatenate((con, matl.reshape(matl.shape[0], 1)), axis=1)):
-                s += f' {i:>3d}    {line[0].astype(int):>3d}     {line[1].astype(int):>3d}       {line[2].astype(int):>3d}      Undefined      \n'
+                s += ' {:>3d}    {:>3d}     {:>3d}       {:>3d}      Undefined      \n'.format(
+                    i, line[0].astype(int), line[1].astype(int), line[2].astype(int))
 
         s += '\n'
         if self.mass is not None:
-            s += f'Mass: {self.mass:.3f} kg \n'
+            s += 'Mass: {:.3f} kg \n'.format(self.mass)
         else:
             s += 'Mass: Undefined \n'
 
         if self.cost is not None:
-            s += f'Cost: $ {self.cost:.2f} \n '
+            s += 'Cost: $ {:.2f} \n '.format(self.cost)
         else:
             s += 'Cost: Undefined \n'
         return s
