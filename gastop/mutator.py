@@ -3,9 +3,7 @@ from gastop import Truss
 
 
 class Mutator():
-
     '''
-
     Randomly mutates the whole/specific attributes belonging to the parents.
 
     When creating a new Mutator() obejct, must be initialized with dictionary
@@ -15,7 +13,6 @@ class Mutator():
     Attributes:
         mutator_params(dict of str): Dictionary of parameters required by mutator objects.
         mutator_params['method'](str): Name of chosen mutation method.
-
     '''
 
     def __init__(self, mutator_params):
@@ -75,7 +72,7 @@ class Mutator():
 
         # creates the new mutated array with values mutated at all indices
         new_array = array + gauss_val
-        
+
         # new method to handle out of bounds problem: loop around on other side
         for j in range(nn[-1]):
             for i in range(nn[0]):

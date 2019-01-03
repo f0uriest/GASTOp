@@ -201,6 +201,7 @@ class GenAlg():
                 self.update_population()  # Determine which members to
                 #if progress_display == 2:
                     #plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+                
             return self.population[0], self.pop_progress
 
         # With parallelization

@@ -6,7 +6,6 @@ import numpy.testing as npt
 import matplotlib.pyplot as plt
 from matplotlib import style
 import json
-import sys
 from tqdm import tqdm, tqdm_notebook, tnrange
 import time
 # sys.path.append('../')
