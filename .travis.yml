@@ -20,7 +20,8 @@ script:
 
 after_script:
   - coveralls
-
+  - codecov
+  
 notifications:
     slack:
       rooms:
