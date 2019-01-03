@@ -3,9 +3,7 @@ from gastop import Truss
 
 
 class Mutator():
-
     '''
-
     Randomly mutates the whole/specific attributes belonging to the parents.
 
     When creating a new Mutator() obejct, must be initialized with dictionary
@@ -15,7 +13,6 @@ class Mutator():
     Attributes:
         mutator_params(dict of str): Dictionary of parameters required by mutator objects.
         mutator_params['method'](str): Name of chosen mutation method.
-
     '''
 
     def __init__(self, mutator_params):
@@ -65,7 +62,6 @@ class Mutator():
             new_array = (np.rint(new_array)).astype(int)
 
         return new_array
-
 
     def pseudo_bit_flip(self, parent, boundaries, proportions, int_flag):  # Amlan
         '''

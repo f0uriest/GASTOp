@@ -29,6 +29,8 @@ num_generations = 30
 num_elite =
 percent_mutation =
 percent_crossover =
+save_frequency = 5
+save_filenames = 'save'
 
 [monitor_params]
 progress_display = 1
