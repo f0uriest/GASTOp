@@ -59,9 +59,14 @@ class ProgMon():
         self.fixtures = fixtures
 
         if self.progress_fitness and self.progress_truss:
-            fig = plt.figure()
-            self.ax1 = fig.add_subplot(1,2,1)
-            self.ax3 =  fig.add_subplot(1,2,2)
+            self.fig = plt.figure()
+            self.ax1 = self.fig.add_subplot(1,2,1)
+            self.ax1.set_title('Fitness Score Evolution')
+            plt.xlim(0, self.num_gens)
+            plt.ylabel('Minimum Fitness Score')
+            plt.xlabel('Iteration')
+            self.ax3 =  self.fig.add_subplot(122,projection='3d')
+
         elif self.progress_fitness:  # check if figure method of progress monitoring is requested
             # initialize plot:
             fig = plt.figure()
@@ -69,27 +74,12 @@ class ProgMon():
             plt.xlim(0, self.num_gens)
             plt.ylabel('Minimum Fitness Score')
             plt.xlabel('Iteration')
+            self.ax1.set_title('Fitness Score Evolution')
+
         elif self.progress_truss:
             self.fig = plt.figure()
             #self.ax3 = self.fig.add_subplot(1,1,1)#self.fig.gca(projection='3d')
             self.ax3 = self.fig.gca(projection='3d')
-
-            #self.ax3.set_xlim(self.domain[0, :])
-            #self.ax3.set_ylim(self.domain[1, :])
-            #self.ax3.set_zlim(self.domain[2, :])
-
-            #plt.ylabel('Y [m]')
-            #plt.xlabel('X [m]')
-            #plt.zlabel('Z [m]')
-
-            #plt.yscale('log')
-            #
-            # self.ax2 = fig.add_subplot(1,2,2) #does this need self.?
-            # plt.xlim(0, num_generations)
-            # plt.ylabel('Min Fitness Score')
-            # plt.xlabel('Iteration')
-            # plt.xlim(0,num_generations)
-        #
 
     def progress_monitor(self, current_gen, population):
 
@@ -102,6 +92,34 @@ class ProgMon():
         self.pop_progress.append(population) #change to be pop stats not population, change to dictionary
         #if self.progress_display == 1:
         #    test = np.amin(fitscore)
+        if self.progress_fitness and self.progress_fitness:
+            if current_gen==0:
+                self.pop_start = fitscore_min
+
+            #** Fitness score plot
+            self.ax1.scatter(current_gen+1.0,fitscore_min,c=[1,0,0]) #change c to be 2D array?
+            # set text with current min fitscore
+            plot_text=self.ax1.text(self.num_gens-self.orderofgen, self.pop_start, round(fitscore_min,3),bbox=dict(facecolor='white', alpha=1))
+            # set box to same size
+            plot_text._bbox_patch._mutation_aspect = 0.1
+            plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
+
+            #** Truss plot
+            best_truss = population[0]
+            self.ax3.cla()
+            #edge_vec_start, edge_vec_end, num_con = best_truss.plot(ax=self.ax3,fig = self.fig)
+            best_truss.plot(domain=self.domain,fixtures=self.fixtures,ax=self.ax3,fig = self.fig)
+
+            plot_text3d=self.ax3.text(self.domain[0][1]-1.0,self.domain[1][1]-1.0,self.domain[2][1],"Iteration: " + str(current_gen),bbox=dict(facecolor='white', alpha=1))
+            # # set box to same size
+            plot_text3d._bbox_patch._mutation_aspect = 0.1
+            plot_text3d.get_bbox_patch().set_boxstyle("square", pad=1)
+
+
+
+            plt.pause(0.001) #pause for 0.001s to allow plot to update, can potentially remove this
+
+
         if self.progress_fitness:
             if current_gen==0:
                 self.pop_start = fitscore_min # store initial min fitscore (should be worst)
@@ -120,7 +138,7 @@ class ProgMon():
             #self.ax1.errorbar(current_gen, fitscore_med, yerr=fitscore_range_scaled, fmt='o',c=[0,0,0])
             #self.ax1.scatter(current_gen,fitscore_med,c=[0,0,0])
 
-            self.ax1.scatter(current_gen,fitscore_min,c=[1,0,0])
+            self.ax1.scatter(current_gen + 1.0,fitscore_min,c=[1,0,0]) #change c to be 2D array?
             # set text with current min fitscore
             plot_text=self.ax1.text(self.num_gens-self.orderofgen, self.pop_start, round(fitscore_min,3),bbox=dict(facecolor='white', alpha=1))
             # set box to same size

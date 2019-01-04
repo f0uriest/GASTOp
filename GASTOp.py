@@ -20,7 +20,7 @@ num_gens = config['ga_params']['num_generations']
 ga = GenAlg(config)
 ga.initialize_population(pop_size)
 best, progress_history = ga.run(
-    num_generations=num_gens,progress_fitness=False,
+    num_generations=num_gens,progress_fitness=True,
     progress_truss=True, num_threads=4)
 
 
