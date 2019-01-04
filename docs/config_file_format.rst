@@ -123,7 +123,10 @@ Crossover Parameters
 ====================
 :code:`[crossover_params]` contains the following parameters:
 
-:node_crossover_method: **(str)** Method for performing node crossover. *Options: uniform_crossover, single_point_split, two_points_split* *Default: uniform_crossover*
+:node_crossover_method: **(str)** Method for performing node crossover. *Options: uniform_crossover_, single_point_split_, two_points_split_* *Default: uniform_crossover_*
+.. _uniform_crossover: https://gastop.readthedocs.io/en/latest/api.html#crossover
+.. _single_point_split: https://gastop.readthedocs.io/en/latest/api.html#crossover
+.. _two_points_split: https://gastop.readthedocs.io/en/latest/api.html#crossover
 :edge_crossover_method: **(str)** Method for performing edge crossover. *Options: uniform_crossover, single_point_split, two_points_split* *Default: uniform_crossover*
 :property_crossover_method: **(str)** Method for performing edge crossover. *Options: uniform_crossover, single_point_split, two_points_split* *Default: uniform_crossover*
 :node_crossover_params: **(dict)** Additional node crossover parameters.
@@ -151,4 +154,4 @@ Selector Parameters
 
 :method: **(str)** Method for performing selection. *Options: inverse_square_rank_probability, tournament* *Default: inverse_square_rank_probability*
 :tourn_size: **(int)** The number of truss indices in each tournament. Must be less than 32.
-:tourn_prob: **(float)** The probability of the fittest truss in a tournamment to be selected.
+:tourn_prob: **(float)** The probability of the fittest truss in a tournament to be selected.
