@@ -43,8 +43,12 @@ class TestCrossover_singlepointsplit(unittest.TestCase):  # Amlan
             str((children[1]).dtype), str(check.dtype))
 
 
-class TestCrossoverPaul(unittest.TestCase):
+class TestCrossover_uniform(unittest.TestCase): #Paul
+    """Tests the uniform method of the Crossover class."""
+    
     def testZeros(self):
+        """Test to make sure parent arrays of 0s returns 0s."""
+
         truss_1 = np.zeros(10, dtype=int)
         truss_2 = np.zeros(10, dtype=int)
 
@@ -54,6 +58,8 @@ class TestCrossoverPaul(unittest.TestCase):
         np.testing.assert_array_equal(result[1], truss_2)
 
     def testOutputTypeInt(self):
+        """Tests the functionality of the int_flag argument."""
+        
         truss_1 = np.zeros(10, dtype=int)
         truss_2 = np.zeros(10, dtype=int)
         check = np.zeros(10, dtype=int)
@@ -69,6 +75,9 @@ class TestCrossoverPaul(unittest.TestCase):
             str((result[1]).dtype), str(check.dtype))
 
     def testChildInParents(self):
+        """Test to make sure that all values of the child arrays 
+        exist in the one of the two parent arrays."""
+        
         truss_1 = np.random.randint(10, size=25)
         truss_2 = np.random.randint(10, size=25)
         parents_combined = np.concatenate((truss_1, truss_2))

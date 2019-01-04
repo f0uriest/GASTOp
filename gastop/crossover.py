@@ -45,12 +45,15 @@ class Crossover():
         The exact opposite multiplication is done to make child2.
 
         Args:
-            truss_1 (array): Numpy array containing information for parent 1
-            truss_2 (array): Numpy array containing information for parent 2
+            truss_1 (ndarray): Numpy array containing information for parent 1.
+            truss_2 (ndarray): Numpy array containing information for parent 2.
 
         Returns:
-            child1 (array): Numpy array containing information for child 1
-            child2 (array): Numpy array containing information for child 2
+
+            child1 (ndarray): Numpy array containing information for child 1.
+
+            child2 (ndarray): Numpy array containing information for child 2.
+        
         '''
         # find the shape of the parents
         nn = np.shape(truss_1)

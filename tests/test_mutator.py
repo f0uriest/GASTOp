@@ -46,7 +46,11 @@ class TestMutator_shuffle_index(unittest.TestCase):  # Amlan
 
 
 class TestMutator_gaussian(unittest.TestCase):  # Paul
+    """Tests the gaussian method of the mutator class."""
+    
     def test_boundary(self):
+        """Tests whether the mutator method keeps all values inside the specified boundary.
+        """
         array = np.random.uniform(-10.0, 10.0, [10, 3])
         gaussian_params = {'boundaries': np.array(
             [[0, -10, -5], [10, 0, 5]]), 'int_flag': False, 'std': 0.5}
@@ -64,6 +68,8 @@ class TestMutator_gaussian(unittest.TestCase):  # Paul
                 "A value was mutated out of bounds by gaussian mutator!")
 
     def test_int_flag(self):
+        """Tests the functionality of the int_flag argument.
+        """
         array = np.random.uniform(-10.0, 10.0, [10, 3])
         gaussian_params = {'boundaries': np.array(
             [[0, -10, -5], [10, 0, 5]]), 'int_flag': True, 'std': 0.5}
