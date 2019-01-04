@@ -27,15 +27,15 @@ General
 
 :loads: The forces and moments acting on each user-specified node as an nx6 numpy array of floats in the format :code:`'[[Fx1,Fy1,Fz1,Mx1,My1,Mz1],[Fx2,Fy2,Fz2,Mx2,My2,Mz2],...,[Fxn,Fyn,Fzn,Mxn,Myn,Mzn]]'`.
 
-:fixtures: The translational and rotational displacements for each user-specified node as an nx6 numpy array of integers in the format :code:`'[[transx1,transy1,transz1,rotx1,roty1,rotz1],[transx2,transy2,transz2,rotx2,roty2,rotz2],...,[transxn,transyn,transzn,rotxn,rotyn,rotzn]]'`. A :code:`1` indicates that the node is fixed, while a :code:`0` indicates it is free to move in that degree of freedom.
+:fixtures: The translational and rotational displacements for each user-specified node as an nx6 numpy array of integers in the format :code:`'[[transx1,transy1,transz1,rotx1,roty1,rotz1],[transx2,transy2,transz2,rotx2,roty2,rotz2],...,[transxn,transyn,transzn,rotxn,rotyn,rotzn]]'`. Here :code:`transx1` is the translational degree of freedom in the x direction of the first user-specified node, and :code:`rotx1` is the rotational degree of freedom about the x-axis of the first user-specified node. A :code:`1` indicates fixed, while a :code:`0` indicates the node is free to move along or about the corresponding degree of freedom.
 
-:num_rand_nodes: = Maximum number of random nodes as an integer.
+:num_rand_nodes: Maximum number of random nodes as an integer.
 
-:num_rand_edges: = Maximum number of random edges as an integer.
+:num_rand_edges: Maximum number of random edges as an integer.
 
 :properties_path: Path to the properties CSV as a string. For example, :code:`gastop-config/properties.csv`.
 
-:domain: = 'Allowable domain as a 3x2 numpy array in the format :code:`'[[xmin xmax],[ymin ymax],[zmin zmax]]'`.
+:domain: Allowable domain as a 3x2 numpy array of floats in the format :code:`'[[xmin xmax],[ymin ymax],[zmin zmax]]'`.
 
 Fitness Function Parameters
 ===========================
