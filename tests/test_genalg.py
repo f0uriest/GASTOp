@@ -91,8 +91,11 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
 
 
 class TestGenAlg_Dan(unittest.TestCase):
+    """Tests genetic algorithm's generate random functionality
+    """
     def test_nodes_in_domain(self):
-
+        """Tests if the created nodes are in the desired range.
+        """
         # Create the Genetic Algorithm Object
         ga = GenAlg(config)
         ga.initialize_population(pop_size)
