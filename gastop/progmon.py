@@ -9,6 +9,7 @@ This module implements the ProgMon class.
 import matplotlib.pyplot as plt
 from matplotlib import style
 import numpy as np
+from matplotlib.animation import FuncAnimation
 
 ##plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
@@ -150,6 +151,7 @@ class ProgMon():
 
         elif  self.progress_truss:
             #population.sort(key=lambda x: x.fitness_score)
+
             best_truss = population[0]
             self.ax3.cla()
             #edge_vec_start, edge_vec_end, num_con = best_truss.plot(ax=self.ax3,fig = self.fig)
@@ -162,3 +164,4 @@ class ProgMon():
 
 
             plt.pause(0.001)
+            self.fig.savefig('animation/truss_evo_iter' + str(current_gen) + '.png')

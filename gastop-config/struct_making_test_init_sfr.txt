@@ -38,11 +38,10 @@ progress_display = 1
 
 
 
-
 # optional stuff
 
 [random_params]
-rng_seed = 
+rng_seed =
 
 [crossover_params]
 node_crossover_method =
@@ -67,5 +66,5 @@ property_mutator_method =
 [selector_params]
 method =
        [[method_params]]
-       tourn_size = 
-       tourn_prob = 
+       tourn_size =
+       tourn_prob =

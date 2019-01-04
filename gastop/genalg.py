@@ -63,7 +63,7 @@ class GenAlg():
         self.fitness_function = FitnessFunction(**config['fitness_params'])
 
         # progress monitor stuff
-        self.pop_progress = []  # initialize as empty array
+        self.pop_progress = []  # initialize as empty array, DELETE?
         # self.progress_display = progress_display #type of progress display
         # [0,1,2] = [no display, terminal display, plot display], change to text later
         if isinstance(self.random_params['rng_seed'], tuple):
