@@ -7,6 +7,7 @@ This module implements testing for the fastest way to mutate with a gaussian dis
 """
 import numpy as np
 import timeit
+import matplotlib.pyplot as plt
 
 def gaussian(self, array, std, boundaries, int_flag):
 
@@ -64,7 +65,7 @@ def gaussian_old(self, array, std, boundaries, int_flag):  # Paul
     return new_array
 
 
-a = np.linspace(10, 100, 10, dtype=int)
+a = np.linspace(5, 100, 20, dtype=int)
 t_new = np.zeros(shape=a.shape)
 t_old = np.zeros(shape=a.shape)
 
@@ -76,7 +77,7 @@ gaussian_params = {'boundaries': np.array(
 child = gaussian(None, array, **gaussian_params)
 '''
     t_new[i] = timeit.timeit(stmt = TEST_CODE, number = 100, globals=globals())
-    print("t_new %d: %f\n" %(i, t_new[i]))
+    
 
 for i in range(len(a)):
     TEST_CODE_OLD = '''
@@ -86,4 +87,20 @@ gaussian_params = {'boundaries': np.array(
 child = gaussian_old(None, array, **gaussian_params)
 '''
     t_old[i] = timeit.timeit(stmt = TEST_CODE_OLD, number = 100, globals=globals())
-    print("t_old %d: %f\n" %(i, t_old[i]))
+    
+
+# plotting the data
+p1 = plt.figure(1)
+plt.plot(a, t_new, 'g^', a, t_old, 'rs')
+plt.ylabel('Time (s)', fontsize=14)
+plt.xlabel('Length of the array tested', fontsize=14)
+plt.axis([0, 105, 0, 0.225])
+p1.show()
+
+p2 = plt.figure(2)
+plt.loglog(a, t_new, 'g^', a, t_old, 'rs')
+plt.ylabel('Time (s)', fontsize=14)
+plt.xlabel('Length of the array tested', fontsize=14)
+p2.show()
+
+input()
