@@ -16,6 +16,30 @@ or string, simply input the value without quotation marks. For instance,
 is a numpy array, input the value as an array in list format, within single
 quotes, like :code:`key: '[[3.14 3.14],[3.14 3.14]]'`.
 
+For instance, the config file:
+.. code-block:: python
+       [dict1]
+       key1: 3
+       key2: 3.14
+       [[sub_dict1]]
+       sub1key1: apples
+       [[sub_dict2]]
+       sub1key2: None
+       [dict2]
+       key3: '[[3.14 12.8],[6.7 88.9999]]'
+       
+
+would be parsed, forming the dictionary:
+.. code-block:: python
+       {'dict1':
+              {'key1':3,
+              'key2':3.14,
+              'sub_dict1':{'sub1key1':'apples'},
+              'sub_dict2':{'sub1key2':None}},
+        'dict2':
+              {'key3':array([[3.14 12.8],[6.7 88.9999]])}}
+
+
 Required Parameters
 *******************
 
