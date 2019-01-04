@@ -274,6 +274,6 @@ class Truss():
         if fixtures is not None:
             fix_nodes = nodes[fixtures[:, :, 0].any(axis=1)]
             ax.scatter(fix_nodes[:, 0], fix_nodes[:, 1], fix_nodes[:, 2],
-                       c='g', marker='o', depthshade=False, s=100)
+                       color='green', marker='o', depthshade=False, s=100)
         if prog == 0: #only shows it if not being called within ProgMon
             plt.show()
