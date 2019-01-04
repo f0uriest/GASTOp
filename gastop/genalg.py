@@ -6,14 +6,11 @@ This module implements the GenAlg class.
 
 """
 
-#import matplotlib.pyplot as plt
-#from matplotlib import style
 import numpy as np
 import json
-from tqdm import tqdm, tqdm_notebook, tnrange
+from tqdm import tqdm, tqdm_notebook
 from multiprocessing import Pool
 import copy
-import os
 import colorama
 from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders, utilities, ProgMon
 colorama.init()  # for progress bars on ms windows
@@ -52,7 +49,7 @@ class GenAlg():
         Returns:
             GenAlg callable object
         """
-        if type(config) is type('str'):
+        if isinstance(config, str):
             config = utilities.init_file_parser(config)
 
         self.config = config
@@ -69,7 +66,12 @@ class GenAlg():
         self.pop_progress = []  # initialize as empty array
         # self.progress_display = progress_display #type of progress display
         # [0,1,2] = [no display, terminal display, plot display], change to text later
-        np.random.seed(0)
+        if isinstance(self.random_params['rng_seed'], tuple):
+            np.random.set_state(self.random_params['rng_seed'])
+        elif isinstance(self.random_params['rng_seed'], int):
+            np.random.seed(self.random_params['rng_seed'])
+        else:
+            np.random.seed(1729)
 
     def generate_random(self):  # Dan
         '''Generates and returns new truss objects with random properties
@@ -92,26 +94,6 @@ class GenAlg():
         num_user_spec_nodes = user_spec_nodes.shape[0]
         domain = self.random_params['domain']
         # First, generate the new nodes:
-        # Try 1: Time: 0.579
-        # Ranges = domain[1]-domain[0]
-        # new_nodes = np.random.rand(num_rand_nodes, 3)
-        #
-        # for j in range(3):
-        #     new_nodes[:, j] = new_nodes[:, j]*Ranges[j] + \
-        #         domain[0][j]*np.ones(num_rand_nodes)
-
-        # Try 2: Time: 0.499
-        # nn1 = np.random.rand(num_rand_nodes, 1)*Ranges[0] + domain[0][0]
-        # nn2 = np.random.rand(num_rand_nodes, 1)*Ranges[1] + domain[0][1]
-        # nn3 = np.random.rand(num_rand_nodes, 1)*Ranges[2] + domain[0][2]
-        # new_nodes = np.concatenate((nn1,nn2,nn3),axis=1)
-
-        # Try 3: Time: 0.451
-        # new_nodes = np.empty([num_rand_nodes,3])
-        # for j in range(3):
-        #     new_nodes[:,j] = np.random.rand(num_rand_nodes)*Ranges[j] + domain[0][j]
-
-        # Try 4: Time: 0.433!
         new_nodes = np.random.uniform(
             domain[0], domain[1], (num_rand_nodes, 3))
 
@@ -139,29 +121,9 @@ class GenAlg():
         else:
             pop_size = self.ga_params['pop_size']
 
-        # Try 1: t= 0.298
         self.population = []
         for i in tqdm(range(pop_size), total=pop_size, leave=False, desc='Initializing Population', position=0):
             self.population.append(self.generate_random())
-
-        # Try 2: t= 0.352
-        # pool = Pool()
-        # result_list = [pool.map_async(self.generate_random, ()) for i in range(pop_size)]
-        #
-        # self.population = [res.get() for res in result_list]
-
-        # Try 3: t=0.343
-        # pool = Pool()
-        # pool.map_async(self.generate_random, range(pop_size),callback=self.population.extend)
-        # pool.close()
-        # pool.join()
-
-        # Try 4: t=0.232
-        # pool = Pool()
-        # self.population = list(tqdm(pool.imap(
-        #     self.generate_random, range(pop_size), int(np.sqrt(pop_size))), total=pop_size, leave=False, desc='Initializing Population', position=0))
-        # pool.close()
-        # pool.join()
 
     def run(self, num_generations=None, progress_display=1, num_threads=None):
         '''Runs the genetic algorithm over all populations and generations
@@ -221,9 +183,11 @@ class GenAlg():
             else:
                 pool = Pool(num_threads)
                 self.population = list(tqdm(pool.imap(
-                    self.evaluator, self.population, chunksize), total=self.ga_params['pop_size'], desc='Evaluating', position=1))
+                    self.evaluator, self.population, chunksize),
+                    total=self.ga_params['pop_size'], desc='Evaluating', position=1))
                 self.population = list(tqdm(pool.imap(
-                    self.fitness_function, self.population, chunksize), total=self.ga_params['pop_size'], desc='Scoring', position=1))
+                    self.fitness_function, self.population, chunksize),
+                    total=self.ga_params['pop_size'], desc='Scoring', position=1))
                 pool.close()
                 pool.join()
 
@@ -232,7 +196,9 @@ class GenAlg():
 
             self.update_population()  # Determine which members to
             # if progress_display == 2:
-            # plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+            # plt.show()
+            # sfr, keep plot from closing right after this completes, terminal
+            # will hang until this is closed
             if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
                 self.save_state(
                     dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
@@ -264,11 +230,13 @@ class GenAlg():
 
     def save_state(self, dest_config='config.json',
                    dest_pop='population.json'):  # Cristian
-        '''Saves the current population and config settings
+        '''Saves the current population and config settings to JSON files.
 
         Args:
-            dest_config (string): filename to be saved for the config
-            dest_pop (string): filename to be saved
+            dest_config (string): Path to save config data file. If file
+                doesn't exist, creates it.
+            dest_pop (string): Path to save population data file. If file
+                doesn't exist, creates it.
 
         Returns:
             Nothing
@@ -292,11 +260,11 @@ class GenAlg():
     @staticmethod
     def load_state(dest_config='config.json',
                    dest_pop='population.json'):  # Cristian
-        '''Loads the current population and config settings
+        '''Loads the current population and config settings from JSON files.
 
         Args:
-            dest_config (string): filename to be uploaded from for the config
-            dest_pop (string): filename to be uploaded from
+            dest_config (string): Path to config data file.
+            dest_pop (string): Path to population data file.
 
         Returns:
             GenAlg Object

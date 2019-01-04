@@ -9,18 +9,12 @@ This module implements testing for the GenAlg class
 
 import unittest
 import numpy as np
-import numpy.testing as npt
 import matplotlib.pyplot as plt
-from matplotlib import style
-import json
-from tqdm import tqdm, tqdm_notebook, tnrange
+from tqdm import tqdm
 import time
-# sys.path.append('../')
-# sys.path.append('.')
-# print(sys.path)
 
 
-from gastop import GenAlg, Truss, Evaluator, FitnessFunction, utilities, ProgMon
+from gastop import GenAlg, Truss, utilities, ProgMon
 
 
 # Parse input paramters from init.txt file
@@ -28,17 +22,8 @@ init_file_path = 'gastop-config/struct_making_test_init.txt'
 config = utilities.init_file_parser(init_file_path)
 
 
-# properties_df = 0
-
-pop_size = int(1e4)
+pop_size = int(1e3)
 num_gens = int(1e2)
-
-# boundaries = Boundaries(#Input here);
-
-# Create the Evaluator Object
-#evaluator = Eval(blah)
-
-# Create a Fitness Function Object
 
 
 class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
@@ -59,11 +44,11 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
         self.assertTrue(sorted(fitness) == fitness)
 
         for truss in ga.population:
-            self.assertTrue(type(truss) is Truss)
-            self.assertTrue(type(truss.user_spec_nodes) is np.ndarray)
-            self.assertTrue(type(truss.rand_nodes) is np.ndarray)
-            self.assertTrue(type(truss.edges) is np.ndarray)
-            self.assertTrue(type(truss.properties) is np.ndarray)
+            self.assertTrue(isinstance(truss,Truss))
+            self.assertTrue(isinstance(truss.user_spec_nodes,np.ndarray))
+            self.assertTrue(isinstance(truss.rand_nodes,np.ndarray))
+            self.assertTrue(isinstance(truss.edges,np.ndarray))
+            self.assertTrue(isinstance(truss.properties,np.ndarray))
 
     def testSaveLoadState(self):
         # Parse input parameters from init file
@@ -84,25 +69,30 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
 
         # Test config
         self.assertTrue(isinstance(config['ga_params']['num_elite'], int))
-        self.assertTrue(isinstance(config['ga_params']['percent_crossover'],float))
+        self.assertTrue(isinstance(
+            config['ga_params']['percent_crossover'], float))
         self.assertTrue(type(config['mutator_params']['node_mutator_params']['boundaries'])
                         is type(np.array([1, 1])))
-        self.assertTrue(isinstance(config['mutator_params']['node_mutator_params']['int_flag'], bool))
+        self.assertTrue(isinstance(
+            config['mutator_params']['node_mutator_params']['int_flag'], bool))
 
         # Test population
         for truss in population:
             self.assertTrue(isinstance(truss, Truss))
-            self.assertTrue(type(truss.user_spec_nodes) is np.ndarray)
-            self.assertTrue(type(truss.rand_nodes) is np.ndarray)
-            self.assertTrue(type(truss.edges) is np.ndarray)
-            self.assertTrue(type(truss.properties) is np.ndarray)
+            self.assertTrue(isinstance(truss.user_spec_nodes,np.ndarray))
+            self.assertTrue(isinstance(truss.rand_nodes,np.ndarray))
+            self.assertTrue(isinstance(truss.edges,np.ndarray))
+            self.assertTrue(isinstance(truss.properties,np.ndarray))
         # print(config)
         # print([truss for truss in population])
 
 
 class TestGenAlg_Dan(unittest.TestCase):
+    """Tests genetic algorithm's generate random functionality
+    """
     def test_nodes_in_domain(self):
-
+        """Tests if the created nodes are in the desired range.
+        """
         # Create the Genetic Algorithm Object
         ga = GenAlg(config)
         ga.initialize_population(pop_size)
@@ -141,13 +131,13 @@ class TestGenAlg_SFR(unittest.TestCase):
         progress_display = 2
         num_generations = 20
 
-        progress = ProgMon(progress_display,num_generations)
+        progress = ProgMon(progress_display, num_generations)
 
         #
 
         # Loop over all generations:
         for current_gen in range(num_generations):
-            progress.progress_monitor(current_gen,population)
+            progress.progress_monitor(current_gen, population)
             for truss in GA.population:
                 #truss.fos = np.random.random()
                 truss.fitness_score = truss.fitness_score + 5.0
@@ -179,20 +169,19 @@ class TestGenAlg_SFR(unittest.TestCase):
 
         ax1 = []
         num_generations = 20
-        progress = ProgMon(progress_display,num_generations)
+        progress = ProgMon(progress_display, num_generations)
 
         #t = tqdm(total=num_generations,leave=False)
         # Loop over all generations:
-        for current_gen in tqdm(range(num_generations),desc='Generation',position=0):
-            progress.progress_monitor(current_gen,population)
+        for current_gen in tqdm(range(num_generations), desc='Generation', position=0):
+            progress.progress_monitor(current_gen, population)
             # t.update(current_gen)
             time.sleep(0.05)
-            for truss in tqdm(GA.population,desc='truss',position=1):
+            for truss in tqdm(GA.population, desc='truss', position=1):
                 #truss.fos = np.random.random()
                 truss.fitness_score = truss.fitness_score + 5.0
         # t.close()
         return GA.population[0], GA.pop_progress
-
 
     def testProgressBar(self):
         # this doesnt quite work yet, showing all progress bars at the end instead of iteratively
@@ -217,13 +206,12 @@ class TestGenAlg_SFR(unittest.TestCase):
         GA.population = population
         progress_display = 1
         # dumb GA run
-        ax1 = []
         num_generations = 20
-        progress = ProgMon(progress_display,num_generations)
+        progress = ProgMon(progress_display, num_generations)
         #t = tqdm(total=num_generations,leave=False)
         # Loop over all generations:
         for current_gen in tqdm(range(num_generations)):
-            progress.progress_monitor(current_gen,population)
+            progress.progress_monitor(current_gen, population)
             # t.update(current_gen)
             time.sleep(0.05)
             for truss in GA.population:
@@ -280,6 +268,7 @@ class TestGenAlg_SFR(unittest.TestCase):
 
 
 class TestGenAlgRC(unittest.TestCase):
+    """Weird edge cases for inheritance"""
 
     def testInvalidCrossover(self):
         """Tests genalg when % crossover + % mutation >1"""
@@ -297,7 +286,9 @@ class TestGenAlgRC(unittest.TestCase):
         self.assertRaises(RuntimeError, utilities.init_file_parser, bad_path)
 
     def testOddNumCrossover(self):
-        """Tests genalg when crossover number is odd"""
+        """Tests genalg when crossover number is odd
+        to make sure it still return the correct population size
+        """
 
         config = utilities.init_file_parser(init_file_path)
         config['ga_params']['percent_crossover'] = 1

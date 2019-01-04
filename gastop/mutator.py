@@ -29,7 +29,8 @@ class Mutator():
         self.property_method = getattr(
             self, self.params['property_mutator_method'])
 
-    def gaussian(self, array, std, boundaries, int_flag):  # Paul
+    @staticmethod
+    def gaussian(array, std, boundaries, int_flag):  # Paul
         '''Performs a gaussian mutation on the given parent array
 
         The gaussian mutator method creates a child array by mutating the given parent
@@ -46,7 +47,7 @@ class Mutator():
                 std[i] is used as the standard deviation for array[:,i].
             boundaries (array-like): Domain of allowable values. If a value is mutated
                 outside this region, it is looped back around to the other side.
-            int_flat (bool): Whether output should be ints.
+            int_flag (bool): Whether output should be ints.
 
         Returns:
             new_array (array): Numpy array containing information for the mutated child
@@ -70,7 +71,8 @@ class Mutator():
 
         return new_array
 
-    def pseudo_bit_flip(self, parent, boundaries, proportions, int_flag):  # Amlan
+    @staticmethod
+    def pseudo_bit_flip(parent, boundaries, proportions, int_flag):  # Amlan
         '''
 
         Mutate specific values of the parent and return the mutant child.
@@ -110,7 +112,8 @@ class Mutator():
 
         return child
 
-    def shuffle_index(self, parent):
+    @staticmethod
+    def shuffle_index(parent):
         '''
 
         Mutate the parent by swapping an index with another in the parent array.

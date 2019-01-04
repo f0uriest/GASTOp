@@ -7,6 +7,7 @@ This module implements testing for the fastest way to mutate with a gaussian dis
 """
 import numpy as np
 import timeit
+import matplotlib.pyplot as plt
 
 def gaussian(self, array, std, boundaries, int_flag):
 
@@ -63,21 +64,47 @@ def gaussian_old(self, array, std, boundaries, int_flag):  # Paul
 
     return new_array
 
-TEST_CODE = '''
-array = np.random.uniform(-10.0, 10.0, [10, 3])
+
+a = np.linspace(5, 100, 20, dtype=int)
+t_new = np.zeros(shape=a.shape)
+t_old = np.zeros(shape=a.shape)
+
+for i in range(len(a)):
+    TEST_CODE = '''
+array = np.random.uniform(-10.0, 10.0, ['''+str(a[i])+''', 3])
 gaussian_params = {'boundaries': np.array(
 [[0, -10, -5], [10, 0, 5]]), 'int_flag': False, 'std': 0.5}
 child = gaussian(None, array, **gaussian_params)
 '''
-t_new = timeit.timeit(stmt = TEST_CODE, number = 100, globals=globals())
-print("tnew: \n", t_new)
+    t_new[i] = timeit.timeit(stmt = TEST_CODE, number = 100, globals=globals())
+    
 
-
-TEST_CODE_OLD = '''
-array = np.random.uniform(-10.0, 10.0, [10, 3])
+for i in range(len(a)):
+    TEST_CODE_OLD = '''
+array = np.random.uniform(-10.0, 10.0, ['''+str(a[i])+''', 3])
 gaussian_params = {'boundaries': np.array(
 [[0, -10, -5], [10, 0, 5]]), 'int_flag': False, 'std': 0.5}
 child = gaussian_old(None, array, **gaussian_params)
 '''
-t_old = timeit.timeit(stmt = TEST_CODE_OLD, number = 100, globals=globals())
-print("told: \n", t_old)
+    t_old[i] = timeit.timeit(stmt = TEST_CODE_OLD, number = 100, globals=globals())
+    
+
+# plotting the data
+p1 = plt.figure(1)
+plt.plot(a, t_new, 'g^', label='Logical indexing')
+plt.plot(a, t_old, 'rs', label='For/while looping')
+plt.ylabel('Time (s)', fontsize=14)
+plt.xlabel('Length of the array tested', fontsize=14)
+plt.axis([0, 105, 0, 0.225])
+plt.legend(prop=dict(size=14))
+p1.show()
+
+p2 = plt.figure(2)
+plt.loglog(a, t_new, 'g^', label='Logical indexing')
+plt.loglog(a, t_old, 'rs', label='For/while looping')
+plt.ylabel('Time (s)', fontsize=14)
+plt.xlabel('Length of the array tested', fontsize=14)
+plt.legend(prop=dict(size=14))
+p2.show()
+
+input()

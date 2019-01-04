@@ -33,7 +33,8 @@ class Crossover():
         self.property_method = getattr(
             self, self.params['property_crossover_method'])
 
-    def uniform_crossover(self, truss_1, truss_2):  # Paul
+    @staticmethod
+    def uniform_crossover(truss_1, truss_2):  # Paul
         '''Performs a uniform crossover on the two parents
 
         The uniform crossover method creates two child arrays by randomly mixing together
@@ -69,7 +70,8 @@ class Crossover():
 
         return child1, child2
 
-    def single_point_split(self, array_1, array_2):  # Amlan
+    @staticmethod
+    def single_point_split(array_1, array_2):  # Amlan
         '''
         Performs a single point split crossover between two parents
 
@@ -98,7 +100,8 @@ class Crossover():
 
         return child_1, child_2
 
-    def two_points_split(self, array_1, array_2):  # Amlan
+    @staticmethod
+    def two_points_split(array_1, array_2):  # Amlan
         '''
 
         Takes specific values of two parents and return two children containing

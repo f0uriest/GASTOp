@@ -18,13 +18,13 @@ class Evaluator():
     fully evaluate a Truss object using specified methods and parameters.
     """
 
-    def __init__(   self,
-                    struct_solver,
-                    mass_solver,
-                    interferences_solver,
-                    cost_solver,
-                    boundary_conditions,
-                    properties_dict):
+    def __init__(self,
+                 struct_solver,
+                 mass_solver,
+                 interferences_solver,
+                 cost_solver,
+                 boundary_conditions,
+                 properties_dict):
         """Creates an Evaluator callable object.
 
         Once created, the Evaluator can be called on a Truss object to
@@ -91,7 +91,8 @@ class Evaluator():
         self.cost_solver = getattr(self, cost_solver)
         self.properties_dict = properties_dict
 
-    def mat_struct_analysis_DSM(self, truss, boundary_conditions, properties_dict):
+    @staticmethod
+    def mat_struct_analysis_DSM(truss, boundary_conditions, properties_dict):
         """Calculates deflections and stresses using direct stiffness method.
 
         Constructs global stiffness matrix from nodes and connections,
@@ -300,14 +301,15 @@ class Evaluator():
                 sigmaVM = np.amax((np.sqrt((sigmaXbending+sigmaXaxial)**2 +
                                            3*tauTorsion**2), np.sqrt(sigmaXaxial**2 + 3*tauXY**2)))
                 # factor of safety in each beam under each loading condition
-                if sigmaVM > YS[i]/1000:
+                if sigmaVM > YS[i]/1000:  # to avoid div/0 and huge fos
                     FoS[i, j] = YS[i]/sigmaVM
                 else:
                     FoS[i, j] = 1000
 
         return FoS, V
 
-    def mass_basic(self, truss, properties_dict):
+    @staticmethod
+    def mass_basic(truss, properties_dict):
         """Calculates mass of structure
 
         Considers only members, does not account for additional mass due
@@ -346,7 +348,8 @@ class Evaluator():
 
         return mass
 
-    def cost_calc(self, truss, properties_dict):
+    @staticmethod
+    def cost_calc(truss, properties_dict):
         """Calculates cost of structure
 
         Considers only members, does not account for additional cost due
@@ -384,7 +387,8 @@ class Evaluator():
 
         return mass
 
-    def interference_ray_tracing(self, truss):
+    @staticmethod
+    def interference_ray_tracing(truss):
         """Not implemented yet.
 
         TODO: method to determine if truss members are crossing into
@@ -393,7 +397,8 @@ class Evaluator():
         """
         return None
 
-    def blank_test(self, truss, *args, **kwargs):
+    @staticmethod
+    def blank_test(truss, *args, **kwargs):
         """Blank function used for testing GA when no evaluation needed
 
         Args:

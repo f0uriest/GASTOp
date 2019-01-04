@@ -28,8 +28,10 @@ class Selector():  # Cristian
 
     def __init__(self, sel_params):
         self.sel_params = sel_params
+        self.method = getattr(self, sel_params['method'])
 
-    def inverse_square_rank_probability(self, num_parents, population):
+    @staticmethod
+    def inverse_square_rank_probability(num_parents, population):
         ''' Selects parents according to inverse square rank method.
 
         Creates a cdf, with each entry the cumulative sum of 1/sqrt(N)
@@ -67,7 +69,8 @@ class Selector():  # Cristian
 
         return parents
 
-    def tournament(self, num_parents, population):
+    @staticmethod
+    def tournament(num_parents, population, tourn_size, tourn_prob):
         ''' Selects parents according to tournament method.
 
         (ASSUMES POPULATION IS SORTED BY FITNESS) Randomly selects truss
@@ -89,8 +92,6 @@ class Selector():  # Cristian
                 corresponding to selected parents.
         '''
 
-        tourn_size = self.sel_params['tourn_size']
-        tourn_prob = self.sel_params['tourn_prob']
         pop_size = len(population)
 
         # Build ndarray of randomly selected parent indices. Each row in the
@@ -118,6 +119,6 @@ class Selector():  # Cristian
         return parents
 
     def __call__(self, num_parents, population):
-        method = getattr(self, self.sel_params['method'])
-        parents = method(num_parents, population)
+        parents = self.method(num_parents, population, **
+                              self.sel_params['method_params'])
         return parents
