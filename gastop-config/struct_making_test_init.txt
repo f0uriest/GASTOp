@@ -39,7 +39,7 @@ progress_display = 1
 # optional stuff
 
 [random_params]
-
+rng_seed = 
 
 [crossover_params]
 node_crossover_method =

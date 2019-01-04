@@ -166,6 +166,8 @@ def init_file_parser(init_file_path):  # Cristian
     config['random_params']['domain'] = domain
     config['random_params']['num_material_options'] = num_matl
     config['random_params']['user_spec_nodes'] = user_spec_nodes
+    if not config['random_params']['rng_seed']:
+        config['random_params']['rng_seed'] = 1729
 
     # crossover params
     config['crossover_params']['user_spec_nodes'] = user_spec_nodes

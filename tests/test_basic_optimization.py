@@ -31,7 +31,8 @@ random_params = {
     # np array 2x3 [[xmin,ymin,zmin],[xmax,ymax,zmax]]
     'domain': np.array([[-5, -5, -5], [5, 5, 5]]),
     'num_material_options': 10,
-    'user_spec_nodes': np.array([[]]).reshape(0, 3)
+    'user_spec_nodes': np.array([[]]).reshape(0, 3),
+    'rng_seed': 0
 }
 
 crossover_params = {

@@ -52,7 +52,7 @@ class GenAlg():
         Returns:
             GenAlg callable object
         """
-        if type(config) is type('str'):
+        if isinstance(config, str):
             config = utilities.init_file_parser(config)
 
         self.config = config
@@ -69,7 +69,12 @@ class GenAlg():
         self.pop_progress = []  # initialize as empty array
         # self.progress_display = progress_display #type of progress display
         # [0,1,2] = [no display, terminal display, plot display], change to text later
-        np.random.seed(0)
+        if isinstance(self.random_params['rng_seed'], tuple):
+            np.random.set_state(self.random_params['rng_seed'])
+        elif isinstance(self.random_params['rng_seed'], int):
+            np.random.seed(self.random_params['rng_seed'])
+        else:
+            np.random.seed(1729)
 
     def generate_random(self):  # Dan
         '''Generates and returns new truss objects with random properties
