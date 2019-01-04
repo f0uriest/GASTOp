@@ -18,6 +18,7 @@ quotes, like :code:`key: '[[3.14 3.14],[3.14 3.14]]'`.
 
 For instance, the config file:
 .. code-block:: python
+
        [dict1]
        key1: 3
        key2: 3.14
@@ -31,6 +32,7 @@ For instance, the config file:
 
 would be parsed, forming the dictionary:
 .. code-block:: python
+
        {'dict1':
               {'key1':3,
               'key2':3.14,
