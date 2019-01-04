@@ -1,6 +1,11 @@
+"""Runs the gastop program
+This file runs scripts for GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+
+"""
 import argparse
 import sys
-from matplotlib import pyplot as plt
 from gastop import GenAlg, utilities
 
 
@@ -32,6 +37,11 @@ def parse_args(args):
 
 
 def main(args=sys.argv[1:]):
+    """Runs the main GASTOp script, from the command line.
+
+    Reads and parses user input from command line, runs the code,
+    and prints and plots the resulting best truss.
+    """
 
     args = parse_args(args)
     config = utilities.init_file_parser(args.config_path)
@@ -72,7 +82,6 @@ def main(args=sys.argv[1:]):
                   loads=config['evaluator_params']['boundary_conditions']['loads'],
                   fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
                   deflection=True)
-        plt.show()
 
 
 if __name__ == '__main__':

@@ -1,4 +1,10 @@
-# Amlan
+"""mutator_pseudo_bit_flip.py
+This file is a part of the profiling scripts for GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements testing for the fastest way to pseudo-bit-flip
+
+"""
 import numpy as np
 import timeit
 nn = int(1e2)

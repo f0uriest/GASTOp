@@ -29,6 +29,8 @@ num_generations = 30
 num_elite =
 percent_mutation = .7
 percent_crossover = .8
+save_frequency = 5
+save_filename_prefix = Recorded_States_
 
 [monitor_params]
 progress_display = 1
@@ -40,7 +42,7 @@ progress_display = 1
 # optional stuff
 
 [random_params]
-
+rng_seed = 
 
 [crossover_params]
 node_crossover_method =
@@ -62,7 +64,9 @@ property_mutator_method =
       [[property_mutator_params]]
       proportions =
 
+
 [selector_params]
 method =
-tourn_size = 31 # Must be less than 32
-tourn_prob = 0.5
+       [[method_params]]
+       tourn_size = 
+       tourn_prob = 

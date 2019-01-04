@@ -1,3 +1,10 @@
+"""test_basic_optimization.py
+This file is a part of the testing scripts for GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements testing for basic optimization
+
+"""
 #!/usr/bin/env python3
 
 import unittest
@@ -11,7 +18,10 @@ ga_params = {
     'num_threads': None,
     'num_elite': 10,  # int, ~10 (the whole truss that get passed)
     'percent_crossover': 0.4,  # double between 0 and 1
-    'percent_mutation': 0.4  # double between 0 and 1
+    'percent_mutation': 0.4,  # double between 0 and 1
+    'save_frequency': 0,
+    'save_filename_prefix': 'Recorded_States_'
+
 }
 
 random_params = {
@@ -21,7 +31,8 @@ random_params = {
     # np array 2x3 [[xmin,ymin,zmin],[xmax,ymax,zmax]]
     'domain': np.array([[-5, -5, -5], [5, 5, 5]]),
     'num_material_options': 10,
-    'user_spec_nodes': np.array([[]]).reshape(0, 3)
+    'user_spec_nodes': np.array([[]]).reshape(0, 3),
+    'rng_seed': 0
 }
 
 crossover_params = {
@@ -47,7 +58,8 @@ mutator_params = {
 
 }
 
-selector_params = {'method': 'inverse_square_rank_probability'}
+selector_params = {
+    'method': 'inverse_square_rank_probability', 'method_params': {}}
 evaluator_params = {'struct_solver': 'blank_test',
                     'mass_solver': 'blank_test',
                     'interferences_solver': 'blank_test',
@@ -66,7 +78,15 @@ pop_size = 1000
 
 
 class TestOptimization(unittest.TestCase):
+    """Tests genetic algorithm's ability to solve basic 
+    convex and non-convex test cases.
+    """
+
     def test_rastrigin(self):
+        """Test GA using rastrigin function,
+        highly non-convex optimization test function.
+        """
+
         config['fitness_params'] = {
             'equation': 'rastrigin', 'parameters': {}}
         config['ga_params']['pop_size'] = 1000
@@ -76,6 +96,10 @@ class TestOptimization(unittest.TestCase):
         self.assertAlmostEqual(best.fitness_score, 0, places=2)
 
     def test_sphere(self):
+        """Tests GA using sphere function, 
+        ie sum of squares. Simple convex test case.
+        """
+
         config['ga_params']['num_threads'] = 2
         config['fitness_params'] = {'equation': 'sphere', 'parameters': {}}
         ga = GenAlg(config)

@@ -1,3 +1,10 @@
+"""test_selector.py
+This file is a part of the testing scripts for GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements testing for the Selector class
+
+"""
 #!/usr/bin/env python3
 
 import unittest
@@ -23,8 +30,7 @@ class TestSelector(unittest.TestCase):  # Cristian
         # print([x.fitness_score for x in population])
 
         sel_params = {'method': 'inverse_square_rank_probability',
-                      'tourn_size': None,
-                      'tourn_prob': None}
+                      'method_params': {}}
         selector = Selector(sel_params)
 
         num_parents = int(1e6)
@@ -68,8 +74,8 @@ class TestSelector(unittest.TestCase):  # Cristian
         # print([x.fitness_score for x in population])
 
         sel_params = {'method': 'tournament',
-                      'tourn_size': 25,
-                      'tourn_prob': 0.5}
+                      'method_params': {'tourn_size': 25,
+                                        'tourn_prob': 0.5}}
         selector = Selector(sel_params)
 
         num_parents = int(1e2)

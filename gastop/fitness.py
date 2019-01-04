@@ -1,3 +1,10 @@
+"""fitness.py
+This file is a part of GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements the FitnessFunction class.
+
+"""
 import numpy as np
 
 
@@ -8,7 +15,7 @@ class FitnessFunction():
     on various parameters, so that comparisons between trusses can be made.
 
     The class is designed to be instantiated as a FitnessFunction object
-    which operates on Truss objects to assign a fitness score, though methods 
+    which operates on Truss objects to assign a fitness score, though methods
     from the class may also be called directly.
     """
 
@@ -18,7 +25,7 @@ class FitnessFunction():
         Once created, the object acts like a function and can be called on a Truss
         object to assign it a fitness score.
 
-        Args: 
+        Args:
             equation (string): The name of the method to be used to compute
                 fitness, as a string. eg, ``'weighted_sum'`` or
                 ``'rosenbrock'``.
@@ -32,7 +39,8 @@ class FitnessFunction():
         self.equation = getattr(self, equation)
         self.parameters = parameters  # dictionary
 
-    def weighted_sum(self, truss, goal_fos, critical_nodes, w_fos, w_mass, w_deflection):
+    @staticmethod
+    def weighted_sum(truss, goal_fos, critical_nodes, w_fos, w_mass, w_deflection):
         """Computes fitness score using a weighted sum of parameters.
 
         Args:
@@ -40,7 +48,7 @@ class FitnessFunction():
                 *fos*, and *deflections* attributes defined (for example, by using evaluator).
             goal_fos (float >= 0): Desired factor of safety. Trusses with
                 a smaller fos will be penalized according to *w_fos*.
-            critical_nodes (int, array): Array of nodes #s for which 
+            critical_nodes (int, array): Array of nodes #s for which
                 deflection should be minimized. If empty, defaults to all.
             w_fos (float >= 0): Penalty weight for low fos. Only applied
                 if truss.fos < *goal_fos*.
@@ -49,17 +57,17 @@ class FitnessFunction():
                   minimizing mass vs maximizing fos.
             w_deflection (float >=0, array): Penalty applied to deflections.
                   If scalar, applies the same penalty to all critical nodes.
-                  Can also be an array the same size as *critical_nodes* in 
+                  Can also be an array the same size as *critical_nodes* in
                   which case different penalties will be applied to each node.
 
         Returns:
             float: Fitness score. Computed as:
-            :math:`f = w_{m} m + w_{fos}\max{(\mathrm{fos}_{goal}-\mathrm{fos}_{min}, 0)} 
+            :math:`f = w_{m} m + w_{fos}\max{(\mathrm{fos}_{goal}-\mathrm{fos}_{min}, 0)}
             + w_{def} ||\mathrm{deflections}||_2`
 
-            :math:`m` is the mass of the stucture, :math:`\mathrm{fos}_{min}` is the 
+            :math:`m` is the mass of the stucture, :math:`\mathrm{fos}_{min}` is the
             lowest fos for the structure under all load conditions.
-            If :math:`\mathrm{fos}_{min} > \mathrm{fos}_{goal}`, no fos penalty is applied, so f 
+            If :math:`\mathrm{fos}_{min} > \mathrm{fos}_{goal}`, no fos penalty is applied, so f
             depends only on mass and deflections.
 
         """
@@ -80,15 +88,16 @@ class FitnessFunction():
         f = w_mass*truss.mass + w_fos*fs + deflection_score
         return f
 
-    def sphere(self, truss):
+    @staticmethod
+    def sphere(truss):
         """Sum of squares of node array elements. aka, sphere function.
 
         Global min at x = 0 where f = 0.
         This method is primarily supplied for testing of the genetic algorithm,
         and should not be used for structural design.
 
-        Args: 
-            truss (Truss object): only uses truss object as container for 
+        Args:
+            truss (Truss object): only uses truss object as container for
                 nodes. No other attributes needed.
 
         Returns:
@@ -103,7 +112,8 @@ class FitnessFunction():
         f = np.sum(x**2)
         return f
 
-    def rosenbrock(self, truss):
+    @staticmethod
+    def rosenbrock(truss):
         """n-dimensional Rosenbrock function.
 
         Sum of n/2 2D Rosenbrock functions.
@@ -111,8 +121,8 @@ class FitnessFunction():
         This method is primarily supplied for testing of the genetic algorithm,
         and should not be used for structural design.
 
-        Args: 
-            truss (Truss object): only uses truss object as container for 
+        Args:
+            truss (Truss object): only uses truss object as container for
                 nodes. No other attributes needed.
 
         Returns:
@@ -132,15 +142,16 @@ class FitnessFunction():
             f += 100*(x[2*i]**2 - x[2*i+1])**2 + (x[2*i] - 1)**2
         return f
 
-    def rastrigin(self, truss):
+    @staticmethod
+    def rastrigin(truss):
         """n-dimensional Restrigin function.
 
         Global min at x=0 where f=0.
         This method is primarily supplied for testing of the genetic algorithm,
         and should not be used for structural design.
 
-        Args: 
-            truss (Truss object): only uses truss object as container for 
+        Args:
+            truss (Truss object): only uses truss object as container for
                 nodes. No other attributes needed.
 
         Returns:
@@ -166,7 +177,7 @@ class FitnessFunction():
         method to be used and any necessary parameters.
 
         Args:
-            truss (Truss object): truss to be scored. 
+            truss (Truss object): truss to be scored.
 
         Returns:
            None

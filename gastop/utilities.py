@@ -1,3 +1,11 @@
+"""utilities.py
+This file is a part of GASTOp
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements the utilities class.
+
+"""
+
 import numpy as np
 import configobj
 import ast
@@ -75,8 +83,17 @@ def init_file_parser(init_file_path):  # Cristian
     else:
         raise IOError("No such path to init file.")
 
-    # Function used to convert each string in config to associated type
     def transform(section, key):
+        """convert each string in config to associated type
+
+        Args:
+            section: section of the file
+            key: key for dictionary
+
+        Returns:
+            Returns each string
+
+        """
         val = section[key]
         newval = val
         # Convert string to float or int
@@ -127,6 +144,15 @@ def init_file_parser(init_file_path):  # Cristian
 
     # ga_params
     config['ga_params']['current_generation'] = 0
+    if config['ga_params']['save_filename_prefix']:
+        config['ga_params']['config_save_name'] = config['ga_params']['save_filename_prefix'] + '_config.json'
+        config['ga_params']['pop_save_name'] = config['ga_params']['save_filename_prefix'] + \
+            '_population.json'
+    else:
+        config['ga_params']['config_save_name'] = 'config.json'
+        config['ga_params']['pop_save_name'] = 'population.json'
+    if not config['ga_params']['save_frequency']:
+        config['ga_params']['save_frequency'] = 0
 
     # evaluator_params
     config['evaluator_params']['boundary_conditions'] = {}
@@ -140,6 +166,8 @@ def init_file_parser(init_file_path):  # Cristian
     config['random_params']['domain'] = domain
     config['random_params']['num_material_options'] = num_matl
     config['random_params']['user_spec_nodes'] = user_spec_nodes
+    if not config['random_params']['rng_seed']:
+        config['random_params']['rng_seed'] = 1729
 
     # crossover params
     config['crossover_params']['user_spec_nodes'] = user_spec_nodes
@@ -175,6 +203,7 @@ def init_file_parser(init_file_path):  # Cristian
 
     if not config['selector_params']['method']:
         config['selector_params']['method'] = 'inverse_square_rank_probability'
+        config['selector_params']['method_params'] = {}
 
     if not config['ga_params']['num_elite']:
         config['ga_params']['num_elite'] = int(np.ceil(

@@ -11,6 +11,8 @@ num_generations = 30
 num_elite = 1 # int, ~10 (the whole truss that get passed)
 percent_crossover = 0.4 # float between 0 and 1
 percent_mutation = 0.4 # float between 0 and 1
+save_frequency = 5
+save_filename_prefix = Recorded_States_
 
 [random_params]
 num_rand_nodes = 1 # int

@@ -26,23 +26,20 @@ cost_solver = cost_calc
 num_threads = 4
 pop_size = 1000
 num_generations = 30
-num_elite =
+num_elite = 1
 percent_mutation =
 percent_crossover =
 save_frequency = 5
-save_filenames = 'save'
+save_filename_prefix = Recorded_States_
 
 [monitor_params]
 progress_display = 1
 
 
-
-
-
 # optional stuff
 
 [random_params]
-
+rng_seed = 
 
 [crossover_params]
 node_crossover_method =
@@ -66,5 +63,6 @@ property_mutator_method =
 
 [selector_params]
 method =
-tourn_size = 31 # Must be less than 32
-tourn_prob = 0.5
+       [[method_params]]
+       tourn_size = 
+       tourn_prob = 
