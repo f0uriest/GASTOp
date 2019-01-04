@@ -19,13 +19,12 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
         # for key in config:
         #     print(key)
         #     print(config[key])
-        self.assertTrue(type(config['ga_params']['num_elite']) is int)
+        self.assertTrue(isinstance(config['ga_params']['num_elite'],int))
         self.assertTrue(
-            type(config['ga_params']['percent_crossover']) is float)
+            isinstance(config['ga_params']['percent_crossover'],float))
         self.assertTrue(type(config['mutator_params']['node_mutator_params']['boundaries'])
                         is type(np.array([1, 1])))
-        self.assertTrue(type(config['mutator_params']['node_mutator_params']['int_flag'])
-                        is bool)
+        self.assertTrue(isinstance(config['mutator_params']['node_mutator_params']['int_flag'],bool))
         self.assertTrue(config['general']['bool0'] is False)
         self.assertTrue(config['general']['bool1'] is True)
         self.assertTrue(config['general']['boolnone'] is None)
