@@ -70,7 +70,8 @@ Fitness Function Parameters
 :code:`[fitness_params]` contains the following parameters:
 
 :equation: Method for calculating fitness as a string. *Options: weighted_sum, sphere, rosenbrock, rastrigin.*
-:parameters: 
+:parameters:
+::
        goal_fos: 4
        critical_nodes  '[3]'
        w_fos = 10000
