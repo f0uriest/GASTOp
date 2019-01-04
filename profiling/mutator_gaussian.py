@@ -56,21 +56,27 @@ def gaussian_old(self, array, std, boundaries, int_flag):  # Paul
         
     return new_array
 
-TEST_CODE = '''
-array = np.random.uniform(-10.0, 10.0, [10, 3])
+
+a = np.linspace(10, 100, 10, dtype=int)
+t_new = np.zeros(shape=a.shape)
+t_old = np.zeros(shape=a.shape)
+
+for i in range(len(a)):
+    TEST_CODE = '''
+array = np.random.uniform(-10.0, 10.0, ['''+str(a[i])+''', 3])
 gaussian_params = {'boundaries': np.array(
 [[0, -10, -5], [10, 0, 5]]), 'int_flag': False, 'std': 0.5}
 child = gaussian(None, array, **gaussian_params)
 '''
-t_new = timeit.timeit(stmt = TEST_CODE, number = 100, globals=globals())
-print("tnew: \n", t_new)
+    t_new[i] = timeit.timeit(stmt = TEST_CODE, number = 100, globals=globals())
+    print("t_new %d: %f\n" %(i, t_new[i]))
 
-
-TEST_CODE_OLD = '''
-array = np.random.uniform(-10.0, 10.0, [10, 3])
+for i in range(len(a)):
+    TEST_CODE_OLD = '''
+array = np.random.uniform(-10.0, 10.0, ['''+str(a[i])+''', 3])
 gaussian_params = {'boundaries': np.array(
 [[0, -10, -5], [10, 0, 5]]), 'int_flag': False, 'std': 0.5}
 child = gaussian_old(None, array, **gaussian_params)
 '''
-t_old = timeit.timeit(stmt = TEST_CODE_OLD, number = 100, globals=globals())
-print("told: \n", t_old)
+    t_old[i] = timeit.timeit(stmt = TEST_CODE_OLD, number = 100, globals=globals())
+    print("t_old %d: %f\n" %(i, t_old[i]))
