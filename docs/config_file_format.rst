@@ -68,6 +68,7 @@ General
 Fitness Function Parameters
 ===========================
 :code:`[fitness_params]` contains the following parameters (see fitness_function_):
+
 .. _fitness_function: https://gastop.readthedocs.io/en/latest/api.html#fitnessfunction
 
 :equation: **(str)** Method for calculating fitness. *Options: weighted_sum, sphere, rosenbrock, rastrigin.*
@@ -84,6 +85,7 @@ Fitness Function Parameters
 Evaluator Parameters
 ====================
 :code:`[evaluator_params]` contains the following parameters (see evaluator_):
+
 .. _evaluator: https://gastop.readthedocs.io/en/latest/api.html#evaluator
 
 :struct_solver: **(str)** Method for solving truss. *Options: mat_struct_analysis_DSM* *Default: mat_struct_analysis_DSM*
@@ -94,6 +96,7 @@ Evaluator Parameters
 Genetic Algorithm Parameters
 ============================
 :code:`[ga_params]` contains the following parameters (see gen_alg_):
+
 .. _gen_alg: https://gastop.readthedocs.io/en/latest/api.html#genalg
 
 :num_threads: **(int)** Number of threads. If equal to one, the GenAlg.run() method will execute in serial. If greater than one, it will run in parallel.
@@ -108,6 +111,7 @@ Genetic Algorithm Parameters
 Progress Monitor Parameters
 ===========================
 :code:`[monitor_params]` contains the following parameters (see progress_monitor_):
+
 .. _progress_monitor: https://gastop.readthedocs.io/en/latest/api.html#progress-monitor
 
 :progress_display: **(str)** Progress monitor display mode. *Options: ...*
@@ -126,6 +130,7 @@ Random Generation Parameters
 Crossover Parameters
 ====================
 :code:`[crossover_params]` contains the following parameters (see crossover_): 
+
 .. _crossover: https://gastop.readthedocs.io/en/latest/api.html#crossover
 
 :node_crossover_method: **(str)** Method for performing node crossover. *Options: uniform_crossover, single_point_split, two_points_split* *Default: uniform_crossover*
@@ -138,6 +143,7 @@ Crossover Parameters
 Mutator Parameters
 ==================
 :code:`[mutator_params]` contains the following parameters (see mutator_):
+
 .. _mutator: https://gastop.readthedocs.io/en/latest/api.html#mutator
 
 :node_mutator_method: **(str)** Method for performing node mutation. *Options: gaussian, pseudo_bit_flip, shuffle_index* *Default: gaussian*
@@ -154,6 +160,7 @@ Mutator Parameters
 Selector Parameters
 ===================
 :code:`[selector_params]` contains the following parameters (see selector_):
+
 .. _selector: https://gastop.readthedocs.io/en/latest/api.html#selector
 
 :method: **(str)** Method for performing selection. *Options: inverse_square_rank_probability, tournament* *Default: inverse_square_rank_probability*
