@@ -69,10 +69,10 @@ Fitness Function Parameters
 ===========================
 :code:`[fitness_params]` contains the following parameters:
 
-:equation: = weighted_sum
-       [[parameters]]
-       goal_fos = 4
-       critical_nodes = '[3]'
+:equation: Method for calculating fitness as a string. *Options: weighted_sum, sphere, rosenbrock, rastrigin.*
+:parameters: 
+       goal_fos: 4
+       critical_nodes  '[3]'
        w_fos = 10000
        w_mass = 1
        w_deflection = 100
@@ -81,16 +81,19 @@ Evaluator Parameters
 ====================
 :code:`[evaluator_params]` contains the following parameters:
 
-:struct_solver: = mat_struct_analysis_DSM
-:mass_solver: = mass_basic
-:interferences_solver: = blank_test
-:cost_solver: = cost_calc
+:struct_solver: Method for solving truss as a string.
+       - *Options: mat_struct_analysis_DSM*
+:mass_solver: Method of calculating the mass of a truss as a string.
+       - Options: mass_basic
+:interferences_solver: Method of determining interferences as a string. *Options: blank_test, interference_ray_tracing*
+:cost_solver: Method of calculating the cost of a truss as a string. *Options: cost_calc*
 
 Genetic Algorithm Parameters
 ============================
 :code:`[ga_params]` contains the following parameters:
 
-:num_threads: = 4
+:num_threads: Number of threads.
+       -Type: int
 :pop_size: = 1000
 :num_generations: = 30
 :num_elite: =
