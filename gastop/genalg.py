@@ -6,8 +6,6 @@ This module implements the GenAlg class.
 
 """
 
-#import matplotlib.pyplot as plt
-#from matplotlib import style
 import numpy as np
 import json
 from tqdm import tqdm, tqdm_notebook, tnrange
@@ -96,26 +94,6 @@ class GenAlg():
         num_user_spec_nodes = user_spec_nodes.shape[0]
         domain = self.random_params['domain']
         # First, generate the new nodes:
-        # Try 1: Time: 0.579
-        # Ranges = domain[1]-domain[0]
-        # new_nodes = np.random.rand(num_rand_nodes, 3)
-        #
-        # for j in range(3):
-        #     new_nodes[:, j] = new_nodes[:, j]*Ranges[j] + \
-        #         domain[0][j]*np.ones(num_rand_nodes)
-
-        # Try 2: Time: 0.499
-        # nn1 = np.random.rand(num_rand_nodes, 1)*Ranges[0] + domain[0][0]
-        # nn2 = np.random.rand(num_rand_nodes, 1)*Ranges[1] + domain[0][1]
-        # nn3 = np.random.rand(num_rand_nodes, 1)*Ranges[2] + domain[0][2]
-        # new_nodes = np.concatenate((nn1,nn2,nn3),axis=1)
-
-        # Try 3: Time: 0.451
-        # new_nodes = np.empty([num_rand_nodes,3])
-        # for j in range(3):
-        #     new_nodes[:,j] = np.random.rand(num_rand_nodes)*Ranges[j] + domain[0][j]
-
-        # Try 4: Time: 0.433!
         new_nodes = np.random.uniform(
             domain[0], domain[1], (num_rand_nodes, 3))
 
@@ -143,29 +121,9 @@ class GenAlg():
         else:
             pop_size = self.ga_params['pop_size']
 
-        # Try 1: t= 0.298
         self.population = []
         for i in tqdm(range(pop_size), total=pop_size, leave=False, desc='Initializing Population', position=0):
             self.population.append(self.generate_random())
-
-        # Try 2: t= 0.352
-        # pool = Pool()
-        # result_list = [pool.map_async(self.generate_random, ()) for i in range(pop_size)]
-        #
-        # self.population = [res.get() for res in result_list]
-
-        # Try 3: t=0.343
-        # pool = Pool()
-        # pool.map_async(self.generate_random, range(pop_size),callback=self.population.extend)
-        # pool.close()
-        # pool.join()
-
-        # Try 4: t=0.232
-        # pool = Pool()
-        # self.population = list(tqdm(pool.imap(
-        #     self.generate_random, range(pop_size), int(np.sqrt(pop_size))), total=pop_size, leave=False, desc='Initializing Population', position=0))
-        # pool.close()
-        # pool.join()
 
     def run(self, num_generations=None, progress_display=1, num_threads=None):
         '''Runs the genetic algorithm over all populations and generations
@@ -236,7 +194,9 @@ class GenAlg():
 
             self.update_population()  # Determine which members to
             # if progress_display == 2:
-            # plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+            # plt.show()
+            # sfr, keep plot from closing right after this completes, terminal
+            # will hang until this is closed
             if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
                 self.save_state(
                     dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
