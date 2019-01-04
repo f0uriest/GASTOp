@@ -71,11 +71,14 @@ Fitness Function Parameters
 
 :equation: **(str)** Method for calculating fitness. *Options: weighted_sum, sphere, rosenbrock, rastrigin.*
 :parameters: **(dict)** Additional fitness function parameters.
-:parameters['goal_fos']: 4
-       critical_nodes  '[3]'
-       w_fos = 10000
-       w_mass = 1
-       w_deflection = 100
+:parameters['goal_fos']: **(int)** Desired factor of safety.
+:parameters['critical_nodes']: **(1xn numpy array of ints)** Array of nodes numbers for which deflection should be minimized. If empty, defaults to all.
+:parameters['w_fos']: **(float)** Penalty weight for low fos. Only applied if truss.fos < *goal_fos*.
+:parameters['w_mass']: **(float)** Penalty applied to mass. Relative magnitude of *w_mass* and *w_fos* determines importance of minimizing mass vs maximizing fos.
+:parameters['w_deflection']: **(float)** Penalty applied to deflections.
+                  If scalar, applies the same penalty to all critical nodes.
+                  Can also be an array the same size as *critical_nodes* in
+                  which case different penalties will be applied to each node.
 
 Evaluator Parameters
 ====================
@@ -134,12 +137,13 @@ Mutator Parameters
 :node_mutator_method: **(str)** Method for performing node mutation. *Options: gaussian, pseudo_bit_flip, shuffle_index* *Default: gaussian*
 :edge_mutator_method: **(str)** Method for performing edge mutation. *Options: gaussian, pseudo_bit_flip, shuffle_index* *Default: pseudo_bit_flip*
 :property_mutator_method: **(str)** Method for performing property mutation. *Options: gaussian, pseudo_bit_flip, shuffle_index* *Default: pseudo_bit_flip*
-      [[node_mutator_params]]
-      std =
-      [[edge_mutator_params]]
-      proportions =
-      [[property_mutator_params]]
-      proportions =
+:node_mutator_params: **(dict)** Additional node mutator parameters.
+:node_mutator_params['std']: **(float)** Standard deviation for mutation. If array-like,
+                std[i] is used as the standard deviation for array[:,i].
+:edge_mutator_params: **(dict)** Additional edge mutator parameters.
+:edge_mutator_params['proportions']: **(float)** Probability of a given entry being mutated.
+:property_mutator_params: **(dict)** Additional property mutator parameters.
+:property_mutator_params['proportions']: **(float)** Probability of a given entry being mutated.
       
 Selector Parameters
 ===================
