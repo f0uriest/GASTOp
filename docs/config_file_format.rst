@@ -13,7 +13,7 @@ squared brackets, :code:`[[nested dict]]`. Each dictionary contains multiple
 arguments indicated by :code:`key: value`. If the value is an integer, float,
 or string, simply input the value without quotation marks. For instance,
 :code:`key: 3`, :code:`key: 3.14`, or :code:`key: pi`. If the value
-is a numpy array, input the value as a the array in list format, within single
+is a numpy array, input the value as an array in list format, within single
 quotes, like :code:`key: '[[3.14 3.14],[3.14 3.14]]'`.
 
 Required Parameters
@@ -23,19 +23,19 @@ General
 =======
 :code:`[general]` contains the following parameters:
 
-:user_spec_nodes: User-specified nodes as an nx3 numpy array in the format :code:`key: '[[x1 y1 z1],[x2 y2 z2],...,[xn yn zn]]'`.
+:user_spec_nodes: User-specified nodes (nodes with provided loads and displacement boundary conditions) as an nx3 numpy array of floats in the format :code:`'[[x1 y1 z1],[x2 y2 z2],...,[xn yn zn]]'`.
 
-:loads: = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-10000,0,0,0]]'
+:loads: The forces and moments acting on each user-specified node as an nx6 numpy array of floats in the format :code:`'[[Fx1,Fy1,Fz1,Mx1,My1,Mz1],[Fx2,Fy2,Fz2,Mx2,My2,Mz2],...,[Fxn,Fyn,Fzn,Mxn,Myn,Mzn]]'`.
 
-:fixtures: = '[[1,1,1,0,0,0],[1,1,1,0,0,0],[1,1,1,0,0,0],[0,0,0,0,0,0]]'
+:fixtures: The translational and rotational displacements for each user-specified node as an nx6 numpy array of integers in the format :code:`'[[transx1,transy1,transz1,rotx1,roty1,rotz1],[transx2,transy2,transz2,rotx2,roty2,rotz2],...,[transxn,transyn,transzn,rotxn,rotyn,rotzn]]'`. A :code:`1` indicates that the node is fixed, while a :code:`0` indicates it is free to move in that degree of freedom.
 
-:num_rand_nodes: = 10 # int
+:num_rand_nodes: = Maximum number of random nodes as an integer.
 
-:num_rand_edges: = 10 # int
+:num_rand_edges: = Maximum number of random edges as an integer.
 
-:properties_path: = 'gastop-config/properties.csv'
+:properties_path: Path to the properties CSV as a string. For example, :code:`gastop-config/properties.csv`.
 
-:domain: = '[[-1, -1, -1], [5, 1, 2]]'
+:domain: = 'Allowable domain as a 3x2 numpy array in the format :code:`'[[xmin xmax],[ymin ymax],[zmin zmax]]'`.
 
 Fitness Function Parameters
 ===========================
