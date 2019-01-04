@@ -68,6 +68,9 @@ def progress(i,y,ax1,ax2,n,test,fig):
     ax2.text(n-1, test-1, np.amin(y),
         bbox=dict(facecolor='white', alpha=1))
     ax2.plot(range(3),y,c=[0,0,0])
+    #ax2.xaxis.font(12)
+    ax2.tick_params(labelsize = 'small')
+
 
     #fig.clf()
     #ax2.draw()

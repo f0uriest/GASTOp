@@ -180,7 +180,7 @@ class GenAlg():
             - **propgress.pop_progress** (dict): Dictionary containing:
 
                 - ``'Item 1'`` *(blah)*: blah
-                - ``'Item 2'`` *(blah)*: blah 
+                - ``'Item 2'`` *(blah)*: blah
         '''
         if num_threads is None:
             if self.ga_params['num_threads'] is None:
@@ -200,7 +200,9 @@ class GenAlg():
         #    plt.ylabel('fos')
         #    plt.xlabel('iteration')
         # initialize progress monitor object
-        progress = ProgMon(progress_display, num_generations)
+        progress = ProgMon(progress_display, num_generations,self.random_params['domain'].T,
+        self.config['evaluator_params']['boundary_conditions']['loads'],
+        self.config['evaluator_params']['boundary_conditions']['fixtures'])
         # ***
         if self.ga_params['pop_size'] < 1e4:
             chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))

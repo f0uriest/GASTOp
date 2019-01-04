@@ -29,7 +29,7 @@ class ProgMon():
 
     """
 
-    def __init__(self,progress_display,num_generations):
+    def __init__(self,progress_display,num_generations,domain,loads,fixtures):
         """Creates a ProgMon object
 
         Once created, the object will store all of the relavant information
@@ -53,6 +53,9 @@ class ProgMon():
         self.orderofgen = 10**(int(np.log10(self.num_gens))) # is this doing what i want it to
         self.pop_progress = []
         self.pop_start = []
+        self.domain = domain
+        self.loads = loads
+        self.fixtures = fixtures
 
         if self.progress_display == 2:  # check if figure method of progress monitoring is requested
             # initialize plot:
@@ -65,6 +68,11 @@ class ProgMon():
             self.fig = plt.figure()
             #self.ax3 = self.fig.add_subplot(1,1,1)#self.fig.gca(projection='3d')
             self.ax3 = self.fig.gca(projection='3d')
+
+            #self.ax3.set_xlim(self.domain[0, :])
+            #self.ax3.set_ylim(self.domain[1, :])
+            #self.ax3.set_zlim(self.domain[2, :])
+
             #plt.ylabel('Y [m]')
             #plt.xlabel('X [m]')
             #plt.zlabel('Z [m]')
@@ -115,29 +123,19 @@ class ProgMon():
             plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
 
             #self.ax1.scatter(current_gen,np.amin(fitscore),c=[0,0,0]) #plot minimum fitscore for current gen in black
-            plt.pause(0.0001) #pause for 0.0001s to allow plot to update, can potentially remove this
+            plt.pause(0.001) #pause for 0.001s to allow plot to update, can potentially remove this
 
-        elif self.progress_display == 3: #does not work yet
+        elif self.progress_display == 3:
             #population.sort(key=lambda x: x.fitness_score)
             best_truss = population[0]
-
-            edge_vec_start, edge_vec_end, num_con = best_truss.plot(ax=self.ax3,fig = self.fig)
-
             self.ax3.cla()
-            #self.fig.canvas.flush_events()
-            for i in range(num_con):
-                self.ax3.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
-                        [edge_vec_start[i, 1], edge_vec_end[i, 1]],
-                        [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
-            #iter = "Iteration:" + str(current_gen)
-            plot_text=self.ax3.text(1,1,1,"Iteration: " + str(current_gen),bbox=dict(facecolor='white', alpha=1))
-            # # set box to same size
+            #edge_vec_start, edge_vec_end, num_con = best_truss.plot(ax=self.ax3,fig = self.fig)
+            best_truss.plot(domain=self.domain,fixtures=self.fixtures,ax=self.ax3,fig = self.fig)
 
+            plot_text=self.ax3.text(self.domain[0][1]-1.0,self.domain[1][1]-1.0,self.domain[2][1],"Iteration: " + str(current_gen),bbox=dict(facecolor='white', alpha=1))
+            # # set box to same size
             plot_text._bbox_patch._mutation_aspect = 0.1
             plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
 
 
-            plt.pause(0.0001)
-            #self.ax3.draw()
-            #self.fig.canvas.draw()
-            #self.fig.canvas.flush_events()
+            plt.pause(0.001)
