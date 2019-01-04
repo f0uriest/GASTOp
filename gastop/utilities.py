@@ -112,7 +112,7 @@ def init_file_parser(init_file_path):  # Cristian
         # Convert string to numpy array
         try:
             a = ast.literal_eval(val)
-            if isinstance(type(a),list):
+            if isinstance(a,list):
                 newval = np.array(a)
         except:
             pass
