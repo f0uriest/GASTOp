@@ -10,7 +10,8 @@ import timeit
 import matplotlib.pyplot as plt
 
 def gaussian(self, array, std, boundaries, int_flag):
-
+    """This method that uses logical indexing to keep values within the boundary."""
+    
     nn = np.shape(array)
     # makes an array of the same size as the one given with random values\
     # pulled from a normal distribution with mean 0 and std given
@@ -30,8 +31,9 @@ def gaussian(self, array, std, boundaries, int_flag):
 
     return new_array
 
-def gaussian_old(self, array, std, boundaries, int_flag):  # Paul
-
+def gaussian_old(self, array, std, boundaries, int_flag):
+    """This method uses for/while loops to keep values within the boundary"""
+    
     nn = np.shape(array)
     # makes an array of the same size as the one given with random values\
     # pulled from a normal distribution with mean 0 and std given
@@ -40,7 +42,7 @@ def gaussian_old(self, array, std, boundaries, int_flag):  # Paul
     # creates the new mutated array with values mutated at all indices
     new_array = array + gauss_val
 
-    # new method to handle out of bounds problem: loop around on other side
+    # method to handle out of bounds problem: loop around on other side
     for j in range(nn[-1]):
         for i in range(nn[0]):
             while (new_array[i, j] < boundaries[0, j]):

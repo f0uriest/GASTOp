@@ -41,16 +41,16 @@ class Mutator():
         amount, assuming a periodic boundary.
 
         Args:
-            array (array): Numpy array containing the information for the parent array that
+            array (ndarray): Numpy array containing the information for the parent array that
                   is being mutated.
             std (float or array-like): Standard deviation for mutation. If array-like,
                 std[i] is used as the standard deviation for array[:,i].
             boundaries (array-like): Domain of allowable values. If a value is mutated
                 outside this region, it is looped back around to the other side.
-            int_flag (bool): Whether output should be ints.
+            int_flag (bool): flag specifying whether output should be ints.
 
         Returns:
-            new_array (array): Numpy array containing information for the mutated child
+            new_array (ndarray): Numpy array containing information for the mutated child.
         '''
         nn = np.shape(array)
         # makes an array of the same size as the one given with random values\
