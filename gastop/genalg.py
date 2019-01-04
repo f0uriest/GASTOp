@@ -125,7 +125,7 @@ class GenAlg():
         for i in tqdm(range(pop_size), total=pop_size, leave=False, desc='Initializing Population', position=0):
             self.population.append(self.generate_random())
 
-    def run(self, num_generations=None, progress_display=1, num_threads=None):
+    def run(self, num_generations=None, progress_fitness=False, progress_truss=False,num_threads=None):
         '''Runs the genetic algorithm over all populations and generations
 
         Args:
@@ -162,7 +162,7 @@ class GenAlg():
         #    plt.ylabel('fos')
         #    plt.xlabel('iteration')
         # initialize progress monitor object
-        progress = ProgMon(progress_display, num_generations,self.random_params['domain'].T,
+        progress = ProgMon(progress_fitness,progress_truss,num_generations,self.random_params['domain'].T,
         self.config['evaluator_params']['boundary_conditions']['loads'],
         self.config['evaluator_params']['boundary_conditions']['fixtures'])
         # ***
@@ -195,10 +195,7 @@ class GenAlg():
             progress.progress_monitor(current_gen, self.population)
 
             self.update_population()  # Determine which members to
-            # if progress_display == 2:
-            # plt.show()
-            # sfr, keep plot from closing right after this completes, terminal
-            # will hang until this is closed
+
             if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
                 self.save_state(
                     dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
@@ -219,14 +216,7 @@ class GenAlg():
     #         # pause for 0.0001s to allow plot to update, can potentially remove this
     #         plt.pause(0.0001)
 
-        # could make population a numpy structured array
-        # fitness = population(:).fos
-        # plt.plot(it,fitness)
-        # plt.ylabel('convergence')
-        # plt.xlabel('iteration')
-        # plt.show()
 
-        # pass
 
     def save_state(self, dest_config='config.json',
                    dest_pop='population.json'):  # Cristian

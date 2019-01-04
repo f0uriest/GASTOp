@@ -29,7 +29,7 @@ class ProgMon():
 
     """
 
-    def __init__(self,progress_display,num_generations,domain,loads,fixtures):
+    def __init__(self,progress_fitness,progress_truss,num_generations,domain,loads,fixtures):
         """Creates a ProgMon object
 
         Once created, the object will store all of the relavant information
@@ -48,7 +48,8 @@ class ProgMon():
             GenAlg callable object
         """
 
-        self.progress_display = progress_display
+        self.progress_fitness = progress_fitness
+        self.progress_truss = progress_truss
         self.num_gens = num_generations
         self.orderofgen = 10**(int(np.log10(self.num_gens))) # is this doing what i want it to
         self.pop_progress = []
@@ -57,14 +58,18 @@ class ProgMon():
         self.loads = loads
         self.fixtures = fixtures
 
-        if self.progress_display == 2:  # check if figure method of progress monitoring is requested
+        if self.progress_fitness and self.progress_truss:
+            fig = plt.figure()
+            self.ax1 = fig.add_subplot(1,2,1)
+            self.ax3 =  fig.add_subplot(1,2,2)
+        elif self.progress_fitness:  # check if figure method of progress monitoring is requested
             # initialize plot:
             fig = plt.figure()
             self.ax1 = fig.add_subplot(1,1,1) #does this need self.?
             plt.xlim(0, self.num_gens)
             plt.ylabel('Minimum Fitness Score')
             plt.xlabel('Iteration')
-        elif self.progress_display == 3:
+        elif self.progress_truss:
             self.fig = plt.figure()
             #self.ax3 = self.fig.add_subplot(1,1,1)#self.fig.gca(projection='3d')
             self.ax3 = self.fig.gca(projection='3d')
@@ -97,7 +102,7 @@ class ProgMon():
         self.pop_progress.append(population) #change to be pop stats not population, change to dictionary
         #if self.progress_display == 1:
         #    test = np.amin(fitscore)
-        if self.progress_display == 2:
+        if self.progress_fitness:
             if current_gen==0:
                 self.pop_start = fitscore_min # store initial min fitscore (should be worst)
             #     fitscore_range_scaled = 1.0
@@ -125,7 +130,7 @@ class ProgMon():
             #self.ax1.scatter(current_gen,np.amin(fitscore),c=[0,0,0]) #plot minimum fitscore for current gen in black
             plt.pause(0.001) #pause for 0.001s to allow plot to update, can potentially remove this
 
-        elif self.progress_display == 3:
+        elif  self.progress_truss:
             #population.sort(key=lambda x: x.fitness_score)
             best_truss = population[0]
             self.ax3.cla()

@@ -46,12 +46,14 @@ def main(args=sys.argv[1:]):
     args = parse_args(args)
     config = utilities.init_file_parser(args.config_path)
 
+    #**** NEEDS TO BE UPDATED
     if args.display:
-        progress_display = 2
-    elif args.quiet:
-        progress_display = 1
-    else:
-        progress_display = None
+        progress_truss = True
+    if args.quiet:
+        progress_fitness= True
+    #else:
+    #    progress_display = None
+    #*******
 
     if args.num_threads:
         num_threads = args.num_threads
@@ -72,12 +74,13 @@ def main(args=sys.argv[1:]):
     ga = GenAlg(config)
     ga.initialize_population(pop_size)
     best, progress_history = ga.run(num_generations=num_generations,
-                                    progress_display=progress_display,
+                                    progress_fitness=progress_fitness,
+                                    progress_truss=progress_truss,
                                     num_threads=num_threads)
 
     print(best)
 
-    if progress_display == 2:
+    if progress_fitness:
         best.plot(domain=config['random_params']['domain'].T,
                   loads=config['evaluator_params']['boundary_conditions']['loads'],
                   fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
