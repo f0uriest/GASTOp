@@ -71,7 +71,6 @@ Fitness Function Parameters
 
 :equation: Method for calculating fitness as a string. *Options: weighted_sum, sphere, rosenbrock, rastrigin.*
 :parameters:
-::
        goal_fos: 4
        critical_nodes  '[3]'
        w_fos = 10000
@@ -82,38 +81,35 @@ Evaluator Parameters
 ====================
 :code:`[evaluator_params]` contains the following parameters:
 
-:struct_solver: Method for solving truss as a string.
-       - *Options: mat_struct_analysis_DSM*
-:mass_solver: Method of calculating the mass of a truss as a string.
-       - Options: mass_basic
-:interferences_solver: Method of determining interferences as a string. *Options: blank_test, interference_ray_tracing*
-:cost_solver: Method of calculating the cost of a truss as a string. *Options: cost_calc*
+:struct_solver: Method for solving truss as a string. *Options: mat_struct_analysis_DSM* *Default: mat_struct_analysis_DSM*
+:mass_solver: Method of calculating the mass of a truss as a string. *Options: mass_basic* *Default: mass_basic*
+:interferences_solver: Method of determining interferences as a string. *Options: blank_test, interference_ray_tracing* *Default: blank_test*
+:cost_solver: Method of calculating the cost of a truss as a string. *Options: cost_calc* *Default: cost_calc*
 
 Genetic Algorithm Parameters
 ============================
 :code:`[ga_params]` contains the following parameters:
 
-:num_threads: Number of threads.
-       -Type: int
-:pop_size: = 1000
-:num_generations: = 30
-:num_elite: =
-:percent_mutation: =
-:percent_crossover: =
-:save_frequency: = 5
-:save_filename_prefix: = Recorded_States_
+:num_threads: Number of threads as an integer. If equal to one, the GenAlg.run() method will execute in serial. If greater than one, it will run in parallel.
+:pop_size: Number of trusses in each generation as an integer.
+:num_generations: Number of generations to run as an integer.
+:num_elite: Number of fittest trusses to carry over to the next generation without modification as an integer.
+:percent_mutation: Percent of trusses in the next generation (after subtracting elites) to be derived from mutation of current trusses as a float.
+:percent_crossover: Percent of trusses in the next generation (after subtracting elites) to be derived from crossover of current trusses as a float.
+:save_frequency: Number of generations after which the population and config are saved to .json files as an integer.
+:save_filename_prefix: Prefix for the save filenames as a string. For example, :code:`save_`.
 
 Progress Monitor Parameters
 ===========================
 :code:`[monitor_params]` contains the following parameters:
 
-:progress_display: = 1
+:progress_display: Progress monitor display mode as a string. *Options: ...*
+
+
 
 
 Advanced Parameters
 *******************
-
-explain different headings and options, with references to API docs
 
 Random Generation Parameters
 ============================
@@ -124,20 +120,20 @@ Crossover Parameters
 ====================
 :code:`[crossover_params]` contains the following parameters:
 
-:node_crossover_method: =
-:edge_crossover_method: =
-:property_crossover_method: =
-      [[node_crossover_params]]
-      [[edge_crossover_params]]
-      [[property_crossover_params]]
+:node_crossover_method: Method for performing node crossover as a string. *Options: uniform_crossover, single_point_split, two_points_split* *Default: uniform_crossover*
+:edge_crossover_method: Method for performing edge crossover as a string. *Options: uniform_crossover, single_point_split, two_points_split* *Default: uniform_crossover*
+:property_crossover_method: Method for performing edge crossover as a string. *Options: uniform_crossover, single_point_split, two_points_split* *Default: uniform_crossover*
+:node_crossover_params: Dictionary of additional node crossover parameters.
+:edge_crossover_params: Dictionary of additional edge crossover parameters.
+:property_crossover_params: Dictionary of additional property crossover parameters.
 
 Mutator Parameters
 ==================
 :code:`[mutator_params]` contains the following parameters:
 
-:node_mutator_method: =
-:edge_mutator_method: =
-:property_mutator_method: =
+:node_mutator_method: Method for performing node mutation as a string. *Options: gaussian, pseudo_bit_flip, shuffle_index* *Default: gaussian*
+:edge_mutator_method: Method for performing edge mutation as a string. *Options: gaussian, pseudo_bit_flip, shuffle_index* *Default: pseudo_bit_flip*
+:property_mutator_method: Method for performing property mutation as a string. *Options: gaussian, pseudo_bit_flip, shuffle_index* *Default: pseudo_bit_flip*
       [[node_mutator_params]]
       std =
       [[edge_mutator_params]]
@@ -149,6 +145,6 @@ Selector Parameters
 ===================
 :code:`[selector_params]` contains the following parameters:
 
-:method: =
-:tourn_size: = 31 # Must be less than 32
-:tourn_prob: = 0.5
+:method: Method for performing selection as a string. *Options: inverse_square_rank_probability, tournament* *Default: inverse_square_rank_probability*
+:tourn_size: The number of truss indices in each tournament as an integer. Must be less than 32.
+:tourn_prob: The probability of the fittest truss in a tournamment to be selected as a float.
