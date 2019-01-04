@@ -12,6 +12,11 @@ from gastop import Truss
 
 
 class ConfigEncoder(json.JSONEncoder):
+    ''' Encodes config file in JSON format.
+
+    If the object is a numpy array, converts it to a list and appends '__numpy__'
+    metadata for decoding.
+    '''
     def default(self, obj):
         if type(obj).__module__ == np.__name__:
             if isinstance(obj, np.ndarray):
@@ -22,6 +27,12 @@ class ConfigEncoder(json.JSONEncoder):
 
 
 class PopulationEncoder(json.JSONEncoder):
+    ''' Encodes population file in JSON format.
+
+    If the object is a numpy array, converts it to a list and appends
+    '__numpy__' metadata for decoding. Handles that population is composed
+    of truss objects.
+    '''
     def default(self, obj):
         if isinstance(obj, Truss):
             a = obj.__dict__
@@ -36,6 +47,10 @@ class PopulationEncoder(json.JSONEncoder):
 
 
 def numpy_decoder(dct):
+    ''' Decodes JSON files to config and population.
+
+    If the object is has '__numpy__' metadata, converts it to a numpy array.
+    '''
     if '__numpy__' in dct:
         return np.array(dct['data'])
     return dct

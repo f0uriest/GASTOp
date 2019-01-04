@@ -228,11 +228,13 @@ class GenAlg():
 
     def save_state(self, dest_config='config.json',
                    dest_pop='population.json'):  # Cristian
-        '''Saves the current population and config settings
+        '''Saves the current population and config settings to JSON files.
 
         Args:
-            dest_config (string): filename to be saved for the config
-            dest_pop (string): filename to be saved
+            dest_config (string): Path to save config data file. If file
+                doesn't exist, creates it.
+            dest_pop (string): Path to save population data file. If file
+                doesn't exist, creates it.
 
         Returns:
             Nothing
@@ -256,11 +258,11 @@ class GenAlg():
     @staticmethod
     def load_state(dest_config='config.json',
                    dest_pop='population.json'):  # Cristian
-        '''Loads the current population and config settings
+        '''Loads the current population and config settings from JSON files.
 
         Args:
-            dest_config (string): filename to be uploaded from for the config
-            dest_pop (string): filename to be uploaded from
+            dest_config (string): Path to config data file.
+            dest_pop (string): Path to population data file.
 
         Returns:
             GenAlg Object
