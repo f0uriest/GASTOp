@@ -8,7 +8,7 @@ This module implements the GenAlg class.
 
 import numpy as np
 import json
-from tqdm import tqdm, tqdm_notebook, tnrange
+from tqdm import tqdm, tqdm_notebook
 from multiprocessing import Pool
 import copy
 import colorama

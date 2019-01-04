@@ -10,11 +10,8 @@ This module implements testing for the GenAlg class
 import unittest
 import numpy as np
 import matplotlib.pyplot as plt
-from tqdm import tqdm, tqdm_notebook
+from tqdm import tqdm
 import time
-# sys.path.append('../')
-# sys.path.append('.')
-# print(sys.path)
 
 
 from gastop import GenAlg, Truss, utilities, ProgMon
@@ -47,11 +44,11 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
         self.assertTrue(sorted(fitness) == fitness)
 
         for truss in ga.population:
-            self.assertTrue(type(truss) is Truss)
-            self.assertTrue(type(truss.user_spec_nodes) is np.ndarray)
-            self.assertTrue(type(truss.rand_nodes) is np.ndarray)
-            self.assertTrue(type(truss.edges) is np.ndarray)
-            self.assertTrue(type(truss.properties) is np.ndarray)
+            self.assertTrue(isinstance(truss,Truss))
+            self.assertTrue(isinstance(truss.user_spec_nodes,np.ndarray))
+            self.assertTrue(isinstance(truss.rand_nodes,np.ndarray))
+            self.assertTrue(isinstance(truss.edges,np.ndarray))
+            self.assertTrue(isinstance(truss.properties,np.ndarray))
 
     def testSaveLoadState(self):
         # Parse input parameters from init file
@@ -82,10 +79,10 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
         # Test population
         for truss in population:
             self.assertTrue(isinstance(truss, Truss))
-            self.assertTrue(type(truss.user_spec_nodes) is np.ndarray)
-            self.assertTrue(type(truss.rand_nodes) is np.ndarray)
-            self.assertTrue(type(truss.edges) is np.ndarray)
-            self.assertTrue(type(truss.properties) is np.ndarray)
+            self.assertTrue(isinstance(truss.user_spec_nodes,np.ndarray))
+            self.assertTrue(isinstance(truss.rand_nodes,np.ndarray))
+            self.assertTrue(isinstance(truss.edges,np.ndarray))
+            self.assertTrue(isinstance(truss.properties,np.ndarray))
         # print(config)
         # print([truss for truss in population])
 
@@ -209,7 +206,6 @@ class TestGenAlg_SFR(unittest.TestCase):
         GA.population = population
         progress_display = 1
         # dumb GA run
-        ax1 = []
         num_generations = 20
         progress = ProgMon(progress_display, num_generations)
         #t = tqdm(total=num_generations,leave=False)
