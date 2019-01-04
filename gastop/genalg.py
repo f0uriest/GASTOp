@@ -13,7 +13,6 @@ import json
 from tqdm import tqdm, tqdm_notebook, tnrange
 from multiprocessing import Pool
 import copy
-import os
 import colorama
 from gastop import Truss, Mutator, Crossover, Selector, Evaluator, FitnessFunction, encoders, utilities, ProgMon
 colorama.init()  # for progress bars on ms windows
@@ -185,7 +184,7 @@ class GenAlg():
             - **propgress.pop_progress** (dict): Dictionary containing:
 
                 - ``'Item 1'`` *(blah)*: blah
-                - ``'Item 2'`` *(blah)*: blah 
+                - ``'Item 2'`` *(blah)*: blah
         '''
         if num_threads is None:
             if self.ga_params['num_threads'] is None:
@@ -224,9 +223,11 @@ class GenAlg():
             else:
                 pool = Pool(num_threads)
                 self.population = list(tqdm(pool.imap(
-                    self.evaluator, self.population, chunksize), total=self.ga_params['pop_size'], desc='Evaluating', position=1))
+                    self.evaluator, self.population, chunksize),
+                    total=self.ga_params['pop_size'], desc='Evaluating', position=1))
                 self.population = list(tqdm(pool.imap(
-                    self.fitness_function, self.population, chunksize), total=self.ga_params['pop_size'], desc='Scoring', position=1))
+                    self.fitness_function, self.population, chunksize),
+                    total=self.ga_params['pop_size'], desc='Scoring', position=1))
                 pool.close()
                 pool.join()
 
