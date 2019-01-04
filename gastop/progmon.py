@@ -29,7 +29,7 @@ class ProgMon():
 
     """
 
-    def __init__(self,progress_fitness,progress_truss,num_generations,domain,loads,fixtures):
+    def __init__(self,progress_fitness,progress_truss,num_generations,domain=None,loads=None,fixtures=None):
         """Creates a ProgMon object
 
         Once created, the object will store all of the relavant information

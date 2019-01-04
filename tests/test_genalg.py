@@ -128,11 +128,11 @@ class TestGenAlg_SFR(unittest.TestCase):
         GA = GenAlg(config)
 
         GA.population = population
-        progress_display = 2
+        progress_fitness = True
+        progress_truss = False
         num_generations = 20
 
-        progress = ProgMon(progress_display, num_generations)
-
+        progress = ProgMon(progress_fitness,progress_truss,num_generations)
         #
 
         # Loop over all generations:
@@ -141,7 +141,7 @@ class TestGenAlg_SFR(unittest.TestCase):
             for truss in GA.population:
                 #truss.fos = np.random.random()
                 truss.fitness_score = truss.fitness_score + 5.0
-        plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+        #plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         return GA.population[0], GA.pop_progress
 
     def testProgressBar2(self):
@@ -165,11 +165,12 @@ class TestGenAlg_SFR(unittest.TestCase):
         GA = GenAlg(config)
 
         GA.population = population
-        progress_display = 1
+        progress_fitness = False
+        progress_truss = False
 
         ax1 = []
         num_generations = 20
-        progress = ProgMon(progress_display, num_generations)
+        progress = ProgMon(progress_fitness,progress_truss, num_generations)
 
         #t = tqdm(total=num_generations,leave=False)
         # Loop over all generations:
@@ -204,10 +205,11 @@ class TestGenAlg_SFR(unittest.TestCase):
         GA = GenAlg(config)
 
         GA.population = population
-        progress_display = 1
+        progress_truss = False
+        progress_fitness = False
         # dumb GA run
         num_generations = 20
-        progress = ProgMon(progress_display, num_generations)
+        progress = ProgMonprogress = ProgMon(progress_fitness,progress_truss, num_generations)
         #t = tqdm(total=num_generations,leave=False)
         # Loop over all generations:
         for current_gen in tqdm(range(num_generations)):
