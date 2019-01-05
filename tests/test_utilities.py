@@ -33,10 +33,21 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
         self.assertTrue(config['general']['bool0'] is False)
         self.assertTrue(config['general']['bool1'] is True)
         self.assertTrue(config['general']['boolnone'] is None)
+        self.assertEqual(config['ga_params']
+                         ['config_save_name'], 'config.json')
+        self.assertEqual(config['ga_params']
+                         ['pop_save_name'], 'population.json')
+        self.assertEqual(config['ga_params']['save_frequency'], 0)
+
+    def testInitFileParser2(self):
+        """tests edge cases for invalid file path"""
+
+        init_file_path = 'gastop-config/foo'
+        self.assertRaises(IOError, utilities.init_file_parser, init_file_path)
 
 
 class TestTrussPlot(unittest.TestCase):
-    """Test for plot method. Doesn't assert, visual inspection used for pass/fail"""
+    """Test for plot and print methods. Doesn't assert, visual inspection used for pass/fail"""
 
     def test_truss_plot(self):
         """Plots a pyramidal truss with loads and deflections."""
@@ -57,6 +68,18 @@ class TestTrussPlot(unittest.TestCase):
             [[-.01, 0, -.01, 0, 0, 0]])), axis=0).reshape(5, 6, 1)
         domain = np.array([[-1.5, 1.5], [-1.5, 1.5], [0, 1.5]]).T
         truss.plot(domain, loads, fixtures, True, load_scale, def_scale)
+
+    def test_truss_print(self):
+        """Prints a truss as formatted text"""
+
+        user_spec_nodes = np.array([[-1, -1, 0], [-1, 1, 0]])
+        rand_nodes = np.array([[1, 1, 0], [1, -1, 0], [0, 0, 1]])
+        edges = np.array([[0, 1], [1, 2], [2, 3], [3, 0],
+                          [0, 4], [1, 4], [2, 4], [3, 4]])
+        properties = np.zeros(8)
+
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
+        print(truss)
 
 
 if __name__ == "__main__":
