@@ -5,7 +5,6 @@ Licensed under GNU GPLv3.
 This module implements the GenAlg class.
 
 """
-import matplotlib.pyplot as plt
 from gastop import GenAlg, utilities
 import imageio
 
@@ -22,25 +21,20 @@ progress_truss = True
 ga = GenAlg(config)
 ga.initialize_population(pop_size)
 best, progress_history = ga.run(
-    num_generations=num_gens,progress_fitness=progress_fitness,
+    num_generations=num_gens, progress_fitness=progress_fitness,
     progress_truss=progress_truss, num_threads=4)
 
-
-# print(best.rand_nodes)
-# print(best.edges)
-# print(best.properties)
-# print(best.fos)
-# print(best.deflection[:, :, 0])
 
 print(best)
 
 best.plot(domain=config['random_params']['domain'].T,
           loads=config['evaluator_params']['boundary_conditions']['loads'],
           fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
-          deflection=True, load_scale=.001, def_scale=100)  # must be followed by plt.show()
-#plt.show()
+          deflection=True, load_scale=.001, def_scale=100)
+
 if progress_truss and not progress_fitness:
     images = []
     for i in range(num_gens):
-        images.append(imageio.imread('animation/truss_evo_iter' + str(i) + '.png'))
-    imageio.mimsave('animation/truss_evo_gif.gif', images,duration=0.5)
+        images.append(imageio.imread(
+            'animation/truss_evo_iter' + str(i) + '.png'))
+    imageio.mimsave('animation/truss_evo_gif.gif', images, duration=0.5)

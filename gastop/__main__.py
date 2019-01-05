@@ -17,18 +17,26 @@ def parse_args(args):
         args (list): List of arguments to parse, ie sys.argv
 
     Returns:
-        parsed_args (argparse object): argparse object containing parsed arguments.
+        parsed_args (argparse object): argparse object containing parsed
+        arguments.
     """
 
     parser = argparse.ArgumentParser(prog='gastop',
-                                     description="A Genetic Algorithm for Structural Design and Topological Optimization. See full documentation at gastop.readthedocs.io")
+                                     description="""A Genetic Algorithm for
+                                     Structural Design and Topological
+                                     Optimization. See full documentation at
+                                     gastop.readthedocs.io""")
     parser.add_argument("config_path", help="file path to gastop config file")
     parser.add_argument("-p", "--pop_size", type=int,
-                        help="population size. If not specified, defaults to what is in config.", metavar='')
+                        help="""population size. If not specified, defaults to
+                        what is in config.""", metavar='')
     parser.add_argument("-g", "--num_gens", type=int,
-                        help="number of generations. If not specified, defaults to what is in config.", metavar='')
+                        help="""number of generations. If not specified, defaults
+                        to what is in config.""", metavar='')
     parser.add_argument("-t", "--num_threads", type=int,
-                        help="number of threads to use. If not specified, defaults to what is in config.", metavar='')
+                        help="""number of threads to use. If not specified,
+                        defaults to what is in config.""", metavar='')
+
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-q", "--quiet", action="store_true",
                        help="hide progress display window")
