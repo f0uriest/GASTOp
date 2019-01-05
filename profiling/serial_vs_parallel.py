@@ -1,8 +1,9 @@
 import gastop
 import timeit
 import numpy as np
+import matplotlib.pyplot as plt
 
-a = np.array([100, 500, 1000, 5000, 10000, 50000, 100000])
+a = np.array([100, 500])  # , 1000, 5000, 10000, 50000, 100000])
 t_serial = np.zeros(shape=a.shape)
 t_parallel = np.zeros(shape=a.shape)
 
@@ -29,11 +30,10 @@ best,history = ga.run(num_generations=10, progress_fitness=False,progress_truss=
 
 
 # plotting the data
-p1 = plt.figure(1)
+
 plt.plot(a, t_serial, 'rs', label='Serial')
 plt.plot(a, t_parallel, 'g^', label='Parallel w/ 4 cores')
 plt.ylabel('Avg Time/Generation (s)', fontsize=14)
 plt.xlabel('Population Size', fontsize=14)
-plt.axis([0, 105, 0, 0.225])
 plt.legend(prop=dict(size=14))
-p1.show()
+plt.show()
