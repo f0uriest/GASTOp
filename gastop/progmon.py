@@ -102,7 +102,7 @@ class ProgMon():
 
             # ** Fitness score plot
             self.ax1.scatter(current_gen+1.0, fitscore_min,
-                             c=[1, 0, 0])  # change c to be 2D array?
+                             c=[[1, 0, 0]])  # change c to be 2D array?
             # set text with current min fitscore
             plot_text = self.ax1.text(self.num_gens-self.orderofgen, self.pop_start, round(
                 fitscore_min, 3), bbox=dict(facecolor='white', alpha=1))
@@ -146,7 +146,7 @@ class ProgMon():
             # self.ax1.scatter(current_gen,fitscore_med,c=[0,0,0])
 
             self.ax1.scatter(current_gen + 1.0, fitscore_min,
-                             c=[1, 0, 0])  # change c to be 2D array?
+                             c=[[1, 0, 0]])  # change c to be 2D array?
             # set text with current min fitscore
             plot_text = self.ax1.text(self.num_gens-self.orderofgen, self.pop_start, round(
                 fitscore_min, 3), bbox=dict(facecolor='white', alpha=1))

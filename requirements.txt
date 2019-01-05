@@ -10,3 +10,4 @@ pytest >=3.0.5
 pytest-cov
 coveralls
 codecov
+imageio
