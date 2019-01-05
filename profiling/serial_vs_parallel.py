@@ -3,7 +3,7 @@ import timeit
 import numpy as np
 import matplotlib.pyplot as plt
 
-a = np.array([100, 500])  # , 1000, 5000, 10000, 50000, 100000])
+a = np.array([100, 500, 1000, 5000, 10000, 50000, 100000])
 t_serial = np.zeros(shape=a.shape)
 t_parallel = np.zeros(shape=a.shape)
 
