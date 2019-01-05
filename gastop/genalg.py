@@ -167,7 +167,7 @@ class GenAlg():
         #    plt.ylabel('fos')
         #    plt.xlabel('iteration')
         # initialize progress monitor object
-        progress = ProgMon(progress_fitness, progress_truss, num_generations, self.random_params['domain'].T,
+        progress = ProgMon(progress_fitness, progress_truss, num_generations, self.random_params['domain'],
                            self.config['evaluator_params']['boundary_conditions']['loads'],
                            self.config['evaluator_params']['boundary_conditions']['fixtures'])
         # ***

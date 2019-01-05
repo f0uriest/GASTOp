@@ -107,7 +107,7 @@ class Mutator():
             B, M)+np.multiply((np.ones(parent.shape)-B), parent)
 
         # Checking for flag to force integer output
-        if (int_flag == True):
+        if int_flag:
             child = (np.floor(child)).astype(int)
 
         return child

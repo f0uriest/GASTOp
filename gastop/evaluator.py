@@ -334,11 +334,9 @@ class Evaluator():
         nodes, con, matl = truss.cleaned_params()
 
         # calculate member lengths
-        edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]
+
         L = np.sqrt(
-            edge_vec[:, 0]**2 +
-            edge_vec[:, 1]**2 +
-            edge_vec[:, 2]**2)
+            np.sum((nodes[con[:, 1], :] - nodes[con[:, 0], :])**2, axis=1))
 
         # get material properties
         # print(properties_dict['x_section_area'])

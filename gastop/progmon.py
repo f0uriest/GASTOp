@@ -117,8 +117,8 @@ class ProgMon():
             best_truss.plot(domain=self.domain,
                             fixtures=self.fixtures, ax=self.ax3, fig=self.fig)
 
-            plot_text3d = self.ax3.text(self.domain[0][1]-1.0, self.domain[1][1]-1.0, self.domain[2]
-                                        [1], "Iteration: " + str(current_gen), bbox=dict(facecolor='white', alpha=1))
+            plot_text3d = self.ax3.text(self.domain[1][0]-1.0, self.domain[1][1]-1.0, self.domain[1]
+                                        [2], "Iteration: " + str(current_gen), bbox=dict(facecolor='white', alpha=1))
             # # set box to same size
             plot_text3d._bbox_patch._mutation_aspect = 0.1
             plot_text3d.get_bbox_patch().set_boxstyle("square", pad=1)
@@ -167,8 +167,8 @@ class ProgMon():
             best_truss.plot(domain=self.domain,
                             fixtures=self.fixtures, ax=self.ax3, fig=self.fig)
 
-            plot_text = self.ax3.text(self.domain[0][1]-1.0, self.domain[1][1]-1.0, self.domain[2]
-                                      [1], "Iteration: " + str(current_gen), bbox=dict(facecolor='white', alpha=1))
+            plot_text = self.ax3.text(self.domain[1][0]-1.0, self.domain[1][1]-1.0, self.domain[1]
+                                      [2], "Iteration: " + str(current_gen), bbox=dict(facecolor='white', alpha=1))
             # # set box to same size
             plot_text._bbox_patch._mutation_aspect = 0.1
             plot_text.get_bbox_patch().set_boxstyle("square", pad=1)

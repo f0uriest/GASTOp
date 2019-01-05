@@ -27,7 +27,7 @@ best, progress_history = ga.run(
 
 print(best)
 
-best.plot(domain=config['random_params']['domain'].T,
+best.plot(domain=config['random_params']['domain'],
           loads=config['evaluator_params']['boundary_conditions']['loads'],
           fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
           deflection=True, load_scale=.001, def_scale=100)

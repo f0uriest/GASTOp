@@ -91,7 +91,7 @@ def main(args=sys.argv[1:]):
     print(best)
 
     if progress_fitness or progress_truss:
-        best.plot(domain=config['random_params']['domain'].T,
+        best.plot(domain=config['random_params']['domain'],
                   loads=config['evaluator_params']['boundary_conditions']['loads'],
                   fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
                   deflection=True)
