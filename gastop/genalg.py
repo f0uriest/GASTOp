@@ -125,7 +125,7 @@ class GenAlg():
         for i in tqdm(range(pop_size), total=pop_size, leave=False, desc='Initializing Population', position=0):
             self.population.append(self.generate_random())
 
-    def run(self, num_generations=None, progress_fitness=False, progress_truss=False, num_threads=None):
+    def run(self, num_generations=None, progress_fitness=None, progress_truss=None, num_threads=None):
         '''Runs the genetic algorithm over all populations and generations
 
         Args:
