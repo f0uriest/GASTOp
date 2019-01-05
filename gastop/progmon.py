@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import numpy as np
 from matplotlib.animation import FuncAnimation
+import collections
 
 # plt.ion() #look into multithreading this
 style.use('fivethirtyeight')
@@ -54,11 +55,14 @@ class ProgMon():
         self.num_gens = num_generations
         # is this doing what i want it to
         self.orderofgen = 10**(int(np.log10(self.num_gens)))
-        self.pop_progress = []
+        self.pop_progress = collections.defaultdict(dict)
+        self.dict_headings = ['Generation','Best Truss','Best Fitness Score','Population Median Fitness Score','Population Fitness Score Range']
+
         self.pop_start = []
         self.domain = domain
         self.loads = loads
         self.fixtures = fixtures
+
 
         if self.progress_fitness and self.progress_truss:
             self.fig = plt.figure()
@@ -90,15 +94,29 @@ class ProgMon():
         # extract factor of safety from each truss object in population
         fitscore = [i.fitness_score for i in population]
         fitscore_min = fitscore[0]
-        #fitscore_min = np.amin(fitscore)
+        fitscore_median = np.median(fitscore)
+        fitscore_range = fitscore[-1] - fitscore_min
 
-        # change to be pop stats not population, change to dictionary
-        self.pop_progress.append(population)
-        # if self.progress_display == 1:
-        #    test = np.amin(fitscore)
+        pop_stats = [current_gen,population[0],fitscore_min,fitscore_median,fitscore_range]
+
+        #More readable but dumb?
+        #self.pop_progress['Generation '+str(current_gen)]['Generation'] = current_gen
+        #self.pop_progress['Generation '+str(current_gen)]['Best Truss'] = population[0]
+        #self.pop_progress['Generation '+str(current_gen)]['Best Fitness Score'] = fitscore_min
+        #self.pop_progress['Generation '+str(current_gen)]['Population Median Fitness Score'] = fitscore_median
+        #self.pop_progress['Generation '+str(current_gen)]['Population Fitness Score Range'] = fitscore_range
+
+        for j in range(5):
+            self.pop_progress['Generation '+str(current_gen)][self.dict_headings[j]] = pop_stats[j]
+        #self.pop_progress.append([current_gen,population[0],fitscore_min,fitscore_median,fitscore_range])
+
+
+        if current_gen == 0:
+            # store initial min fitscore (should be worst) for plotting box
+            self.pop_start = fitscore_min
+
         if self.progress_fitness and self.progress_truss:
-            if current_gen == 0:
-                self.pop_start = fitscore_min
+
 
             # ** Fitness score plot
             self.ax1.scatter(current_gen+1.0, fitscore_min,
@@ -126,10 +144,8 @@ class ProgMon():
             # pause for 0.001s to allow plot to update, can potentially remove this
             plt.pause(0.001)
 
-        if self.progress_fitness:
-            if current_gen == 0:
-                # store initial min fitscore (should be worst)
-                self.pop_start = fitscore_min
+        elif self.progress_fitness:
+
             #     fitscore_range_scaled = 1.0
             #     #self.pop_prop(current_gen) = (np.amax(fitscore) - np.amin(fitscore))/2.0
             #     self.pop_prop.append([(np.amax(fitscore) - np.amin(fitscore))/2.0])

@@ -204,22 +204,10 @@ class GenAlg():
             if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
                 self.save_state(
                     dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
+
+        # call gif maker
         return self.population[0], progress.pop_progress
 
-    # def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
-    #     # three options: plot, progress bar ish thing, no output just append
-    #     # calc population diversity and plot stuff or show current results
-    #     # extract factor of safety from each truss object in population
-    #     fitscore = [i.fitness_score for i in self.population]
-    #     self.pop_progress.append(self.population)  # append to history
-    #     if progress_display == 1:
-    #         print(current_gen, np.amin(fitscore))
-    #     elif progress_display == 2:
-    #         # print(current_gen,min(fitscore))
-    #         # plot minimum fitscore for current gen in black
-    #         ax1.scatter(current_gen, np.amin(fitscore), c=[0, 0, 0])
-    #         # pause for 0.0001s to allow plot to update, can potentially remove this
-    #         plt.pause(0.0001)
 
     def save_state(self, dest_config='config.json',
                    dest_pop='population.json'):  # Cristian

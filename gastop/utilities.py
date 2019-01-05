@@ -131,6 +131,10 @@ def init_file_parser(init_file_path):  # Cristian
     num_matl = properties_dict['elastic_modulus'].shape[0]
     loads = config['general']['loads']
     fixtures = config['general']['fixtures']
+
+    progress_fitness = config['monitor_params']['progress_fitness'] #sfr
+    progress_truss = config['monitor_params']['progress_truss'] #sfr
+
     if loads.ndim < 3:
         loads = np.reshape(loads, (loads.shape + (1,)))
     if fixtures.ndim < 3:
@@ -214,5 +218,10 @@ def init_file_parser(init_file_path):  # Cristian
         config['ga_params']['percent_mutation'] = 0.4
     if (config['ga_params']['percent_mutation'] + config['ga_params']['percent_crossover']) > 1:
         raise RuntimeError('percent_crossover + percent_mutation > 1')
+
+    if not config['monitor_params']['progress_fitness']: #sfr
+        config['monitor_params']['progress_fitness'] = False
+    if not config['monitor_params']['progress_truss']: #sfr
+        config['monitor_params']['progress_truss'] = False
 
     return config
