@@ -5,6 +5,8 @@ from matplotlib import style
 import time
 from tqdm import tqdm
 import numpy as np
+import collections
+
 
 ##plt.ion() #look into multithreading this
 #style.use('fivethirtyeight')
@@ -35,9 +37,17 @@ def counter(n):
     #plt.ylim(0,12)
     test  = []
 
+    d = collections.defaultdict(dict)
+
+
 
     for i in tqdm(range(n)):
         y = 10.0-i*y0
+        #for j in range(3):
+        #    d['Iteration '+str(i)]['y'+str(j)] = y[j]
+        d['Iteration'+str(i)]['y0'] = y[0]
+        d['Iteration'+str(i)]['y1'] = y[1]
+        d['Iteration'+str(i)]['y012'] = y
         if i == 0:
             test = np.min(y)
         # else:
@@ -47,7 +57,7 @@ def counter(n):
         print(np.min(y))
     plt.show()
 
-    return y
+    return y, d
 
 
 def progress(i,y,ax1,ax2,n,test,fig):
@@ -80,5 +90,5 @@ def progress(i,y,ax1,ax2,n,test,fig):
     plt.pause(0.5) #time it waits for plot to update
 
 
-y = counter(4)
-print(y)
+y,dict_full = counter(4)
+print(dict_full)
