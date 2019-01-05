@@ -66,13 +66,16 @@ evaluator_params = {'struct_solver': 'blank_test',
                     'boundary_conditions': {'loads': 0, 'fixtures': 0, },
                     'properties_dict': 0,
                     'cost_solver': 'blank_test'}
+monitor_params = {'progress_fitness': False,
+                  'progress_truss': False}
 
 config = {'ga_params': ga_params,
           'random_params': random_params,
           'mutator_params': mutator_params,
           'crossover_params': crossover_params,
           'selector_params': selector_params,
-          'evaluator_params': evaluator_params}
+          'evaluator_params': evaluator_params,
+          'monitor_params': monitor_params}
 
 pop_size = 1000
 
