@@ -10,8 +10,6 @@ from gastop import GenAlg, utilities
 import imageio
 
 
-
-
 def parse_args(args):
     """Parses command line arguments
 
@@ -45,22 +43,19 @@ def main(args=sys.argv[1:]):
     Reads and parses user input from command line, runs the code,
     and prints and plots the resulting best truss.
     """
-    #*** REMOVE
-    progress_fitness= False
-    progress_truss = True
-    #*****
 
     args = parse_args(args)
     config = utilities.init_file_parser(args.config_path)
 
-    #**** NEEDS TO BE UPDATED
     if args.display:
+        progress_fitness = True
         progress_truss = True
-    if args.quiet:
-        progress_fitness= True
-    #else:
-    #    progress_display = None
-    #*******
+    elif args.quiet:
+        progress_fitness = False
+        progress_truss = False
+    else:
+        progress_fitness = config['monitor_params']['progress_fitness']
+        progress_truss = config['monitor_params']['progress_truss']
 
     if args.num_threads:
         num_threads = args.num_threads
@@ -96,9 +91,9 @@ def main(args=sys.argv[1:]):
     if progress_truss and not progress_fitness:
         images = []
         for i in range(num_generations):
-            images.append(imageio.imread('animation/truss_evo_iter' + str(i) + '.png'))
-        imageio.mimsave('animation/truss_evo_gif.gif', images,duration=0.5)
-
+            images.append(imageio.imread(
+                'animation/truss_evo_iter' + str(i) + '.png'))
+        imageio.mimsave('animation/truss_evo_gif.gif', images, duration=0.5)
 
 
 if __name__ == '__main__':
