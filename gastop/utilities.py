@@ -8,11 +8,12 @@ This module implements the utilities class.
 
 import numpy as np
 import configobj
-import ast
-import os.path
 import json
+import ast
+import os
 
-from gastop import encoders, Truss
+
+from gastop import Truss, ProgMon, encoders
 
 
 def beam_file_parser(properties_path):
