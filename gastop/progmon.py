@@ -68,19 +68,20 @@ class ProgMon():
             self.fig = plt.figure()
             self.ax1 = self.fig.add_subplot(1, 2, 1)
             self.ax1.set_title('Fitness Score Evolution')
-            plt.xlim(0, self.num_gens)
+            plt.xlim(-0.1, self.num_gens)
             plt.ylabel('Minimum Fitness Score')
-            plt.xlabel('Iteration')
+            plt.xlabel('Generation')
             self.ax3 = self.fig.add_subplot(122, projection='3d')
 
         elif self.progress_fitness:  # check if figure method of progress monitoring is requested
             # initialize plot:
             fig = plt.figure()
             self.ax1 = fig.add_subplot(1, 1, 1)  # does this need self.?
-            plt.xlim(0, self.num_gens)
+            plt.xlim(-0.1, self.num_gens)
             plt.ylabel('Minimum Fitness Score')
-            plt.xlabel('Iteration')
+            plt.xlabel('Generation')
             self.ax1.set_title('Fitness Score Evolution')
+
 
         elif self.progress_truss:
             self.fig = plt.figure()
@@ -92,22 +93,29 @@ class ProgMon():
         # three options: plot, progress bar ish thing, no output just append
         # calc population diversity and plot stuff or show current results
         # extract factor of safety from each truss object in population
-        fitscore = [i.fitness_score for i in population]
-        fitscore_min = fitscore[0]
-        fitscore_median = np.median(fitscore)
-        fitscore_range = fitscore[-1] - fitscore_min
 
-        pop_stats = [current_gen,population[0],fitscore_min,fitscore_median,fitscore_range]
+        try: #if being called by utilities you dont want to do this block
+            fitscore = [i.fitness_score for i in population]
+            fitscore_min = fitscore[0]
+            fitscore_median = np.median(fitscore)
+            fitscore_range = fitscore[-1] - fitscore_min
+            best_truss = population[0]
+            pop_stats = [current_gen,best_truss,fitscore_min,fitscore_median,fitscore_range]
 
-        #More readable but dumb?
-        #self.pop_progress['Generation '+str(current_gen)]['Generation'] = current_gen
-        #self.pop_progress['Generation '+str(current_gen)]['Best Truss'] = population[0]
-        #self.pop_progress['Generation '+str(current_gen)]['Best Fitness Score'] = fitscore_min
-        #self.pop_progress['Generation '+str(current_gen)]['Population Median Fitness Score'] = fitscore_median
-        #self.pop_progress['Generation '+str(current_gen)]['Population Fitness Score Range'] = fitscore_range
+            #More readable but dumb?
+            #self.pop_progress['Generation '+str(current_gen)]['Generation'] = current_gen
+            #self.pop_progress['Generation '+str(current_gen)]['Best Truss'] = population[0]
+            #self.pop_progress['Generation '+str(current_gen)]['Best Fitness Score'] = fitscore_min
+            #self.pop_progress['Generation '+str(current_gen)]['Population Median Fitness Score'] = fitscore_median
+            #self.pop_progress['Generation '+str(current_gen)]['Population Fitness Score Range'] = fitscore_range
 
-        for j in range(5):
-            self.pop_progress['Generation '+str(current_gen)][self.dict_headings[j]] = pop_stats[j]
+            for j in range(5):
+                self.pop_progress['Generation '+str(current_gen)][self.dict_headings[j]] = pop_stats[j]
+        except:
+            fitscore = population.fitness_score
+            fitscore_min = fitscore
+            best_truss = population
+            #pass
         #self.pop_progress.append([current_gen,population[0],fitscore_min,fitscore_median,fitscore_range])
 
 
@@ -119,8 +127,8 @@ class ProgMon():
 
 
             # ** Fitness score plot
-            self.ax1.scatter(current_gen+1.0, fitscore_min,
-                             c=[[1, 0, 0]])  # change c to be 2D array?
+            self.ax1.scatter(current_gen, fitscore_min,
+                             c=[[0, 0, 0]])  # change c to be 2D array?
             # set text with current min fitscore
             plot_text = self.ax1.text(self.num_gens-self.orderofgen, self.pop_start, round(
                 fitscore_min, 3), bbox=dict(facecolor='white', alpha=1))
@@ -131,7 +139,6 @@ class ProgMon():
             # ** Truss plot
             best_truss = population[0]
             self.ax3.cla()
-            #edge_vec_start, edge_vec_end, num_con = best_truss.plot(ax=self.ax3,fig = self.fig)
             best_truss.plot(domain=self.domain,
                             fixtures=self.fixtures, ax=self.ax3, fig=self.fig)
 
@@ -161,8 +168,8 @@ class ProgMon():
             #self.ax1.errorbar(current_gen, fitscore_med, yerr=fitscore_range_scaled, fmt='o',c=[0,0,0])
             # self.ax1.scatter(current_gen,fitscore_med,c=[0,0,0])
 
-            self.ax1.scatter(current_gen + 1.0, fitscore_min,
-                             c=[[1, 0, 0]])  # change c to be 2D array?
+            self.ax1.scatter(current_gen, fitscore_min,
+                             c=[[0, 0, 0]])  # change c to be 2D array?
             # set text with current min fitscore
             plot_text = self.ax1.text(self.num_gens-self.orderofgen, self.pop_start, round(
                 fitscore_min, 3), bbox=dict(facecolor='white', alpha=1))
@@ -170,6 +177,7 @@ class ProgMon():
             plot_text._bbox_patch._mutation_aspect = 0.1
             plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
 
+            #plt.ylim(bottom=0) #this doesnt work
             # self.ax1.scatter(current_gen,np.amin(fitscore),c=[0,0,0]) #plot minimum fitscore for current gen in black
             # pause for 0.001s to allow plot to update, can potentially remove this
             plt.pause(0.001)
@@ -177,7 +185,7 @@ class ProgMon():
         elif self.progress_truss:
             #population.sort(key=lambda x: x.fitness_score)
 
-            best_truss = population[0]
+            #best_truss = population[0]
             self.ax3.cla()
             #edge_vec_start, edge_vec_end, num_con = best_truss.plot(ax=self.ax3,fig = self.fig)
             best_truss.plot(domain=self.domain,
@@ -190,5 +198,5 @@ class ProgMon():
             plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
 
             plt.pause(0.001)
-            self.fig.savefig('animation/truss_evo_iter' +
-                             str(current_gen) + '.png')
+            #self.fig.savefig('animation/truss_evo_iter' +
+            #                 str(current_gen) + '.png')

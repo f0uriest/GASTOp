@@ -25,7 +25,7 @@ cost_solver = cost_calc
 [ga_params]
 num_threads = 4
 pop_size = 1000
-num_generations = 5
+num_generations = 3
 num_elite =
 percent_mutation =
 percent_crossover =
@@ -34,7 +34,7 @@ save_filename_prefix = Recorded_States_
 
 [monitor_params]
 progress_fitness = False
-progress_truss = False
+progress_truss = True
 
 
 

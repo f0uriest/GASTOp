@@ -8,6 +8,7 @@ This module implements the GenAlg class.
 from gastop import GenAlg, utilities
 import imageio
 
+animation_path = '/Users/susanredmond/Desktop/APC524_FinalProject/animation'
 # Parse input paramters from init.txt file
 init_file_path = 'gastop-config/struct_making_test_init_sfr.txt'
 config = utilities.init_file_parser(init_file_path)
@@ -33,12 +34,4 @@ best.plot(domain=config['random_params']['domain'],
           deflection=True, load_scale=.001, def_scale=100)
 
 
-#truss1 = progress_history['Generation 1']['Best Truss']
-#print(truss1)
-
-if progress_truss and not progress_fitness:
-    images = []
-    for i in range(num_gens):
-        images.append(imageio.imread(
-            'animation/truss_evo_iter' + str(i) + '.png'))
-    imageio.mimsave('animation/truss_evo_gif.gif', images, duration=0.5)
+utilities.save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens,config)
