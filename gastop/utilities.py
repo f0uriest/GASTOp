@@ -11,9 +11,35 @@ import configobj
 import json
 import ast
 import os
+import imageio
+import matplotlib.pyplot as plt
+import shutil
+
+from gastop import Truss, ProgMon
 
 
-from gastop import Truss, ProgMon, encoders
+def save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens,config):
+
+    #delete old animation folder
+    try:
+        shutil.rmtree(animation_path)
+    except:
+        pass
+    os.makedirs(animation_path)
+    evolution = ProgMon(progress_fitness, progress_truss, num_gens, config['random_params']['domain'],
+                       config['evaluator_params']['boundary_conditions']['loads'],
+                       config['evaluator_params']['boundary_conditions']['fixtures'])
+    images = []
+    for current_gen in range(num_gens):
+        progress_truss = progress_history['Generation '+str(current_gen)]['Best Truss']
+        #progress_truss.plot(domain=config['random_params']['domain'],
+        #          fixtures=config['evaluator_params']['boundary_conditions']['fixtures'])
+        evolution.progress_monitor(current_gen, progress_truss)
+        fig = plt.gcf()
+        fig.savefig(animation_path + '/truss_evo_iter' + str(current_gen) + '.png')
+        images.append(imageio.imread(
+            'animation/truss_evo_iter' + str(current_gen) + '.png'))
+    imageio.mimsave(animation_path + '/truss_evo_gif.gif', images, duration=0.5)
 
 
 def beam_file_parser(properties_path):
