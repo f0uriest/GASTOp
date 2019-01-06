@@ -10,6 +10,9 @@ import numpy as np
 import configobj
 import ast
 import os.path
+import json
+
+from gastop import encoders, Truss
 
 
 def beam_file_parser(properties_path):
@@ -225,3 +228,40 @@ def init_file_parser(init_file_path):  # Cristian
         config['monitor_params']['progress_truss'] = False
 
     return config
+
+def save_progress_history(progress_history, path_progress_history='progress_history.json'):
+    '''Saves the population history (progress_history) to a JSON file.
+
+    Args:
+        progress_history (dict): History of each generation, including generation
+            number, fittest truss, etc.
+        path_progress_history (string): Path to save progress_history data file. If file
+            doesn't exist, creates it.
+
+    Returns:
+        Nothing
+    '''
+    # Save pop_progress data
+    with open(path_progress_history, 'w') as f:
+        progress_history_dumped = json.dumps(progress_history, cls=encoders.PopulationEncoder)
+        json.dump(progress_history_dumped, f)
+
+def load_progress_history(path_progress_history='progress_history.json'):
+    '''Loads the population history (progress_history) from a JSON file.
+
+    Args:
+        path_progress_history (string): Path to progress_history data file.
+
+    Returns:
+        progress_history (dict): History of each generation, including generation
+            number, fittest truss, etc.
+    '''
+    # Load pop_progress data
+    with open(path_progress_history, 'r') as f:
+        progress_history_loaded = json.load(f)
+    progress_history = json.loads(progress_history_loaded, object_hook=encoders.numpy_decoder)
+    # Bundle truss dictionaries as Truss objects
+    for gen in progress_history.keys():
+        progress_history[gen]['Best Truss'] = Truss(**progress_history[gen]['Best Truss'])
+
+    return progress_history
