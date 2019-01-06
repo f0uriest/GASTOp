@@ -9,7 +9,7 @@ This module implements testing for the Utilities class
 
 import unittest
 import numpy as np
-from gastop import Truss, utilities
+from gastop import Truss, utilities, ProgMon, GenAlg
 
 
 class TestUtilities_Cristian(unittest.TestCase):  # Cristian
@@ -44,6 +44,41 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
 
         init_file_path = 'gastop-config/foo'
         self.assertRaises(IOError, utilities.init_file_parser, init_file_path)
+
+
+    def testSaveLoadPopProgress(self):
+        '''Tests that the pop_progress dictionary is correctly saved to and
+        loaded from a JSON file.
+        '''
+        # Parse input paramters from init.txt file
+        init_file_path = 'gastop-config/struct_making_test_init.txt'
+        config = utilities.init_file_parser(init_file_path)
+
+        progress_fitness = False
+        progress_truss = False
+        num_threads = 1
+        num_generations = 3
+        pop_size = 5
+
+        # Create the Genetic Algorithm Object
+        ga = GenAlg(config)
+        ga.initialize_population(pop_size)
+        best, progress_history = ga.run(num_generations=num_generations,
+                                        progress_fitness=progress_fitness,
+                                        progress_truss=progress_truss,
+                                        num_threads=num_threads)
+
+        # Save and load pop_progress to/from JSON file
+        utilities.save_progress_history(progress_history)
+        loaded_progress_history = utilities.load_progress_history()
+        print(loaded_progress_history)
+
+        for gen in loaded_progress_history.keys():
+            self.assertTrue(isinstance(loaded_progress_history[gen]['Generation'],int))
+            self.assertTrue(isinstance(loaded_progress_history[gen]['Best Truss'],Truss))
+            self.assertTrue(isinstance(loaded_progress_history[gen]['Best Fitness Score'],float))
+            self.assertTrue(isinstance(loaded_progress_history[gen]['Population Median Fitness Score'],float))
+            self.assertTrue(isinstance(loaded_progress_history[gen]['Population Fitness Score Range'],float))
 
 
 class TestTrussPlot(unittest.TestCase):

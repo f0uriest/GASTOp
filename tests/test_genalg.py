@@ -28,6 +28,8 @@ num_gens = int(1e2)
 
 class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
     def testUpdatePopulation(self):
+        '''Tests that the population correctly updates every generation.
+        '''
         # Create GenAlg object and assign random fitness scores
         pop_size = int(1e4)
         ga = GenAlg(init_file_path)
@@ -51,6 +53,9 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
             self.assertTrue(isinstance(truss.properties,np.ndarray))
 
     def testSaveLoadState(self):
+        '''Tests that config and population can be saved to and loaded from
+        JSON files.
+        '''
         # Parse input parameters from init file
         init_file_path = 'gastop-config/struct_making_test_init.txt'
         config = utilities.init_file_parser(init_file_path)
@@ -62,7 +67,6 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
 
         # Save and reload
         ga.save_state()
-        # config, population = ga.load_state()
         ga_loaded = ga.load_state()
         config = ga_loaded.config
         population = ga_loaded.population
@@ -83,8 +87,6 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
             self.assertTrue(isinstance(truss.rand_nodes,np.ndarray))
             self.assertTrue(isinstance(truss.edges,np.ndarray))
             self.assertTrue(isinstance(truss.properties,np.ndarray))
-        # print(config)
-        # print([truss for truss in population])
 
 
 class TestGenAlg_Dan(unittest.TestCase):

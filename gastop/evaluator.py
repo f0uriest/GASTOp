@@ -428,6 +428,6 @@ class Evaluator():
             truss, self.boundary_conditions, self.properties_dict)
         truss.mass = self.mass_solver(truss, self.properties_dict)
         truss.cost = self.cost_solver(truss, self.properties_dict)
-        truss.interferences = self.interferences_solver(truss)
+        truss.interference = self.interferences_solver(truss)
 
         return truss
