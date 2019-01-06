@@ -15,7 +15,7 @@ import imageio
 import matplotlib.pyplot as plt
 import shutil
 
-from gastop import Truss, ProgMon
+from gastop import Truss, ProgMon, encoders
 
 
 def save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens,config):
