@@ -13,7 +13,7 @@ from matplotlib.animation import FuncAnimation
 import collections
 
 # plt.ion() #look into multithreading this
-style.use('fivethirtyeight')
+#style.use('fivethirtyeight')
 
 
 class ProgMon():
@@ -111,6 +111,7 @@ class ProgMon():
 
             for j in range(5):
                 self.pop_progress['Generation '+str(current_gen)][self.dict_headings[j]] = pop_stats[j]
+
         except:
             fitscore = population.fitness_score
             fitscore_min = fitscore

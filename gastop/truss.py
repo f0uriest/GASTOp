@@ -246,6 +246,11 @@ class Truss():
             ax.set_ylim(domain[:, 1])
             ax.set_zlim(domain[:, 2])
 
+        for i in range(num_con):
+            ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
+                    [edge_vec_start[i, 1], edge_vec_end[i, 1]],
+                    [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
+
         if deflection:
             def_nodes = nodes + def_scale*self.deflection[:, :3, 0]
             def_edge_vec_start = def_nodes[con[:, 0], :]
@@ -253,16 +258,9 @@ class Truss():
             for i in range(num_con):
                 ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
-                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-')
+                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-',alpha=0.5)#,label='Displaced Truss')
+            #ax.legend()
 
-        # edge_vec_start = nodes[con[:, 0], :] #sfr
-        # edge_vec_end = nodes[con[:, 1], :] #sfr
-
-        # ****
-        for i in range(num_con):
-            ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
-                    [edge_vec_start[i, 1], edge_vec_end[i, 1]],
-                    [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
