@@ -18,30 +18,34 @@ import shutil
 from gastop import Truss, ProgMon, encoders
 
 
-def save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens,config):
+def save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens, config):
 
-    #delete old animation folder
+    # delete old animation folder
     try:
-        shutil.rmtree(animation_path) #doesnt seem to be removing everything properly?
+        # doesnt seem to be removing everything properly?
+        shutil.rmtree(animation_path)
     except:
         pass
     os.makedirs(animation_path)
 
     if progress_fitness or progress_truss:
         evolution = ProgMon(progress_fitness, progress_truss, num_gens, config['random_params']['domain'],
-                           config['evaluator_params']['boundary_conditions']['loads'],
-                           config['evaluator_params']['boundary_conditions']['fixtures'])
+                            config['evaluator_params']['boundary_conditions']['loads'],
+                            config['evaluator_params']['boundary_conditions']['fixtures'])
         images = []
         for current_gen in range(num_gens):
-            progress_truss = progress_history['Generation '+str(current_gen)]['Best Truss']
-            #progress_truss.plot(domain=config['random_params']['domain'],
+            progress_truss = progress_history['Generation ' +
+                                              str(current_gen)]['Best Truss']
+            # progress_truss.plot(domain=config['random_params']['domain'],
             #          fixtures=config['evaluator_params']['boundary_conditions']['fixtures'])
             evolution.progress_monitor(current_gen, progress_truss)
             fig = plt.gcf()
-            fig.savefig(animation_path + '/truss_evo_iter' + str(current_gen) + '.png')
+            fig.savefig(animation_path + '/truss_evo_iter' +
+                        str(current_gen) + '.png')
             images.append(imageio.imread(
                 'animation/truss_evo_iter' + str(current_gen) + '.png'))
-        imageio.mimsave(animation_path + '/truss_evo_gif.gif', images, duration=0.5)
+        imageio.mimsave(animation_path + '/truss_evo_gif.gif',
+                        images, duration=0.5)
 
 
 def beam_file_parser(properties_path):
@@ -144,7 +148,7 @@ def init_file_parser(init_file_path):  # Cristian
         # Convert string to numpy array
         try:
             a = ast.literal_eval(val)
-            if isinstance(a,list):
+            if isinstance(a, list):
                 newval = np.array(a)
         except:
             pass
@@ -164,8 +168,8 @@ def init_file_parser(init_file_path):  # Cristian
     loads = config['general']['loads']
     fixtures = config['general']['fixtures']
 
-    progress_fitness = config['monitor_params']['progress_fitness'] #sfr
-    progress_truss = config['monitor_params']['progress_truss'] #sfr
+    progress_fitness = config['monitor_params']['progress_fitness']  # sfr
+    progress_truss = config['monitor_params']['progress_truss']  # sfr
 
     if loads.ndim < 3:
         loads = np.reshape(loads, (loads.shape + (1,)))
@@ -195,6 +199,10 @@ def init_file_parser(init_file_path):  # Cristian
     config['evaluator_params']['boundary_conditions']['loads'] = loads
     config['evaluator_params']['boundary_conditions']['fixtures'] = fixtures
     config['evaluator_params']['properties_dict'] = properties_dict
+
+    # fitness params
+    if config['fitness_params']['parameters']['critical_nodes'] is '':
+        config['fitness_params']['parameters']['critical_nodes'] = np.array([])
 
     # random params
     config['random_params']['num_rand_nodes'] = num_rand_nodes
@@ -251,12 +259,13 @@ def init_file_parser(init_file_path):  # Cristian
     if (config['ga_params']['percent_mutation'] + config['ga_params']['percent_crossover']) > 1:
         raise RuntimeError('percent_crossover + percent_mutation > 1')
 
-    if not config['monitor_params']['progress_fitness']: #sfr
+    if not config['monitor_params']['progress_fitness']:  # sfr
         config['monitor_params']['progress_fitness'] = False
-    if not config['monitor_params']['progress_truss']: #sfr
+    if not config['monitor_params']['progress_truss']:  # sfr
         config['monitor_params']['progress_truss'] = False
 
     return config
+
 
 def save_progress_history(progress_history, path_progress_history='progress_history.json'):
     '''Saves the population history (progress_history) to a JSON file.
@@ -272,8 +281,10 @@ def save_progress_history(progress_history, path_progress_history='progress_hist
     '''
     # Save pop_progress data
     with open(path_progress_history, 'w') as f:
-        progress_history_dumped = json.dumps(progress_history, cls=encoders.PopulationEncoder)
+        progress_history_dumped = json.dumps(
+            progress_history, cls=encoders.PopulationEncoder)
         json.dump(progress_history_dumped, f)
+
 
 def load_progress_history(path_progress_history='progress_history.json'):
     '''Loads the population history (progress_history) from a JSON file.
@@ -288,9 +299,11 @@ def load_progress_history(path_progress_history='progress_history.json'):
     # Load pop_progress data
     with open(path_progress_history, 'r') as f:
         progress_history_loaded = json.load(f)
-    progress_history = json.loads(progress_history_loaded, object_hook=encoders.numpy_decoder)
+    progress_history = json.loads(
+        progress_history_loaded, object_hook=encoders.numpy_decoder)
     # Bundle truss dictionaries as Truss objects
     for gen in progress_history.keys():
-        progress_history[gen]['Best Truss'] = Truss(**progress_history[gen]['Best Truss'])
+        progress_history[gen]['Best Truss'] = Truss(
+            **progress_history[gen]['Best Truss'])
 
     return progress_history
