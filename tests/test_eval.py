@@ -16,12 +16,47 @@ class TestEvaluator(unittest.TestCase):
     mass solver, and cost solver.
     """
 
-    def test_axial_load(self):
+    def test_axial_load_y(self):
         """Tests simple straight beam under axial forces"""
 
         p = 1000  # load in newtons
         L = 2  # length in meters
         matl = 0
+        rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
+        user_spec_nodes = np.array([[0, 0, 0], [0, L, 0]])
+        edges = np.array([[0, 1]])
+        properties = np.array([matl])
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
+        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]]
+                       ).reshape(2, 6, 1)
+        load = np.array(
+            [[0, 0, 0, 0, 0, 0], [0, p, 0, 0, 0, 0]]).reshape(2, 6, 1)
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
+        bdry = {'loads': load, 'fixtures': dof}
+        evaluator = Evaluator('mat_struct_analysis_DSM',
+                              'mass_basic', 'interference_ray_tracing', 'cost_calc', bdry, beam_dict)
+        evaluator(truss)
+        A = beam_dict['x_section_area'][matl]
+        E = beam_dict['elastic_modulus'][matl]
+        sigma = p/A
+        fos_true = beam_dict['yield_strength'][matl]/sigma
+        strain = sigma/E
+        deflection_true = np.array([[[0], [0], [0], [0], [0], [0]],
+                                    [[0], [strain*L], [0], [0], [0], [0]]])
+
+        np.testing.assert_almost_equal(
+            truss.mass, A*L*beam_dict['density'][matl])
+        np.testing.assert_array_almost_equal(truss.fos, fos_true)
+        np.testing.assert_array_almost_equal(truss.deflection, deflection_true)
+        self.assertTrue(truss.interference is None)
+        np.testing.assert_almost_equal(truss.cost, L*beam_dict['cost'][matl])
+
+    def test_axial_load_x(self):
+        """Tests simple straight beam under axial forces"""
+
+        p = 10000  # load in newtons
+        L = .5  # length in meters
+        matl = 4
         rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
         user_spec_nodes = np.array([[0, 0, 0], [L, 0, 0]])
         edges = np.array([[0, 1]])
@@ -48,8 +83,39 @@ class TestEvaluator(unittest.TestCase):
             truss.mass, A*L*beam_dict['density'][matl])
         np.testing.assert_array_almost_equal(truss.fos, fos_true)
         np.testing.assert_array_almost_equal(truss.deflection, deflection_true)
-        self.assertTrue(truss.interference is None)
-        np.testing.assert_almost_equal(truss.cost, L*beam_dict['cost'][matl])
+
+    def test_axial_load_z(self):
+        """Tests simple straight beam under axial forces"""
+
+        p = 5000  # load in newtons
+        L = 4  # length in meters
+        matl = 1
+        rand_nodes = np.array([]).reshape(0, 3)  # no random nodes
+        user_spec_nodes = np.array([[0, 0, 0], [0, 0, L]])
+        edges = np.array([[0, 1]])
+        properties = np.array([matl])
+        truss = Truss(user_spec_nodes, rand_nodes, edges, properties)
+        dof = np.array([[1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]]
+                       ).reshape(2, 6, 1)
+        load = np.array(
+            [[0, 0, 0, 0, 0, 0], [0, 0, p, 0, 0, 0]]).reshape(2, 6, 1)
+        beam_dict = utilities.beam_file_parser('gastop-config/properties.csv')
+        bdry = {'loads': load, 'fixtures': dof}
+        evaluator = Evaluator('mat_struct_analysis_DSM',
+                              'mass_basic', 'interference_ray_tracing', 'cost_calc', bdry, beam_dict)
+        evaluator(truss)
+        A = beam_dict['x_section_area'][matl]
+        E = beam_dict['elastic_modulus'][matl]
+        sigma = p/A
+        fos_true = beam_dict['yield_strength'][matl]/sigma
+        strain = sigma/E
+        deflection_true = np.array([[[0], [0], [0], [0], [0], [0]],
+                                    [[0], [0], [strain*L], [0], [0], [0]]])
+
+        np.testing.assert_almost_equal(
+            truss.mass, A*L*beam_dict['density'][matl])
+        np.testing.assert_array_almost_equal(truss.fos, fos_true)
+        np.testing.assert_array_almost_equal(truss.deflection, deflection_true)
 
     def test_singular_stiffness_matrix(self):
         """Tests straight beam under axial forces with no restraints
