@@ -205,6 +205,7 @@ class Evaluator():
         rho = np.sqrt(edge_vec[:, 0]**2+edge_vec[:, 1]
                       ** 2)  # length in x-y plane
         L = np.sqrt(rho**2 + edge_vec[:, 2]**2)  # total length of member
+# fix singular azimuthal angle
         ca = edge_vec[:, 0]/rho  # cosine of azimuthal angle
         sa = edge_vec[:, 1]/rho  # sine of azimuthal angle
         cp = rho/L  # cosine of polar angle
