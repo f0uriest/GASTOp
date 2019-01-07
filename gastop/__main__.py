@@ -96,15 +96,6 @@ def main(args=sys.argv[1:]):
                   fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
                   deflection=True)
 
-    if progress_truss and not progress_fitness:
-        images = []
-        for i in range(num_generations):
-            images.append(imageio.imread(
-                'animation/truss_evo_iter' + str(i) + '.png'))
-        imageio.mimsave('animation/truss_evo_gif.gif', images, duration=0.5)
-
-#utilities.save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens,config)
-
 
 if __name__ == '__main__':
     main(sys.argv[1:])
