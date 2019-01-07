@@ -59,6 +59,7 @@ class ProgMon():
         self.dict_headings = ['Generation','Best Truss','Best Fitness Score','Population Median Fitness Score','Population Fitness Score Range']
 
         self.pop_start = []
+        self.box_size = []
         self.domain = domain
         self.loads = loads
         self.fixtures = fixtures
@@ -68,7 +69,8 @@ class ProgMon():
             self.fig = plt.figure()
             self.ax1 = self.fig.add_subplot(1, 2, 1)
             self.ax1.set_title('Fitness Score Evolution')
-            plt.xlim(-0.1, self.num_gens)
+            self.ax1.set_yscale('log')
+            plt.xlim(0, self.num_gens+1.0)
             plt.ylabel('Minimum Fitness Score')
             plt.xlabel('Generation')
             self.ax3 = self.fig.add_subplot(122, projection='3d')
@@ -77,10 +79,11 @@ class ProgMon():
             # initialize plot:
             fig = plt.figure()
             self.ax1 = fig.add_subplot(1, 1, 1)  # does this need self.?
-            plt.xlim(-0.1, self.num_gens)
+            plt.xlim(0, self.num_gens+1.0)
             plt.ylabel('Minimum Fitness Score')
             plt.xlabel('Generation')
             self.ax1.set_title('Fitness Score Evolution')
+            self.ax1.set_yscale('log')
 
 
         elif self.progress_truss:
@@ -128,12 +131,14 @@ class ProgMon():
 
 
             # ** Fitness score plot
-            self.ax1.scatter(current_gen, fitscore_min,
+            self.ax1.scatter(current_gen+1.0, fitscore_min,
                              c=[[0, 0, 0]])  # change c to be 2D array?
             # set text with current min fitscore
-            plot_text = self.ax1.text(self.num_gens-self.orderofgen, self.pop_start, round(
-                fitscore_min, 3), bbox=dict(facecolor='white', alpha=1))
+            [txt.set_visible(False) for txt in self.ax1.texts] #clear old text box
+            plot_text = self.ax1.text(self.num_gens, self.pop_start, round(
+                fitscore_min, 3), bbox=dict(facecolor='white', alpha=1),horizontalalignment='right')
             # set box to same size
+
             plot_text._bbox_patch._mutation_aspect = 0.1
             plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
 
@@ -144,10 +149,7 @@ class ProgMon():
                             fixtures=self.fixtures, ax=self.ax3, fig=self.fig)
 
             plot_text3d = self.ax3.text(self.domain[1][0]-1.0, self.domain[1][1]-1.0, self.domain[1]
-                                        [2], "Iteration: " + str(current_gen), bbox=dict(facecolor='white', alpha=1))
-            # # set box to same size
-            plot_text3d._bbox_patch._mutation_aspect = 0.1
-            plot_text3d.get_bbox_patch().set_boxstyle("square", pad=1)
+                                        [2], "Iteration: " + str(current_gen+1.0), bbox=dict(facecolor='white', alpha=1))
 
             # pause for 0.001s to allow plot to update, can potentially remove this
             plt.pause(0.001)
@@ -169,14 +171,12 @@ class ProgMon():
             #self.ax1.errorbar(current_gen, fitscore_med, yerr=fitscore_range_scaled, fmt='o',c=[0,0,0])
             # self.ax1.scatter(current_gen,fitscore_med,c=[0,0,0])
 
-            self.ax1.scatter(current_gen, fitscore_min,
+            self.ax1.scatter(current_gen+1.0, fitscore_min,
                              c=[[0, 0, 0]])  # change c to be 2D array?
             # set text with current min fitscore
-            plot_text = self.ax1.text(self.num_gens-self.orderofgen, self.pop_start, round(
-                fitscore_min, 3), bbox=dict(facecolor='white', alpha=1))
-            # set box to same size
-            plot_text._bbox_patch._mutation_aspect = 0.1
-            plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
+            [txt.set_visible(False) for txt in self.ax1.texts]
+            plot_text = self.ax1.text(self.num_gens-1.0, self.pop_start, 'Min Fitness Score: ' + str(round(
+                fitscore_min, 3)), bbox=dict(facecolor='white', alpha=1),horizontalalignment='right')
 
             #plt.ylim(bottom=0) #this doesnt work
             # self.ax1.scatter(current_gen,np.amin(fitscore),c=[0,0,0]) #plot minimum fitscore for current gen in black
@@ -190,10 +190,10 @@ class ProgMon():
             self.ax3.cla()
             #edge_vec_start, edge_vec_end, num_con = best_truss.plot(ax=self.ax3,fig = self.fig)
             best_truss.plot(domain=self.domain,
-                            fixtures=self.fixtures, ax=self.ax3, fig=self.fig)
+                            fixtures=self.fixtures, loads = self.loads, ax=self.ax3, fig=self.fig)
 
             plot_text = self.ax3.text(self.domain[1][0]-1.0, self.domain[1][1]-1.0, self.domain[1]
-                                      [2], "Iteration: " + str(current_gen), bbox=dict(facecolor='white', alpha=1))
+                                      [2], "Iteration: " + str(current_gen+1.0), bbox=dict(facecolor='white', alpha=1))
             # # set box to same size
             plot_text._bbox_patch._mutation_aspect = 0.1
             plot_text.get_bbox_patch().set_boxstyle("square", pad=1)

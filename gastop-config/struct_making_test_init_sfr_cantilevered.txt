@@ -2,8 +2,8 @@
 user_spec_nodes = '[[0,0,0],[0,0.001,1],[0,1.5,0],[0,1.5001,1],[0,3,0],[0,3.0001,1],[3,0,1],[3,1.5,1],[3,3,1]]'
 loads = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-1000,0,0,0],[0,0,-1000,0,0,0],[0,0,-1000,0,0,0]]'
 fixtures = '[[1,1,1,0,0,0],[1,1,1,0,0,0],[1,1,1,0,0,0],[1,1,1,0,0,0],[1,1,1,0,0,0],[1,1,1,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]'
-num_rand_nodes = 10 # int
-num_rand_edges = 15 # int
+num_rand_nodes = 20 # int
+num_rand_edges = 25 # int
 properties_path = 'gastop-config/properties.csv'
 domain = '[[0, 0, 0], [3, 3, 1]]'
 
@@ -11,7 +11,7 @@ domain = '[[0, 0, 0], [3, 3, 1]]'
 equation = weighted_sum
        [[parameters]]
        goal_fos = 4
-       critical_nodes = '[8]'
+       critical_nodes = '[7]'
        w_fos = 10000
        w_mass = 1
        w_deflection = 100
@@ -25,7 +25,7 @@ cost_solver = cost_calc
 [ga_params]
 num_threads = 4
 pop_size = 1000
-num_generations = 10
+num_generations = 50
 num_elite =
 percent_mutation =
 percent_crossover =

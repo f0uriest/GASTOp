@@ -6,7 +6,12 @@ import time
 from tqdm import tqdm
 import numpy as np
 import collections
+from matplotlib.path import Path
+from matplotlib.patches import BoxStyle
+import matplotlib.textpath as textpath
+from matplotlib.artist import Artist
 
+from matplotlib.offsetbox import AnchoredText
 
 ##plt.ion() #look into multithreading this
 #style.use('fivethirtyeight')
@@ -71,13 +76,37 @@ def progress(i,y,ax1,ax2,n,test,fig):
     err_range = (np.amax(y) - np.amin(y))/2.0
 
 
-    ax2.cla()
+    #ax2.cla()
     ax1.errorbar(i, np.mean(y), yerr=err_range, fmt='o')
+    if i!=0:
+        #Artist.remove(ax1.texts)
+        #fig.text.remove()
+        #print(ax1.get_extents)
+        [Artist.remove(txt) for txt in ax1.texts]
+    [txt.set_visible(False) for txt in ax1.texts]
+    #if i != 0:
+    #    textvar = ax1.texts
+        #textvar.remove(True)
+        #ax1.remove(textvar)
+        #ax1.texts.set_visible(False)
+    #    [txt.set_visible(False) for txt in ax1.texts]
+        #for txt in ax1.texts:
+            #txt.set_visible(False)
+
+    text_box = AnchoredText(np.amin(y), frameon=True, loc=1, pad=0.5)
+    plt.setp(text_box.patch, facecolor='white', alpha=1)
+    ax1.add_artist(text_box)
+
+    #plot_text = ax1.text(3, 9, np.amin(y),bbox=dict(facecolor='white', alpha=1))
+    #plot_text._bbox_patch._mutation_aspect = 0.1
+    #plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
+
+
     #ax2.text(n,4,np.amin(y),bbox=dict(facecolor='white', alpha=1))
 
-    ax2.text(n-1, test-1, np.amin(y),
-        bbox=dict(facecolor='white', alpha=1))
+
     ax2.plot(range(3),y,c=[0,0,0])
+
     #ax2.xaxis.font(12)
     ax2.tick_params(labelsize = 'small')
 
@@ -90,5 +119,5 @@ def progress(i,y,ax1,ax2,n,test,fig):
     plt.pause(0.5) #time it waits for plot to update
 
 
-y,dict_full = counter(4)
-print(dict_full)
+counter(4)
+#print(dict_full)
