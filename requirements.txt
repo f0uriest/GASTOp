@@ -6,8 +6,8 @@ matplotlib >= 2.2.0
 configobj >= 5.0.6
 tqdm >= 4.28.1
 colorama >= 0.4.0
-pytest >=3.0.5
-pytest-cov
+pytest >= 3.6.0
+pytest-cov >= 2.6.0
 coveralls
 codecov
 imageio
