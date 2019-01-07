@@ -221,10 +221,8 @@ class Truss():
 
         size_scale = (nodes.max(axis=0)-nodes.min(axis=0)).max()
 
-        edge_vec_start = nodes[con[:, 0], :] #sfr
-        edge_vec_end = nodes[con[:, 1], :] #sfr
-
-
+        edge_vec_start = nodes[con[:, 0], :]  # sfr
+        edge_vec_end = nodes[con[:, 1], :]  # sfr
 
         if load_scale is None and loads is not None:
             load_scale = size_scale/np.abs(loads).max()/5
@@ -235,18 +233,23 @@ class Truss():
             prog = 0
             ax.set_title('Truss')
         else:
-            prog = 1 # currently in progress monitor
+            prog = 1  # currently in progress monitor
             ax.set_title('Truss Evolution')
 
-        ax.set_xlabel('X [m]',fontsize=14,labelpad=10)
-        ax.set_ylabel('Y [m]',fontsize=14,labelpad=10)
-        ax.set_zlabel('Z [m]',fontsize=14,labelpad=10)
-        ax.tick_params(labelsize = 'small')
+        ax.set_xlabel('X [m]', fontsize=14, labelpad=10)
+        ax.set_ylabel('Y [m]', fontsize=14, labelpad=10)
+        ax.set_zlabel('Z [m]', fontsize=14, labelpad=10)
+        ax.tick_params(labelsize='small')
 
         if domain is not None:
-            ax.set_xlim(domain[0, :])
-            ax.set_ylim(domain[1, :])
-            ax.set_zlim(domain[2, :])
+            ax.set_xlim(domain[:, 0])
+            ax.set_ylim(domain[:, 1])
+            ax.set_zlim(domain[:, 2])
+
+        for i in range(num_con):
+            ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
+                    [edge_vec_start[i, 1], edge_vec_end[i, 1]],
+                    [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
 
         if deflection:
             def_nodes = nodes + def_scale*self.deflection[:, :3, 0]
@@ -255,16 +258,9 @@ class Truss():
             for i in range(num_con):
                 ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
-                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-')
+                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-',alpha=0.5)#,label='Displaced Truss')
+            #ax.legend()
 
-        #edge_vec_start = nodes[con[:, 0], :] #sfr
-        #edge_vec_end = nodes[con[:, 1], :] #sfr
-
-        # ****
-        for i in range(num_con):
-            ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
-                    [edge_vec_start[i, 1], edge_vec_end[i, 1]],
-                    [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
@@ -275,5 +271,5 @@ class Truss():
             fix_nodes = nodes[fixtures[:, :, 0].any(axis=1)]
             ax.scatter(fix_nodes[:, 0], fix_nodes[:, 1], fix_nodes[:, 2],
                        color='green', marker='o', depthshade=False, s=100)
-        if prog == 0: #only shows it if not being called within ProgMon
+        if prog == 0:  # only shows it if not being called within ProgMon
             plt.show()

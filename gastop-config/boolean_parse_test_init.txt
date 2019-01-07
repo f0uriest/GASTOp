@@ -32,11 +32,12 @@ num_generations = 30
 num_elite =
 percent_mutation =
 percent_crossover =
-save_frequency = 5
-save_filename_prefix = Recorded_States_
+save_frequency =
+save_filename_prefix =
 
 [monitor_params]
-progress_display = 1
+progress_fitness = False
+progress_truss = False
 
 
 

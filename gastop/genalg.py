@@ -8,7 +8,7 @@ This module implements the GenAlg class.
 
 import numpy as np
 import json
-from tqdm import tqdm, tqdm_notebook
+from tqdm import tqdm
 from multiprocessing import Pool
 import copy
 import colorama
@@ -125,7 +125,7 @@ class GenAlg():
         for i in tqdm(range(pop_size), total=pop_size, leave=False, desc='Initializing Population', position=0):
             self.population.append(self.generate_random())
 
-    def run(self, num_generations=None, progress_fitness=False, progress_truss=False,num_threads=None):
+    def run(self, num_generations=None, progress_fitness=None, progress_truss=None, num_threads=None):
         '''Runs the genetic algorithm over all populations and generations
 
         Args:
@@ -154,6 +154,11 @@ class GenAlg():
         else:
             self.ga_params['num_generations'] = num_generations
 
+        if progress_fitness is None:
+            progress_fitness = self.config['monitor_params']['progress_fitness']
+        if progress_truss is None:
+            progress_truss = self.config['monitor_params']['progress_truss']
+
         # ***
         # if progress_display == 2:  # check if figure method of progress monitoring is requested
             # initialize plot:
@@ -162,9 +167,9 @@ class GenAlg():
         #    plt.ylabel('fos')
         #    plt.xlabel('iteration')
         # initialize progress monitor object
-        progress = ProgMon(progress_fitness,progress_truss,num_generations,self.random_params['domain'].T,
-        self.config['evaluator_params']['boundary_conditions']['loads'],
-        self.config['evaluator_params']['boundary_conditions']['fixtures'])
+        progress = ProgMon(progress_fitness, progress_truss, num_generations, self.random_params['domain'],
+                           self.config['evaluator_params']['boundary_conditions']['loads'],
+                           self.config['evaluator_params']['boundary_conditions']['fixtures'])
         # ***
         if self.ga_params['pop_size'] < 1e4:
             chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))
@@ -199,23 +204,9 @@ class GenAlg():
             if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
                 self.save_state(
                     dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
+
+        # call gif maker
         return self.population[0], progress.pop_progress
-
-    # def progress_monitor(self, current_gen, progress_display, ax1):  # Susan
-    #     # three options: plot, progress bar ish thing, no output just append
-    #     # calc population diversity and plot stuff or show current results
-    #     # extract factor of safety from each truss object in population
-    #     fitscore = [i.fitness_score for i in self.population]
-    #     self.pop_progress.append(self.population)  # append to history
-    #     if progress_display == 1:
-    #         print(current_gen, np.amin(fitscore))
-    #     elif progress_display == 2:
-    #         # print(current_gen,min(fitscore))
-    #         # plot minimum fitscore for current gen in black
-    #         ax1.scatter(current_gen, np.amin(fitscore), c=[0, 0, 0])
-    #         # pause for 0.0001s to allow plot to update, can potentially remove this
-    #         plt.pause(0.0001)
-
 
 
     def save_state(self, dest_config='config.json',

@@ -168,6 +168,8 @@ class Evaluator():
         loads = boundary_conditions['loads'].copy()
         fixtures = boundary_conditions['fixtures'].copy()
 
+        eps = np.finfo(float).eps  # machine precision
+
         num_nodes = nodes.shape[0]
         num_con = con.shape[0]
         num_loads = loads.shape[2]
@@ -202,13 +204,18 @@ class Evaluator():
 
         # calculate length and direction sines/cosines of members in global coords
         edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]
-        rho = np.sqrt(edge_vec[:, 0]**2+edge_vec[:, 1]
-                      ** 2)  # length in x-y plane
-        L = np.sqrt(rho**2 + edge_vec[:, 2]**2)  # total length of member
+        # length of projection in x-y plane
+        rho = np.sqrt(edge_vec[:, 0]**2+edge_vec[:, 2]**2)
+        L = np.sqrt(rho**2 + edge_vec[:, 1]**2)  # total length
+        sing = rho < eps  # id vectors along z axis, azimuth is not defined, convention set to 0
+        edge_vec[:, 0][sing] = 1  # cos(0) = 1
+        edge_vec[:, 2][sing] = 0  # sin(0) = 0
+        rho[sing] = 1
         ca = edge_vec[:, 0]/rho  # cosine of azimuthal angle
-        sa = edge_vec[:, 1]/rho  # sine of azimuthal angle
-        cp = rho/L  # cosine of polar angle
-        sp = edge_vec[:, 2]/L  # sine of polar angle
+        sa = edge_vec[:, 2]/rho  # sine of azimuthal angle
+        rho[sing] = 0
+        cp = rho/L  # cosine of polar elevation angle
+        sp = edge_vec[:, 1]/L  # sine of polar elevation angle
 
         # populate transformation matrices
         r[0, 0, :] = cp*ca
@@ -334,11 +341,9 @@ class Evaluator():
         nodes, con, matl = truss.cleaned_params()
 
         # calculate member lengths
-        edge_vec = nodes[con[:, 1], :] - nodes[con[:, 0], :]
+
         L = np.sqrt(
-            edge_vec[:, 0]**2 +
-            edge_vec[:, 1]**2 +
-            edge_vec[:, 2]**2)
+            np.sum((nodes[con[:, 1], :] - nodes[con[:, 0], :])**2, axis=1))
 
         # get material properties
         # print(properties_dict['x_section_area'])
@@ -430,6 +435,6 @@ class Evaluator():
             truss, self.boundary_conditions, self.properties_dict)
         truss.mass = self.mass_solver(truss, self.properties_dict)
         truss.cost = self.cost_solver(truss, self.properties_dict)
-        truss.interferences = self.interferences_solver(truss)
+        truss.interference = self.interferences_solver(truss)
 
         return truss

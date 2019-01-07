@@ -63,16 +63,19 @@ selector_params = {
 evaluator_params = {'struct_solver': 'blank_test',
                     'mass_solver': 'blank_test',
                     'interferences_solver': 'blank_test',
-                    'boundary_conditions': 0,
+                    'boundary_conditions': {'loads': 0, 'fixtures': 0, },
                     'properties_dict': 0,
                     'cost_solver': 'blank_test'}
+monitor_params = {'progress_fitness': False,
+                  'progress_truss': False}
 
 config = {'ga_params': ga_params,
           'random_params': random_params,
           'mutator_params': mutator_params,
           'crossover_params': crossover_params,
           'selector_params': selector_params,
-          'evaluator_params': evaluator_params}
+          'evaluator_params': evaluator_params,
+          'monitor_params': monitor_params}
 
 pop_size = 1000
 
@@ -105,7 +108,7 @@ class TestOptimization(unittest.TestCase):
         ga = GenAlg(config)
         ga.initialize_population(pop_size)
         best, progress_history = ga.run(
-            num_generations=100, progress_display=2)
+            num_generations=100, progress_fitness=True, progress_truss=False)
         self.assertAlmostEqual(best.fitness_score, 0, places=4)
 
 
