@@ -23,9 +23,9 @@ interferences_solver = blank_test
 cost_solver = cost_calc
 
 [ga_params]
-num_threads = 4
-pop_size = 1000
-num_generations = 30
+num_threads = 6
+pop_size = 1500
+num_generations = 50
 num_elite =
 percent_mutation =
 percent_crossover =
@@ -37,13 +37,10 @@ progress_fitness = False
 progress_truss = False
 
 
-
-
-
 # optional stuff
 
 [random_params]
-rng_seed = 
+rng_seed =
 
 [crossover_params]
 node_crossover_method =
@@ -68,5 +65,5 @@ property_mutator_method =
 [selector_params]
 method =
        [[method_params]]
-       tourn_size = 
-       tourn_prob = 
+       tourn_size =
+       tourn_prob =
