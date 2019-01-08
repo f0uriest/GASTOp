@@ -12,6 +12,8 @@ animation_path = '/Users/Dan/Documents/Academic/Current Classes/MAE 524 (Comp. M
 # Parse input paramters from init.txt file
 init_file_path = 'gastop-config/struct_making_test_init2.txt'
 #init_file_path = 'gastop-config/struct_making_test_init_sfr_cantilevered.txt'
+init_file_path = 'gastop-config/struct_making_test_init.txt'
+
 config = utilities.init_file_parser(init_file_path)
 
 pop_size = config['ga_params']['pop_size']
