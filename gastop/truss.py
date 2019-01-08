@@ -226,7 +226,6 @@ class Truss():
 
         if load_scale is None and loads is not None:
             load_scale = size_scale/np.abs(loads).max()/5
-
         if ax is None:
             fig = plt.figure()
             ax = fig.gca(projection='3d')
@@ -240,6 +239,8 @@ class Truss():
         ax.set_ylabel('Y [m]', fontsize=14, labelpad=10)
         ax.set_zlabel('Z [m]', fontsize=14, labelpad=10)
         ax.tick_params(labelsize='small')
+        ax.view_init(30, -45)
+
 
         if domain is not None:
             ax.set_xlim(domain[:, 0])
@@ -266,6 +267,9 @@ class Truss():
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
                       loads[:, 0, 0], loads[:, 1, 0], loads[:, 2, 0],
                       length=load_scale, pivot='tip', color='r')
+            load_nodes = nodes[loads[:, :, 0].any(axis=1)]
+            ax.scatter(load_nodes[:, 0], load_nodes[:, 1], load_nodes[:, 2],
+                       color='red', marker='o', depthshade=False, s=100)
 
         if fixtures is not None:
             fix_nodes = nodes[fixtures[:, :, 0].any(axis=1)]
@@ -273,3 +277,4 @@ class Truss():
                        color='green', marker='o', depthshade=False, s=100)
         if prog == 0:  # only shows it if not being called within ProgMon
             plt.show()
+            plt.gcf().savefig('final_result.png')
