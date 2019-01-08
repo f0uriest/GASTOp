@@ -66,7 +66,7 @@ class ProgMon():
 
 
         if self.progress_fitness and self.progress_truss:
-            self.fig = plt.figure()
+            self.fig = plt.figure(figsize = [10, 5])
             self.ax1 = self.fig.add_subplot(1, 2, 1)
             self.ax1.set_title('Fitness Score Evolution')
             self.ax1.set_yscale('log')
@@ -143,7 +143,7 @@ class ProgMon():
             plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
 
             # ** Truss plot
-            best_truss = population[0]
+            #best_truss = population[0]
             self.ax3.cla()
             best_truss.plot(domain=self.domain,
                             fixtures=self.fixtures, ax=self.ax3, fig=self.fig)
