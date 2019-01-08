@@ -14,9 +14,10 @@ from gastop import Crossover
 
 
 class TestCrossover_singlepointsplit(unittest.TestCase):  # Amlan
-
+    """Tests the single point split method of the Crossover class."""
+    
     def test_sanity(self):
-
+        """Test to make sure parent arrays of 1's returns all 1's."""
         array1 = np.ones((10, 1))
         array2 = np.ones((10, 1))
         check = np.ones((10, 1))
@@ -27,7 +28,7 @@ class TestCrossover_singlepointsplit(unittest.TestCase):  # Amlan
         np.testing.assert_array_equal(children[1], check)
 
     def test_datatype(self):
-
+        """Test to make sure the data type matches what is expected."""
         array1 = np.ones((10, 1), dtype=int)
         array2 = np.ones((10, 1), dtype=int)
         check = np.ones((10, 1), dtype=int)
@@ -58,7 +59,7 @@ class TestCrossover_uniform(unittest.TestCase): #Paul
         np.testing.assert_array_equal(result[1], truss_2)
 
     def testOutputTypeInt(self):
-        """Tests the functionality of the int_flag argument."""
+        """Test to make sure the data type matches what is expected."""
         
         truss_1 = np.zeros(10, dtype=int)
         truss_2 = np.zeros(10, dtype=int)
@@ -94,8 +95,9 @@ class TestCrossover_uniform(unittest.TestCase): #Paul
 
 
 class TestCrossover_twopointssplit(unittest.TestCase):  # Amlan
+    """Tests the two point split method of the Crossover class."""
     def test_sanity(self):
-
+        """Test to make sure parent arrays of 1's returns all 1's."""
         array1 = np.ones((10, 1))
         array2 = np.ones((10, 1))
         check = np.ones((10, 1))
@@ -106,7 +108,7 @@ class TestCrossover_twopointssplit(unittest.TestCase):  # Amlan
         np.testing.assert_array_equal(children[1], check)
 
     def test_datatype(self):
-
+        """Test to make sure the data type matches what is expected."""
         array1 = np.ones((10, 1), dtype=np.float64)
         array2 = np.ones((10, 1), dtype=np.float64)
         check = np.ones((10, 1), dtype=np.float64)

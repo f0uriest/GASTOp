@@ -9,20 +9,21 @@ This module implements testing for the Mutator class
 
 import unittest
 import numpy as np
-import timeit
 
 from gastop import Mutator
 
 
 class TestMutator_pseudo_bit_flip(unittest.TestCase):  # Amlan
-
+    """Tests the pseudo bit flip method of the Mutator class."""
     def test_basic(self):
+        """Tests whether the method runs without errors"""
         array = np.ones((10, 3))
         bit_flip_params = {'boundaries': np.array(
             [[0, 0, 0], [10, 10, 10]]), 'proportions': 0.5, 'int_flag': False}
         child = Mutator.pseudo_bit_flip(array, **bit_flip_params)
 
     def test_datatype(self):
+        """Tests the functionality of the int_flag argument."""
         array = np.ones((10, 3))
         bit_flip_params = {'boundaries': np.array(
             [[0, 0, 0], [10, 10, 10]]), 'proportions': 0.5, 'int_flag': True}
@@ -34,8 +35,9 @@ class TestMutator_pseudo_bit_flip(unittest.TestCase):  # Amlan
 
 
 class TestMutator_shuffle_index(unittest.TestCase):  # Amlan
-
+    """Tests the shuffle index method of the Mutator class."""
     def test_basic(self):
+        """Tests whether the method runs without errors."""
         array = np.random.rand(2, 3)
         shuffle_index_params = {}
         child = Mutator.shuffle_index(array, **shuffle_index_params)
@@ -49,8 +51,7 @@ class TestMutator_gaussian(unittest.TestCase):  # Paul
     """Tests the gaussian method of the mutator class."""
     
     def test_boundary(self):
-        """Tests whether the mutator method keeps all values inside the specified boundary.
-        """
+        """Tests whether the mutator method keeps all values inside the specified boundary."""
         array = np.random.uniform(-10.0, 10.0, [10, 3])
         gaussian_params = {'boundaries': np.array(
             [[0, -10, -5], [10, 0, 5]]), 'int_flag': False, 'std': 0.5}
@@ -68,8 +69,7 @@ class TestMutator_gaussian(unittest.TestCase):  # Paul
                 "A value was mutated out of bounds by gaussian mutator!")
 
     def test_int_flag(self):
-        """Tests the functionality of the int_flag argument.
-        """
+        """Tests the functionality of the int_flag argument."""
         array = np.random.uniform(-10.0, 10.0, [10, 3])
         gaussian_params = {'boundaries': np.array(
             [[0, -10, -5], [10, 0, 5]]), 'int_flag': True, 'std': 0.5}
