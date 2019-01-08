@@ -23,9 +23,9 @@ interferences_solver = blank_test
 cost_solver = cost_calc
 
 [ga_params]
-num_threads = 4
-pop_size = 1000
-num_generations = 2
+num_threads = 6
+pop_size = 1500
+num_generations = 50
 num_elite =
 percent_mutation =
 percent_crossover =
@@ -35,9 +35,6 @@ save_filename_prefix = Recorded_States_
 [monitor_params]
 progress_fitness = False
 progress_truss = False
-
-
-
 
 
 # optional stuff
