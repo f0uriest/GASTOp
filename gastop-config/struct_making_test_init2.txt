@@ -23,10 +23,10 @@ interferences_solver = blank_test
 cost_solver = cost_calc
 
 [ga_params]
-num_threads = 6
+num_threads = 1
 pop_size = 1500
 num_generations = 50
-num_elite =
+num_elite = 14
 percent_mutation =
 percent_crossover =
 save_frequency = 5

@@ -11,8 +11,7 @@ import imageio
 animation_path = '/Users/Dan/Documents/Academic/Current Classes/MAE 524 (Comp. Mtds.)/Final Project/APC524_FinalProject/animation' #needs to be full path
 # Parse input paramters from init.txt file
 init_file_path = 'gastop-config/struct_making_test_init2.txt'
-#init_file_path = 'gastop-config/struct_making_test_init_sfr_cantilevered.txt'
-init_file_path = 'gastop-config/struct_making_test_init2.txt'
+
 
 config = utilities.init_file_parser(init_file_path)
 
@@ -34,7 +33,8 @@ print(best)
 best.plot(domain=config['random_params']['domain'],
           loads=config['evaluator_params']['boundary_conditions']['loads'],
           fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
-          deflection=True, load_scale=.0002, def_scale=10)
+          deflection=True, load_scale=.0002, def_scale=100)
+
 progress_fitness = True
 progress_truss = True
 utilities.save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens,config)
