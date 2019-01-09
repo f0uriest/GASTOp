@@ -167,9 +167,9 @@ class GenAlg():
         #    plt.ylabel('fos')
         #    plt.xlabel('iteration')
         # initialize progress monitor object
-        progress = ProgMon(progress_fitness, progress_truss, num_generations, self.random_params['domain'],
-                           self.config['evaluator_params']['boundary_conditions']['loads'],
-                           self.config['evaluator_params']['boundary_conditions']['fixtures'])
+        progress = ProgMon(progress_fitness, progress_truss, num_generations, domain = self.random_params['domain'],
+                           loads = self.config['evaluator_params']['boundary_conditions']['loads'],
+                           fixtures = self.config['evaluator_params']['boundary_conditions']['fixtures'])
         # ***
         if self.ga_params['pop_size'] < 1e4:
             chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))

@@ -8,7 +8,7 @@ This module implements the GenAlg class.
 from gastop import GenAlg, utilities
 import imageio
 
-animation_path = '/Users/Dan/Documents/Academic/Current Classes/MAE 524 (Comp. Mtds.)/Final Project/APC524_FinalProject/animation' #needs to be full path
+animation_path = '/Users/susanredmond/Desktop/APC524_FinalProject/animation' #needs to be full path
 # Parse input paramters from init.txt file
 init_file_path = 'gastop-config/struct_making_test_init2.txt'
 
