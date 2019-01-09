@@ -95,9 +95,9 @@ class Truss():
 
         # mark duplicate edges
         self.edges.sort()
-        self.edges = np.unique(self.edges, axis=0)
-        self.edges = np.concatenate(
-            (self.edges, -1*np.ones((orig_num_edges-self.edges.shape[0], 2))), axis=0)
+        unique, idx = np.unique(self.edges, axis=0, return_index=True)
+        duplicates = np.setdiff1d(range(orig_num_edges), idx)
+        self.edges[duplicates, :] = -1
         return
 
     def cleaned_params(self):
@@ -241,7 +241,6 @@ class Truss():
         ax.tick_params(labelsize='small')
         ax.view_init(30, -45)
 
-
         if domain is not None:
             ax.set_xlim(domain[:, 0])
             ax.set_ylim(domain[:, 1])
@@ -260,8 +259,13 @@ class Truss():
             for i in range(num_con):
                 ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
+<<<<<<< HEAD
                         [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-',alpha=0.5)#,label='Displaced Truss')
             #ax.legend()
+=======
+                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-', alpha=0.5)  # ,label='Displaced Truss')
+            # ax.legend()
+>>>>>>> 8551670da96303591f86e4fd3147140dc0f13e63
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],

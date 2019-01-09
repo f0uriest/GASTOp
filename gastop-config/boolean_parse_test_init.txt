@@ -1,7 +1,7 @@
 [general]
 user_spec_nodes = '[[0,-.5,0],[0,.5,0],[0,0,1],[2,0,0]]'
 loads = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-1000,0,0,0]]'
-fixtures = '[[1,1,1,0,0,0],[1,1,1,0,0,0],[1,1,1,0,0,0],[0,0,0,0,0,0]]'
+fixtures = '[[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,0,0,0,0]]'
 num_rand_nodes = 10 # int
 num_rand_edges = 15 # int
 properties_path = 'gastop-config/properties.csv'
@@ -46,7 +46,7 @@ progress_truss = False
 # optional stuff
 
 [random_params]
-rng_seed = 
+rng_seed =
 
 
 [crossover_params]
@@ -72,5 +72,5 @@ property_mutator_method =
 [selector_params]
 method =
        [[method_params]]
-       tourn_size = 
-       tourn_prob = 
+       tourn_size =
+       tourn_prob =

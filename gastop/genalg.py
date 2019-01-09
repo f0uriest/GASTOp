@@ -186,21 +186,19 @@ class GenAlg():
                 for current_truss in tqdm(self.population, desc='Scoring', position=1):
                     self.fitness_function(current_truss)
             else:
-                pool = Pool(num_threads)
-                self.population = list(tqdm(pool.imap(
-                    self.evaluator, self.population, chunksize),
-                    total=self.ga_params['pop_size'], desc='Evaluating', position=1))
-                self.population = list(tqdm(pool.imap(
-                    self.fitness_function, self.population, chunksize),
-                    total=self.ga_params['pop_size'], desc='Scoring', position=1))
-                pool.close()
-                pool.join()
+                with Pool(num_threads) as pool:
+                    self.population = list(tqdm(pool.imap(
+                        self.evaluator, self.population, chunksize),
+                        total=self.ga_params['pop_size'], desc='Evaluating', position=1))
+                    self.population = list(tqdm(pool.imap(
+                        self.fitness_function, self.population, chunksize),
+                        total=self.ga_params['pop_size'], desc='Scoring', position=1))
 
             self.population.sort(key=lambda x: x.fitness_score)
 
             progress.progress_monitor(current_gen, self.population)
 
-            self.update_population()  # Determine which members to
+            self.update_population()
 
             if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
                 self.save_state(

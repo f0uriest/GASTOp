@@ -1,7 +1,7 @@
 [general]
 user_spec_nodes = '[[0,-.5,0],[0,.5,0],[0,0,1],[2,0,0]]'
 loads = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-10000,0,0,0]]'
-fixtures = '[[1,1,1,0,0,0],[1,1,1,0,0,0],[1,1,1,0,0,0],[0,0,0,0,0,0]]'
+fixtures = '[[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,0,0,0,0]]'
 num_rand_nodes = 10 # int
 num_rand_edges = 10 # int
 properties_path = 'gastop-config/properties.csv'
@@ -25,8 +25,13 @@ cost_solver = cost_calc
 [ga_params]
 num_threads = 1
 pop_size = 1500
+<<<<<<< HEAD
 num_generations = 2
 num_elite = 14
+=======
+num_generations = 50
+num_elite = 15
+>>>>>>> 8551670da96303591f86e4fd3147140dc0f13e63
 percent_mutation =
 percent_crossover =
 save_frequency = 5
