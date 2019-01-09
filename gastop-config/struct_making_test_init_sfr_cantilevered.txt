@@ -2,8 +2,8 @@
 user_spec_nodes = '[[0,0,0],[0,0.001,1],[0,1.5,0],[0,1.5001,1],[0,3,0],[0,3.0001,1],[3,0,1],[3,1.5,1],[3,3,1]]'
 loads = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-1000,0,0,0],[0,0,-1000,0,0,0],[0,0,-1000,0,0,0]]'
 fixtures = '[[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]'
-num_rand_nodes = 20 # int
-num_rand_edges = 25 # int
+num_rand_nodes = 10 # int
+num_rand_edges = 30 # int
 properties_path = 'gastop-config/properties.csv'
 domain = '[[0, 0, 0], [3, 3, 1]]'
 
@@ -23,13 +23,13 @@ interferences_solver = blank_test
 cost_solver = cost_calc
 
 [ga_params]
-num_threads = 4
-pop_size = 10
-num_generations = 4
+num_threads = 6
+pop_size = 1000
+num_generations = 1000
 num_elite =
 percent_mutation = 0.5
 percent_crossover =
-save_frequency = 5
+save_frequency = 0
 save_filename_prefix = Recorded_States_
 
 [monitor_params]

@@ -25,7 +25,7 @@ ga = GenAlg(config)
 ga.initialize_population(pop_size)
 best, progress_history = ga.run(
     num_generations=num_gens, progress_fitness=progress_fitness,
-    progress_truss=progress_truss, num_threads=4)
+    progress_truss=progress_truss, num_threads=8)
 
 
 print(best)
