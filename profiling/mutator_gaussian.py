@@ -66,8 +66,7 @@ def gaussian_old(self, array, std, boundaries, int_flag):
 
     return new_array
 
-
-a = np.linspace(5, 100, 20, dtype=int)
+a = np.array([10, 100, 1000, 10000, 100000, 1000000])
 t_new = np.zeros(shape=a.shape)
 t_old = np.zeros(shape=a.shape)
 
@@ -93,18 +92,18 @@ child = gaussian_old(None, array, **gaussian_params)
 
 # plotting the data
 p1 = plt.figure(1)
-plt.plot(a, t_new, 'g^', label='Logical indexing')
-plt.plot(a, t_old, 'rs', label='For/while looping')
+plt.plot(a, t_new, 'g^', label='Vectorization')
+plt.plot(a, t_old, 'rs', label='For/while loops')
 plt.ylabel('Time (s)', fontsize=14)
 plt.xlabel('Length of the array tested', fontsize=14)
-plt.axis([0, 105, 0, 0.225])
 plt.legend(prop=dict(size=14))
 p1.show()
 
+
 p2 = plt.figure(2)
-plt.loglog(a, t_new, 'g^', label='Logical indexing')
-plt.loglog(a, t_old, 'rs', label='For/while looping')
-plt.ylabel('Time (s)', fontsize=14)
+plt.loglog(a, t_new, 'g^', label='Vectorization')
+plt.loglog(a, t_old, 'rs', label='For/while loops')
+plt.ylabel('Time for n=100 (s)', fontsize=14)
 plt.xlabel('Length of the array tested', fontsize=14)
 plt.legend(prop=dict(size=14))
 p2.show()
