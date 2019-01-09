@@ -10,7 +10,7 @@ import imageio
 
 animation_path = '/Users/Dan/Documents/Academic/Current Classes/MAE 524 (Comp. Mtds.)/Final Project/APC524_FinalProject/animation' #needs to be full path
 # Parse input paramters from init.txt file
-init_file_path = 'gastop-config/struct_making_test_init2.txt'
+init_file_path = 'gastop-config/struct_making_test_init_sfr_cantilevered.txt'
 
 
 config = utilities.init_file_parser(init_file_path)
@@ -25,7 +25,7 @@ ga = GenAlg(config)
 ga.initialize_population(pop_size)
 best, progress_history = ga.run(
     num_generations=num_gens, progress_fitness=progress_fitness,
-    progress_truss=progress_truss, num_threads=4)
+    progress_truss=progress_truss, num_threads=8)
 
 
 print(best)
