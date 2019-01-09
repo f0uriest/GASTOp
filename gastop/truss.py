@@ -259,13 +259,8 @@ class Truss():
             for i in range(num_con):
                 ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
-<<<<<<< HEAD
                         [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-',alpha=0.5)#,label='Displaced Truss')
             #ax.legend()
-=======
-                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-', alpha=0.5)  # ,label='Displaced Truss')
-            # ax.legend()
->>>>>>> 8551670da96303591f86e4fd3147140dc0f13e63
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
