@@ -187,7 +187,7 @@ class Truss():
         return s
 
     def plot(self, domain=None, loads=None, fixtures=None,
-             deflection=False, load_scale=None, def_scale=100, ax=None, fig=None):
+             deflection=False, load_scale=None, def_scale=100, ax=None, fig=None,setup_only = False):
         """Plots a truss object as a 3D wireframe
 
         Args:
@@ -246,20 +246,21 @@ class Truss():
             ax.set_ylim(domain[:, 1])
             ax.set_zlim(domain[:, 2])
 
-        for i in range(num_con):
-            ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
-                    [edge_vec_start[i, 1], edge_vec_end[i, 1]],
-                    [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
+        if not setup_only:
+            for i in range(num_con):
+                ax.plot([edge_vec_start[i, 0], edge_vec_end[i, 0]],
+                        [edge_vec_start[i, 1], edge_vec_end[i, 1]],
+                        [edge_vec_start[i, 2], edge_vec_end[i, 2]], 'k-')
 
-        if deflection:
+        if deflection and not setup_only:
             def_nodes = nodes + def_scale*self.deflection[:, :3, 0]
             def_edge_vec_start = def_nodes[con[:, 0], :]
             def_edge_vec_end = def_nodes[con[:, 1], :]
             for i in range(num_con):
                 ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
-                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-', alpha=0.5)  # ,label='Displaced Truss')
-            # ax.legend()
+                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-',alpha=0.5)#,label='Displaced Truss')
+            #ax.legend()
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
