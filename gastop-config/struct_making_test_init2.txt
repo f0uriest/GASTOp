@@ -25,13 +25,8 @@ cost_solver = cost_calc
 [ga_params]
 num_threads = 1
 pop_size = 1500
-<<<<<<< HEAD
-num_generations = 2
-num_elite = 14
-=======
 num_generations = 50
 num_elite = 15
->>>>>>> 8551670da96303591f86e4fd3147140dc0f13e63
 percent_mutation =
 percent_crossover =
 save_frequency = 5
