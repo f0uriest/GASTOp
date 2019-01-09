@@ -103,7 +103,7 @@ class ProgMon():
             fitscore_median = np.median(fitscore)
             fitscore_range = fitscore[-1] - fitscore_min
             best_truss = population[0]
-            pop_stats = [current_gen,best_truss,fitscore_min,fitscore_median,fitscore_range]
+            pop_stats = [current_gen+1,best_truss,fitscore_min,fitscore_median,fitscore_range]
 
             #More readable but dumb?
             #self.pop_progress['Generation '+str(current_gen)]['Generation'] = current_gen
@@ -113,7 +113,7 @@ class ProgMon():
             #self.pop_progress['Generation '+str(current_gen)]['Population Fitness Score Range'] = fitscore_range
 
             for j in range(5):
-                self.pop_progress['Generation '+str(current_gen)][self.dict_headings[j]] = pop_stats[j]
+                self.pop_progress['Generation '+str(current_gen+1)][self.dict_headings[j]] = pop_stats[j]
 
         except:
             fitscore = population.fitness_score
@@ -145,7 +145,7 @@ class ProgMon():
             # ** Truss plot
             #best_truss = population[0]
             self.ax3.cla()
-            best_truss.plot(domain=self.domain,
+            best_truss.plot(domain=self.domain, loads = self.loads,
                             fixtures=self.fixtures, ax=self.ax3, fig=self.fig)
 
             plot_text3d = self.ax3.text(self.domain[1][0]-1.0, self.domain[1][1]-1.0, self.domain[1]
@@ -155,21 +155,6 @@ class ProgMon():
             plt.pause(0.001)
 
         elif self.progress_fitness:
-
-            #     fitscore_range_scaled = 1.0
-            #     #self.pop_prop(current_gen) = (np.amax(fitscore) - np.amin(fitscore))/2.0
-            #     self.pop_prop.append([(np.amax(fitscore) - np.amin(fitscore))/2.0])
-            # else:
-            #     fitscore_range = (np.amax(fitscore) - np.amin(fitscore))/2.0
-            #     fitscore_range_scaled = fitscore_range/self.pop_prop[current_gen-1]
-            #     self.pop_prop.append([fitscore_range])
-            #     #self.pop_prop(current_gen) = fitscore_range
-            #
-            # fitscore_med = np.median(fitscore)
-            # self.pop_prop.append(fitscore_range)
-
-            #self.ax1.errorbar(current_gen, fitscore_med, yerr=fitscore_range_scaled, fmt='o',c=[0,0,0])
-            # self.ax1.scatter(current_gen,fitscore_med,c=[0,0,0])
 
             self.ax1.scatter(current_gen+1.0, fitscore_min,
                              c=[[0, 0, 0]])  # change c to be 2D array?
@@ -189,8 +174,8 @@ class ProgMon():
             #best_truss = population[0]
             self.ax3.cla()
             #edge_vec_start, edge_vec_end, num_con = best_truss.plot(ax=self.ax3,fig = self.fig)
-            best_truss.plot(domain=self.domain,
-                            fixtures=self.fixtures, loads = self.loads, ax=self.ax3, fig=self.fig)
+            best_truss.plot(domain=self.domain, loads = self.loads,
+                            fixtures=self.fixtures, ax=self.ax3, fig=self.fig)
 
             plot_text = self.ax3.text(self.domain[1][0]-1.0, self.domain[1][1]-1.0, self.domain[1]
                                       [2], "Iteration: " + str(current_gen+1.0), bbox=dict(facecolor='white', alpha=1))
