@@ -50,13 +50,13 @@ def save_gif(progress_history, progress_fitness, progress_truss, animation_path,
         imageio.mimsave(animation_path + '/truss_evo_gif.gif',
                         images, duration=0.5)
 
-        progress_history['Generation 1']['Best Truss'].plot(domain=config['random_params']['domain'],
-                   loads=config['evaluator_params']['boundary_conditions']['loads'],
-                   fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
-                   deflection=False,setup_only=True)
-        fig2= plt.gcf()
-        fig2.savefig(animation_path + '/simulation_setup.png')
-        plt.close()
+        # progress_history['Generation 1']['Best Truss'].plot(domain=config['random_params']['domain'],
+        #            loads=config['evaluator_params']['boundary_conditions']['loads'],
+        #            fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
+        #            deflection=False,setup_only=True)
+        #fig2= plt.gcf()
+        #fig2.savefig(animation_path + '/simulation_setup.png')
+        #plt.close()
 
 
 def beam_file_parser(properties_path):
