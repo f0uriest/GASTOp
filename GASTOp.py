@@ -34,12 +34,7 @@ print(best)
 best.plot(domain=config['random_params']['domain'],
           loads=config['evaluator_params']['boundary_conditions']['loads'],
           fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
-<<<<<<< HEAD
           deflection=True, load_scale=.0002, def_scale=10)
-=======
-          deflection=True, load_scale=.001, def_scale=100)
-
->>>>>>> b40dbd717efcb9ecb4ece2ee532d3bb854e14819
 progress_fitness = True
 progress_truss = True
 utilities.save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens,config)
