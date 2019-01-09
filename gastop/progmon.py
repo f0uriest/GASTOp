@@ -131,16 +131,15 @@ class ProgMon():
 
 
             # ** Fitness score plot
-            self.ax1.scatter(current_gen+1.0, fitscore_min,
-                             c=[[0, 0, 0]])  # change c to be 2D array?
+            self.ax1.scatter(current_gen+1.0, fitscore_min,c=[[0, 0, 0]])  # change c to be 2D array?
             # set text with current min fitscore
             [txt.set_visible(False) for txt in self.ax1.texts] #clear old text box
             plot_text = self.ax1.text(self.num_gens, self.pop_start, round(
                 fitscore_min, 3), bbox=dict(facecolor='white', alpha=1),horizontalalignment='right')
             # set box to same size
 
-            plot_text._bbox_patch._mutation_aspect = 0.1
-            plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
+            #plot_text._bbox_patch._mutation_aspect = 0.1
+            #plot_text.get_bbox_patch().set_boxstyle("square", pad=1)
 
             # ** Truss plot
             #best_truss = population[0]

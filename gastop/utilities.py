@@ -18,7 +18,7 @@ import shutil
 from gastop import Truss, ProgMon, encoders
 
 
-def save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens, config):
+def save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens, config, gif_pause = 0.5):
 
     # delete old animation folder
     try:
@@ -48,7 +48,7 @@ def save_gif(progress_history, progress_fitness, progress_truss, animation_path,
             images.append(imageio.imread(
                 'animation/truss_evo_iter' + str(current_gen+1) + '.png'))
         imageio.mimsave(animation_path + '/truss_evo_gif.gif',
-                        images, duration=0.5)
+                        images, duration=gif_pause)
 
         # progress_history['Generation 1']['Best Truss'].plot(domain=config['random_params']['domain'],
         #            loads=config['evaluator_params']['boundary_conditions']['loads'],
