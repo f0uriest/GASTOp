@@ -95,9 +95,9 @@ class Truss():
 
         # mark duplicate edges
         self.edges.sort()
-        self.edges = np.unique(self.edges, axis=0)
-        self.edges = np.concatenate(
-            (self.edges, -1*np.ones((orig_num_edges-self.edges.shape[0], 2))), axis=0)
+        unique, idx = np.unique(self.edges, axis=0, return_index=True)
+        duplicates = np.setdiff1d(range(orig_num_edges), idx)
+        self.edges[duplicates, :] = -1
         return
 
     def cleaned_params(self):
@@ -226,7 +226,6 @@ class Truss():
 
         if load_scale is None and loads is not None:
             load_scale = size_scale/np.abs(loads).max()/5
-
         if ax is None:
             fig = plt.figure()
             ax = fig.gca(projection='3d')
@@ -240,6 +239,7 @@ class Truss():
         ax.set_ylabel('Y [m]', fontsize=14, labelpad=10)
         ax.set_zlabel('Z [m]', fontsize=14, labelpad=10)
         ax.tick_params(labelsize='small')
+        ax.view_init(30, -45)
 
         if domain is not None:
             ax.set_xlim(domain[:, 0])
@@ -258,14 +258,16 @@ class Truss():
             for i in range(num_con):
                 ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
-                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-',alpha=0.5)#,label='Displaced Truss')
-            #ax.legend()
-
+                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-', alpha=0.5)  # ,label='Displaced Truss')
+            # ax.legend()
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
                       loads[:, 0, 0], loads[:, 1, 0], loads[:, 2, 0],
                       length=load_scale, pivot='tip', color='r')
+            load_nodes = nodes[loads[:, :, 0].any(axis=1)]
+            ax.scatter(load_nodes[:, 0], load_nodes[:, 1], load_nodes[:, 2],
+                       color='red', marker='o', depthshade=False, s=100)
 
         if fixtures is not None:
             fix_nodes = nodes[fixtures[:, :, 0].any(axis=1)]
@@ -273,3 +275,4 @@ class Truss():
                        color='green', marker='o', depthshade=False, s=100)
         if prog == 0:  # only shows it if not being called within ProgMon
             plt.show()
+            plt.gcf().savefig('final_result.png')

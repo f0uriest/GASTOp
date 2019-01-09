@@ -197,6 +197,7 @@ class GenAlg():
                 pool.join()
 
             self.population.sort(key=lambda x: x.fitness_score)
+
             progress.progress_monitor(current_gen, self.population)
 
             self.update_population()  # Determine which members to
