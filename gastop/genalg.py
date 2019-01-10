@@ -139,10 +139,10 @@ class GenAlg():
             - **self.population[0]** *(Truss)*: The Truss with the best Factor
               of safety.
 
-            - **propgress.pop_progress** (dict): Dictionary containing:
+            - **propgress.pop_progress** (dict): Dictionary of dictionaries containing:
 
-                - ``'Item 1'`` *(blah)*: blah
-                - ``'Item 2'`` *(blah)*: blah
+                - ``'Generation 1'`` *(blah)*: blah
+                - ``'Generation 2'`` *(blah)*: blah
         '''
         if num_threads is None:
             if self.ga_params['num_threads'] is None:
@@ -159,18 +159,12 @@ class GenAlg():
         if progress_truss is None:
             progress_truss = self.config['monitor_params']['progress_truss']
 
-        # ***
-        # if progress_display == 2:  # check if figure method of progress monitoring is requested
-            # initialize plot:
-        #    fig = plt.figure()
-        #    ax1 = fig.add_subplot(1, 1, 1)
-        #    plt.ylabel('fos')
-        #    plt.xlabel('iteration')
+
         # initialize progress monitor object
         progress = ProgMon(progress_fitness, progress_truss, num_generations, domain = self.random_params['domain'],
                            loads = self.config['evaluator_params']['boundary_conditions']['loads'],
                            fixtures = self.config['evaluator_params']['boundary_conditions']['fixtures'])
-        # ***
+
         if self.ga_params['pop_size'] < 1e4:
             chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))
         else:
@@ -204,7 +198,7 @@ class GenAlg():
                 self.save_state(
                     dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
 
-        # call gif maker
+
         return self.population[0], progress.pop_progress
 
 

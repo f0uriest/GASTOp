@@ -226,6 +226,7 @@ class Truss():
 
         if load_scale is None and loads is not None:
             load_scale = size_scale/np.abs(loads).max()/5
+
         if ax is None:
             fig = plt.figure()
             ax = fig.gca(projection='3d')
@@ -260,7 +261,6 @@ class Truss():
                 ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
                         [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-',alpha=0.5)#,label='Displaced Truss')
-            #ax.legend()
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],

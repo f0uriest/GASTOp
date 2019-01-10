@@ -2,7 +2,7 @@
 This file is a part of GASTOp
 Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
 Licensed under GNU GPLv3.
-This module implements the utilities class.
+This module houses the utilities functions.
 
 """
 
@@ -20,9 +20,29 @@ from gastop import Truss, ProgMon, encoders
 
 def save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens, config, gif_pause = 0.5):
 
-    # delete old animation folder
+    """Saves progress history to gif
+
+    Clears contents of folder specified then creates png of each generation of
+    the evolution and then combines the png's into a gif.  Accomplishes this by
+    creating progress monitor instance and passing it the truss object stored in
+    the progress history.
+
+    Args:
+        progress_history (dictionary of dictionaries): population statistics and
+        best truss from each generation.
+        progress_fitness (boolean): indicates whether to plot the fitness score.
+        progress_truss (boolean): indicates whether to plot the current truss.
+        animation_path (string): path to the file where the gif should be created.
+        num_gens (integer): total number of generations
+        config (dictionary of dictionaries): stores domain, loads, and fixtures
+        gif_pause (float): pause between images in the gif
+
+    Returns:
+        Nothing
+
+    """
+    # Delete old animation folder
     try:
-        # doesnt seem to be removing everything properly?
         shutil.rmtree(animation_path)
     except:
         pass
@@ -33,14 +53,11 @@ def save_gif(progress_history, progress_fitness, progress_truss, animation_path,
                             config['evaluator_params']['boundary_conditions']['loads'],
                             config['evaluator_params']['boundary_conditions']['fixtures'])
 
-
-
         images = []
         for current_gen in range(num_gens):
             progress_truss = progress_history['Generation ' +
                                               str(current_gen+1)]['Best Truss']
-            # progress_truss.plot(domain=config['random_params']['domain'],
-            #          fixtures=config['evaluator_params']['boundary_conditions']['fixtures'])
+
             evolution.progress_monitor(current_gen, progress_truss)
             fig = plt.gcf()
             fig.savefig(animation_path + '/truss_evo_iter' +
@@ -49,14 +66,6 @@ def save_gif(progress_history, progress_fitness, progress_truss, animation_path,
                 'animation/truss_evo_iter' + str(current_gen+1) + '.png'))
         imageio.mimsave(animation_path + '/truss_evo_gif.gif',
                         images, duration=gif_pause)
-
-        # progress_history['Generation 1']['Best Truss'].plot(domain=config['random_params']['domain'],
-        #            loads=config['evaluator_params']['boundary_conditions']['loads'],
-        #            fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
-        #            deflection=False,setup_only=True)
-        #fig2= plt.gcf()
-        #fig2.savefig(animation_path + '/simulation_setup.png')
-        #plt.close()
 
 
 def beam_file_parser(properties_path):
