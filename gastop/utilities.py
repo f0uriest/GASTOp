@@ -188,8 +188,8 @@ def init_file_parser(init_file_path):  # Cristian
     loads = config['general']['loads']
     fixtures = config['general']['fixtures']
 
-    progress_fitness = config['monitor_params']['progress_fitness']  # sfr
-    progress_truss = config['monitor_params']['progress_truss']  # sfr
+    #progress_fitness = config['monitor_params']['progress_fitness']  # sfr
+    #progress_truss = config['monitor_params']['progress_truss']  # sfr
 
     if loads.ndim < 3:
         loads = np.reshape(loads, (loads.shape + (1,)))
