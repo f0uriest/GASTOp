@@ -10,17 +10,21 @@ from gastop import Truss
 
 
 class Mutator():
-    '''
-    Randomly mutates the whole/specific attributes belonging to the parents.
 
-    When creating a new Mutator() obejct, must be initialized with dictionary
-    mutator_params (containing mutation method). Object can then be used as a
-    function that mutates parents according to the specified method.
+    '''Randomly mutates the whole/specific attributes belonging to the parents.
+
+    When creating a new Mutator() obejct, it must be initialized with dictionary
+    mutator_params (containing mutation method). The Mutator() Object can then be
+    used as a function that mutates parents according to the specified method,
+    such as gaussian, pseudo_bit_flip and shuffle_index.
 
     '''
 
     def __init__(self, mutator_params):
-        """Creates Mutator object. 
+        """Creates a Mutator object.
+
+        Once instantiated, the Mutator object can be called as a function to
+        alter the parent array using the specified methods and parameters
 
         Args:
             mutator_params (dict): Dictionary containing:
@@ -31,11 +35,11 @@ class Mutator():
                   edge mutation.
                 - ``'property_mutator_method'`` *(str)*: Name of method to use
                   for property mutation.
-                - ``'node_mutator_params'`` *(dict)*: Dictionary of parameters 
+                - ``'node_mutator_params'`` *(dict)*: Dictionary of parameters
                   for node method.
-                - ``'edge_mutator_params'`` *(dict)*: Dictionary of parameters 
+                - ``'edge_mutator_params'`` *(dict)*: Dictionary of parameters
                   for edge method.
-                - ``'property_mutator_params'`` *(dict)*: Dictionary of parameters 
+                - ``'property_mutator_params'`` *(dict)*: Dictionary of parameters
                   for property method.
                 - ``'user_spec_nodes'`` *(ndarray)*: Array of user specified nodes
                   that should be passed on unaltered.
@@ -101,20 +105,21 @@ class Mutator():
         Mutate specific values of the parent and return the mutant child.
 
         The pseudo_bit_flip method creates a random binary matrix with a fixed
-        ratio of 1s and 0s, as specified by the user. It also creates another
+        ratio of 1s and 0s as specified by the user. It also creates another random
         matrix with elements within the domain specified by the user. It then replaces
-        the values from the original matrix with the corresponding value in the
-        new matrix only if the corresponding entry in the binary matrix is 1.
+        the elements from the original matrix with the corresponding elements in
+        the new matrix only if the corresponding element in the binary matrix is 1.
 
         Args:
-            parent (numpy array): the parent array.
-            boundaries (array-like): Domain from which to select mutated values.
-            proportions (float): Probability of a given entry being mutated.
-            int_flat (bool): Whether output should be ints.
+            parent (ndarray): Numpy array containing the information for the parent array that
+                  is being mutated.
+            boundaries (array-like): Domain of allowable values.
+            proportions (float): Ratio of 1s and 0s in the binary matrix used in
+                  the pseudo bit flip algorithm
+            int_flat (bool): flag specifying whether output should be ints.
 
         Returns:
-            child (numpy array): Numpy array containing characteristics mutated
-            from the parent.
+            child (numpy array): Numpy array containing information for the mutated child.
 
         '''
 
@@ -139,20 +144,19 @@ class Mutator():
     def shuffle_index(parent):
         '''
 
-        Mutate the parent by swapping an index with another in the parent array.
+        Mutate the parent by swapping an index with another within the same array.
 
-        The shuffle_index method creates two random matrices. It then compares
-        the individual entries in the two matrices. If the entry in the first
-        matrix is greater than the entry in the second matrix, then it replaces the
-        corresponding entry in the original matrix with another such element in
+        First, the shuffle_index method creates two random matrices. It then compares
+        the two matrices. If the entry in the first matrix is greater than the
+        entry in the second matrix, then it permutes the corresponding elements in
         the original matrix.
 
         Args:
-            parent (numpy array): the parent array.
+            parent (numpy array): Numpy array containing the information for the parent array that
+                  is being mutated.
 
         Returns:
-            child (numpy array):  Numpy array containing characteristics mutated
-            from the parent.
+            child (numpy array):  Numpy array containing information for the mutated child.
 
         '''
 

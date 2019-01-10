@@ -2,7 +2,7 @@
 This file is a part of GASTOp
 Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
 Licensed under GNU GPLv3.
-This module implements the crossover class.
+This module implements the Crossover class.
 
 """
 import numpy as np
@@ -14,14 +14,15 @@ class Crossover():
     '''Mixes attributes belonging to two different parents to produce two children with
     specific characteristics from both parents.
 
-    When creating a new Crossover() obejct, must be initialized with dictionary
-    crossover_params (containing crossover method). Object can then be used as a
-    function that produces children according to the specified method.
+    When creating a new Crossover() object, it must be initialized with dictionary
+    crossover_params (containing crossover method). The Crossover() object can
+    then be used as a function that produces children according to the specified
+    crossover method, such as uniform_crossover, single_point_split or two_points_split.
 
     '''
 
     def __init__(self, crossover_params):
-        """Creates Crossover object.
+        """Creates a Crossover object.
 
         Once instantiated, the Crossover object can be called as a function
         to combine two trusses using the specified methods and parameters.
@@ -52,19 +53,21 @@ class Crossover():
     def uniform_crossover(parent_1, parent_2):  # Paul
         '''Performs a uniform crossover on the two parents
 
-        The uniform crossover method creates two child arrays by randomly mixing together
-        information taken from two parent arrays. To do this, the method creates two arrays
-        of ones and zeros -one being the complement of the other- with the same shape as
-        the parent arrays. The first array is multiplied with parent1 and the complementary
-        array is multiplied with parent2 before adding the results together to make child1.
-        The exact opposite multiplication is done to make child2.
+        The uniform crossover method creates two child arrays by randomly mixing
+        together information taken from two parent arrays. To do this, the uniform
+        crossover method creates two arrays of ones and zeros -one being the complement
+        of the other- with the same shape as the parent arrays. The first array
+        is multiplied with parent1 and the complementary array is multiplied with
+        parent2 before adding the results together to make child1. The exact
+        opposite multiplication is done to make child2.
 
         Args:
             parent_1 (ndarray): Numpy array containing information for parent 1.
             parent_2 (ndarray): Numpy array containing information for parent 2.
 
         Returns:
-            child1, child2 (ndarrays): Numpy arrays containing information for children.
+            child1, child2 (ndarrays): Numpy arrays containing information for
+            children.
 
         '''
         # find the shape of the parents
@@ -89,11 +92,11 @@ class Crossover():
     def single_point_split(array_1, array_2):  # Amlan
         '''Performs a single point split crossover between two parents
 
-        It takes specific information from two parents and returns two children
-        containing characteristics from both parents. In order to achieve this,
-        it chooses a random point and splits the two parents into two different
-        parts. Then it merges the first half of the first parent with the second
-        half of the second parent and vice versa.
+        The single split crossover method takes specific information from two parents
+        and returns two children containing characteristics from both parents.
+        In order to achieve this, it chooses a random point and splits the two
+        parents into two different parts. Then it merges the first half of the
+        first parent with the second half of the second parent and vice versa.
 
         Args:
             array_1 (ndarray): Numpy array containing information for parent 1.
@@ -119,9 +122,9 @@ class Crossover():
         '''Takes specific values of two parents and return two children containing
         characteristics from both parents.
 
-        Chooses two random points and splits the two parents into three different parts.
-        Replaces the central part of the first parent with the central part of the second
-        parent.
+        The two points split method chooses two random points and splits the two
+        parents into three different parts. Then, it replaces the central part of
+        the first parent with the central part of the second parent.
 
         Args:
             array_1 (ndarray): Numpy array containing information for parent 1.
@@ -160,7 +163,7 @@ class Crossover():
             truss_2 (Truss object): Second truss to be combined.
 
         Returns:
-            child_1, child_2 (Truss objects): Child trusses produced by crossover.
+            child_1, child_2 (Truss objects): Children trusses produced by crossover.
 
         """
 
