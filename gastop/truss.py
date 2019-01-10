@@ -215,10 +215,12 @@ class Truss():
             load_scale (float): Size load vector arrows should be scaled by.
             def_scale (float): Scaling for deflections. *def_scale*=1
                 means actual size, larger than 1 magnifies.
-            ax (axes object): Axes to plot in. If not supplied, one will be created.
-            fig (figure object): Figure window to plot in. If not supplied, one will
-                be created.
-            setup_only (bool): If True, only plot loads and fixtures, not truss.
+            ax (axis): Axis to plot truss on, if an axis is passed to the
+                function, the function is being called by ProgMon and *prog* is
+                set to 1.  If axis is none, a new one is created.
+            fig (fig): Figure belonging to the axis.
+            setup_only (boolean): If true, only the loads and fixtures are
+                plotted.
 
         Returns:
             None
@@ -235,6 +237,7 @@ class Truss():
 
         if load_scale is None and loads is not None:
             load_scale = size_scale/np.abs(loads).max()/5
+
         if ax is None:
             fig = plt.figure()
             ax = fig.gca(projection='3d')
@@ -268,8 +271,7 @@ class Truss():
             for i in range(num_con):
                 ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
-                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-', alpha=0.5)  # ,label='Displaced Truss')
-            # ax.legend()
+                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-', alpha=0.5)
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],
