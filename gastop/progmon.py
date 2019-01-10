@@ -132,25 +132,6 @@ class ProgMon():
             # store initial min fitscore (should be worst) for plotting box
             self.pop_start = fitscore_min
 
-        # if self.progress_fitness and self.progress_truss:
-        #
-        #
-        #     # Fitness score plot
-        #     self.ax1.scatter(current_gen+1.0, fitscore_min,c=[[0, 0, 0]])  # change c to be 2D array?
-        #
-        #     [txt.set_visible(False) for txt in self.ax1.texts]  #clear old text box
-        #     self.ax1.text(self.num_gens, self.pop_start, round(
-        #         fitscore_min, 3), bbox=dict(facecolor='white', alpha=1),horizontalalignment='right')
-        #
-        #     # Truss plot
-        #     self.ax3.cla()
-        #     best_truss.plot(domain=self.domain, loads = self.loads,
-        #                     fixtures=self.fixtures, ax=self.ax3, fig=self.fig)
-        #
-        #     self.ax3.text(self.domain[1][0]-1.0, self.domain[1][1]-1.0, self.domain[1][2],
-        #     "Iteration: " + str(current_gen+1.0), bbox=dict(facecolor='white', alpha=1))
-        #
-        #     plt.pause(0.001)
 
         if self.progress_fitness:
 
@@ -158,7 +139,7 @@ class ProgMon():
                              c=[[0, 0, 0]])
 
             [txt.set_visible(False) for txt in self.ax1.texts]
-            plot_text = self.ax1.text(self.num_gens-1.0, self.pop_start, 'Min Fitness Score: ' + str(round(
+            self.ax1.text(self.num_gens-1.0, self.pop_start, 'Min Fitness Score: ' + str(round(
                 fitscore_min, 3)), bbox=dict(facecolor='white', alpha=1),horizontalalignment='right')
 
             plt.pause(0.001)
@@ -169,7 +150,7 @@ class ProgMon():
             best_truss.plot(domain=self.domain, loads = self.loads,
                             fixtures=self.fixtures, ax=self.ax3, fig=self.fig)
 
-            plot_text = self.ax3.text(self.domain[1][0]-1.0, self.domain[1][1]-1.0, self.domain[1]
+            self.ax3.text(self.domain[1][0]-1.0, self.domain[1][1]-1.0, self.domain[1]
                                       [2], "Iteration: " + str(current_gen+1.0), bbox=dict(facecolor='white', alpha=1))
 
         plt.pause(0.001)
