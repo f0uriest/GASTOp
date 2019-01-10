@@ -2,7 +2,7 @@
 This file is a part of GASTOp
 Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
 Licensed under GNU GPLv3.
-This module implements the utilities class.
+This module houses the utilities functions.
 
 """
 
@@ -14,15 +14,35 @@ import os
 import imageio
 import matplotlib.pyplot as plt
 import shutil
+import copy
 
 from gastop import Truss, ProgMon, encoders
 
 
-def save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens, config):
+def save_gif(progress_history, progress_fitness, progress_truss, animation_path, num_gens, config, gif_pause=0.5):
+    """Saves progress history to gif
 
-    # delete old animation folder
+    Clears contents of folder specified then creates png of each generation of
+    the evolution and then combines the png's into a gif.  Accomplishes this by
+    creating progress monitor instance and passing it the truss object stored in
+    the progress history.
+
+    Args:
+        progress_history (dictionary of dictionaries): population statistics and
+            best truss from each generation.
+        progress_fitness (boolean): indicates whether to plot the fitness score.
+        progress_truss (boolean): indicates whether to plot the current truss.
+        animation_path (string): path to the file where the gif should be created.
+        num_gens (integer): total number of generations
+        config (dictionary of dictionaries): stores domain, loads, and fixtures
+        gif_pause (float): pause between images in the gif
+
+    Returns:
+        Nothing
+
+    """
+    # Delete old animation folder
     try:
-        # doesnt seem to be removing everything properly?
         shutil.rmtree(animation_path)
     except:
         pass
@@ -33,14 +53,11 @@ def save_gif(progress_history, progress_fitness, progress_truss, animation_path,
                             config['evaluator_params']['boundary_conditions']['loads'],
                             config['evaluator_params']['boundary_conditions']['fixtures'])
 
-
-
         images = []
         for current_gen in range(num_gens):
             progress_truss = progress_history['Generation ' +
                                               str(current_gen+1)]['Best Truss']
-            # progress_truss.plot(domain=config['random_params']['domain'],
-            #          fixtures=config['evaluator_params']['boundary_conditions']['fixtures'])
+
             evolution.progress_monitor(current_gen, progress_truss)
             fig = plt.gcf()
             fig.savefig(animation_path + '/truss_evo_iter' +
@@ -48,15 +65,7 @@ def save_gif(progress_history, progress_fitness, progress_truss, animation_path,
             images.append(imageio.imread(
                 'animation/truss_evo_iter' + str(current_gen+1) + '.png'))
         imageio.mimsave(animation_path + '/truss_evo_gif.gif',
-                        images, duration=0.5)
-
-        # progress_history['Generation 1']['Best Truss'].plot(domain=config['random_params']['domain'],
-        #            loads=config['evaluator_params']['boundary_conditions']['loads'],
-        #            fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
-        #            deflection=False,setup_only=True)
-        #fig2= plt.gcf()
-        #fig2.savefig(animation_path + '/simulation_setup.png')
-        #plt.close()
+                        images, duration=gif_pause)
 
 
 def beam_file_parser(properties_path):
@@ -67,7 +76,7 @@ def beam_file_parser(properties_path):
 
     Property entries should be formatted as:
     beam #, material name, OD (m), ID (m), elastic_modulus (Pa),
-    yield_strength (Pa), density (kg/m^3), poisson_ratio, cost
+    yield_strength (Pa), density (kg/m^3), poisson_ratio, cost ($)
 
     Args:
         properties_path (str): Path to the properties csv file, relative to
@@ -75,8 +84,8 @@ def beam_file_parser(properties_path):
 
     Returns:
         properties_dict (dict): Dictionary of property values.
-        Each entry is an ndarray of the key property of each beam. For example,
-        properties_dict['dens'] is an ndarray of the density of each beam.
+        Each entry is an ndarray of the keyed property of each beam. For example,
+        properties_dict['dens'] is an ndarray of the density of each beam type.
 
     """
 
@@ -114,7 +123,8 @@ def init_file_parser(init_file_path):  # Cristian
 
     Creates ConfigObj object, which reads input parameters as a nested
     dictionary of strings. The string are then converted to their correct types
-    using the ConfigObj walk method and a transform function.
+    using the ConfigObj walk method and a transform function. Defaults are then
+    set with if statements.
 
     Args:
         init_file_path (string): Path to the init file, relative to
@@ -169,7 +179,10 @@ def init_file_parser(init_file_path):  # Cristian
     # transform function.
     config.walk(transform)
 
+    # Parse 'properties' CSV file
     properties_dict = beam_file_parser(config['general']['properties_path'])
+
+    # ---------------------------Set Defaults---------------------------------
     user_spec_nodes = config['general']['user_spec_nodes']
     num_user_nodes = user_spec_nodes.shape[0]
     num_rand_nodes = config['general']['num_rand_nodes']
@@ -178,9 +191,6 @@ def init_file_parser(init_file_path):  # Cristian
     num_matl = properties_dict['elastic_modulus'].shape[0]
     loads = config['general']['loads']
     fixtures = config['general']['fixtures']
-
-    progress_fitness = config['monitor_params']['progress_fitness']  # sfr
-    progress_truss = config['monitor_params']['progress_truss']  # sfr
 
     if loads.ndim < 3:
         loads = np.reshape(loads, (loads.shape + (1,)))
@@ -290,10 +300,10 @@ def save_progress_history(progress_history, path_progress_history='progress_hist
     Returns:
         Nothing
     '''
-    # Save pop_progress data
+    # Save progress_history data
     with open(path_progress_history, 'w') as f:
         progress_history_dumped = json.dumps(
-            progress_history, cls=encoders.PopulationEncoder)
+            copy.deepcopy(progress_history), cls=encoders.PopulationEncoder)
         json.dump(progress_history_dumped, f)
 
 
@@ -305,9 +315,9 @@ def load_progress_history(path_progress_history='progress_history.json'):
 
     Returns:
         progress_history (dict): History of each generation, including generation
-            number, fittest truss, etc.
+        number, fittest truss, etc.
     '''
-    # Load pop_progress data
+    # Load progress_history data
     with open(path_progress_history, 'r') as f:
         progress_history_loaded = json.load(f)
     progress_history = json.loads(

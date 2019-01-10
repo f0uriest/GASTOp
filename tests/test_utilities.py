@@ -20,9 +20,7 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
 
         init_file_path = 'gastop-config/boolean_parse_test_init.txt'
         config = utilities.init_file_parser(init_file_path)
-        # for key in config:
-        #     print(key)
-        #     print(config[key])
+
         self.assertTrue(isinstance(config['ga_params']['num_elite'], int))
         self.assertTrue(
             isinstance(config['ga_params']['percent_crossover'], float))
@@ -40,11 +38,10 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
         self.assertEqual(config['ga_params']['save_frequency'], 0)
 
     def testInitFileParser2(self):
-        """tests edge cases for invalid file path"""
+        """Tests edge cases for invalid file path"""
 
         init_file_path = 'gastop-config/foo'
         self.assertRaises(IOError, utilities.init_file_parser, init_file_path)
-
 
     def testSaveLoadPopProgress(self):
         '''Tests that the pop_progress dictionary is correctly saved to and
@@ -74,11 +71,16 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
         print(loaded_progress_history)
 
         for gen in loaded_progress_history.keys():
-            self.assertTrue(isinstance(loaded_progress_history[gen]['Generation'],int))
-            self.assertTrue(isinstance(loaded_progress_history[gen]['Best Truss'],Truss))
-            self.assertTrue(isinstance(loaded_progress_history[gen]['Best Fitness Score'],float))
-            self.assertTrue(isinstance(loaded_progress_history[gen]['Population Median Fitness Score'],float))
-            self.assertTrue(isinstance(loaded_progress_history[gen]['Population Fitness Score Range'],float))
+            self.assertTrue(isinstance(
+                loaded_progress_history[gen]['Generation'], int))
+            self.assertTrue(isinstance(
+                loaded_progress_history[gen]['Best Truss'], Truss))
+            self.assertTrue(isinstance(
+                loaded_progress_history[gen]['Best Fitness Score'], float))
+            self.assertTrue(isinstance(
+                loaded_progress_history[gen]['Population Median Fitness Score'], float))
+            self.assertTrue(isinstance(
+                loaded_progress_history[gen]['Population Fitness Score Range'], float))
 
 
 class TestTrussPlot(unittest.TestCase):

@@ -9,7 +9,6 @@ This module implements testing for the GenAlg class
 
 import unittest
 import numpy as np
-import matplotlib.pyplot as plt
 from tqdm import tqdm
 import time
 
@@ -46,11 +45,11 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
         self.assertTrue(sorted(fitness) == fitness)
 
         for truss in ga.population:
-            self.assertTrue(isinstance(truss,Truss))
-            self.assertTrue(isinstance(truss.user_spec_nodes,np.ndarray))
-            self.assertTrue(isinstance(truss.rand_nodes,np.ndarray))
-            self.assertTrue(isinstance(truss.edges,np.ndarray))
-            self.assertTrue(isinstance(truss.properties,np.ndarray))
+            self.assertTrue(isinstance(truss, Truss))
+            self.assertTrue(isinstance(truss.user_spec_nodes, np.ndarray))
+            self.assertTrue(isinstance(truss.rand_nodes, np.ndarray))
+            self.assertTrue(isinstance(truss.edges, np.ndarray))
+            self.assertTrue(isinstance(truss.properties, np.ndarray))
 
     def testSaveLoadState(self):
         '''Tests that config and population can be saved to and loaded from
@@ -83,15 +82,16 @@ class TestGenAlg_Cristian(unittest.TestCase):  # Cristian
         # Test population
         for truss in population:
             self.assertTrue(isinstance(truss, Truss))
-            self.assertTrue(isinstance(truss.user_spec_nodes,np.ndarray))
-            self.assertTrue(isinstance(truss.rand_nodes,np.ndarray))
-            self.assertTrue(isinstance(truss.edges,np.ndarray))
-            self.assertTrue(isinstance(truss.properties,np.ndarray))
+            self.assertTrue(isinstance(truss.user_spec_nodes, np.ndarray))
+            self.assertTrue(isinstance(truss.rand_nodes, np.ndarray))
+            self.assertTrue(isinstance(truss.edges, np.ndarray))
+            self.assertTrue(isinstance(truss.properties, np.ndarray))
 
 
 class TestGenAlg_Dan(unittest.TestCase):
     """Tests genetic algorithm's generate random functionality
     """
+
     def test_nodes_in_domain(self):
         """Tests if the created nodes are in the desired range.
         """
@@ -134,7 +134,7 @@ class TestGenAlg_SFR(unittest.TestCase):
         progress_truss = False
         num_generations = 20
 
-        progress = ProgMon(progress_fitness,progress_truss,num_generations)
+        progress = ProgMon(progress_fitness, progress_truss, num_generations)
         #
 
         # Loop over all generations:
@@ -143,7 +143,7 @@ class TestGenAlg_SFR(unittest.TestCase):
             for truss in GA.population:
                 #truss.fos = np.random.random()
                 truss.fitness_score = truss.fitness_score + 5.0
-        #plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
+        # plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
         return GA.population[0], GA.pop_progress
 
     def testProgressBar2(self):
@@ -172,7 +172,7 @@ class TestGenAlg_SFR(unittest.TestCase):
 
         ax1 = []
         num_generations = 20
-        progress = ProgMon(progress_fitness,progress_truss, num_generations)
+        progress = ProgMon(progress_fitness, progress_truss, num_generations)
 
         #t = tqdm(total=num_generations,leave=False)
         # Loop over all generations:
@@ -211,7 +211,8 @@ class TestGenAlg_SFR(unittest.TestCase):
         progress_fitness = False
         # dumb GA run
         num_generations = 20
-        progress = ProgMonprogress = ProgMon(progress_fitness,progress_truss, num_generations)
+        progress = ProgMonprogress = ProgMon(
+            progress_fitness, progress_truss, num_generations)
         #t = tqdm(total=num_generations,leave=False)
         # Loop over all generations:
         for current_gen in tqdm(range(num_generations)):

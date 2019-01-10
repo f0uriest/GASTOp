@@ -18,13 +18,30 @@ class Crossover():
     crossover_params (containing crossover method). Object can then be used as a
     function that produces children according to the specified method.
 
-    Attributes:
-        crossover_params(dict of str): Dictionary of parameters required by crossover objects.
-        crossover_params['method'](str): Name of chosen crossover method.
-
     '''
 
     def __init__(self, crossover_params):
+        """Creates Crossover object.
+
+        Once instantiated, the Crossover object can be called as a function
+        to combine two trusses using the specified methods and parameters.
+
+        Args:
+            crossover_params (dict): Dictionary containing:
+
+                - ``'node_crossover_method'`` *(str)*: Name of method to use for
+                  node crossover.
+                - ``'edge_crossover_method'`` *(str)*: Name of method to use for
+                  edge crossover.
+                - ``'property_crossover_method'`` *(str)*: Name of method to use
+                  for property crossover.
+                - ``'user_spec_nodes'`` *(ndarray)*: Array of user specified nodes
+                  that should be passed on unaltered.
+
+        Returns:
+            Crossover callable object.
+
+        """
         self.params = crossover_params
         self.node_method = getattr(self, self.params['node_crossover_method'])
         self.edge_method = getattr(self, self.params['edge_crossover_method'])
@@ -32,7 +49,7 @@ class Crossover():
             self, self.params['property_crossover_method'])
 
     @staticmethod
-    def uniform_crossover(truss_1, truss_2):  # Paul
+    def uniform_crossover(parent_1, parent_2):  # Paul
         '''Performs a uniform crossover on the two parents
 
         The uniform crossover method creates two child arrays by randomly mixing together
@@ -43,18 +60,15 @@ class Crossover():
         The exact opposite multiplication is done to make child2.
 
         Args:
-            truss_1 (ndarray): Numpy array containing information for parent 1.
-            truss_2 (ndarray): Numpy array containing information for parent 2.
+            parent_1 (ndarray): Numpy array containing information for parent 1.
+            parent_2 (ndarray): Numpy array containing information for parent 2.
 
         Returns:
-
-            child1 (ndarray): Numpy array containing information for child 1.
-
-            child2 (ndarray): Numpy array containing information for child 2.
+            child1, child2 (ndarrays): Numpy arrays containing information for children.
 
         '''
         # find the shape of the parents
-        nn = np.shape(truss_1)
+        nn = np.shape(parent_1)
 
         # making an array of ones and zeros
         unos_and_zeros = np.random.randint(2, size=nn)
@@ -66,8 +80,8 @@ class Crossover():
         unos_and_zeros_c = unos - unos_and_zeros
 
         # making kids ;)
-        child1 = (unos_and_zeros * truss_1) + (unos_and_zeros_c * truss_2)
-        child2 = (unos_and_zeros_c * truss_1) + (unos_and_zeros * truss_2)
+        child1 = (unos_and_zeros * parent_1) + (unos_and_zeros_c * parent_2)
+        child2 = (unos_and_zeros_c * parent_1) + (unos_and_zeros * parent_2)
 
         return child1, child2
 
@@ -82,12 +96,12 @@ class Crossover():
         half of the second parent and vice versa.
 
         Args:
-            truss_1 (array): Numpy array containing information for parent 1
-            truss_2 (array): Numpy array containing information for parent 2
+            array_1 (ndarray): Numpy array containing information for parent 1.
+            array_2 (ndarray): Numpy array containing information for parent 2.
 
         Returns:
-            child1 (array): Numpy array containing information for child 1
-            child2 (array): Numpy array containing information for child 2
+            child1, child2 (ndarrays): Numpy arrays containing information for children.
+
        '''
 
         # Choosing a random point
@@ -110,12 +124,11 @@ class Crossover():
         parent.
 
         Args:
-            truss_1 (array): Numpy array containing information for parent 1
-            truss_2 (array): Numpy array containing information for parent 2
+            array_1 (ndarray): Numpy array containing information for parent 1.
+            array_2 (ndarray): Numpy array containing information for parent 2.
 
         Returns:
-            child1 (array): Numpy array containing information for child 1
-            child2 (array): Numpy array containing information for child 2
+            child_1, child_2 (ndarrays): Numpy arrays containing information for children.
 
         '''
         # Choosing two random points
@@ -137,6 +150,19 @@ class Crossover():
         return child_1, child_2
 
     def __call__(self, truss_1, truss_2):
+        """Calls a crossover object on two trusses to combine them.
+
+        Crossover object must have been instantiated specifying which
+        methods to use.
+
+        Args:
+            truss_1 (Truss object): First truss to be combined.
+            truss_2 (Truss object): Second truss to be combined.
+
+        Returns:
+            child_1, child_2 (Truss objects): Child trusses produced by crossover.
+
+        """
 
         user_spec_nodes = self.params['user_spec_nodes']
         child_1 = Truss(user_spec_nodes, 0, 0, 0)

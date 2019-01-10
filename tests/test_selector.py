@@ -15,8 +15,11 @@ from gastop import Selector, Truss
 
 
 class TestSelector(unittest.TestCase):  # Cristian
+    '''Tests for Selector() method_params
+    '''
     def testInvSqrRankProp(self):
-        # Tests the inverse_square_rank_probability method of Selector()
+        '''Tests the inverse_square_rank_probability method of Selector()
+        '''
         nodes = np.array([[1, 2, 3], [2, 3, 4]])
         edges = np.array([[0, 1]])
         properties = np.array([[0, 3]])
@@ -59,7 +62,8 @@ class TestSelector(unittest.TestCase):  # Cristian
         self.assertEqual(num_parents, len(parents))
 
     def testTournament(self):
-        # Tests the tournament method of Selector()
+        '''Tests the tournament method of Selector()
+        '''
         nodes = np.array([[1, 2, 3], [2, 3, 4]])
         edges = np.array([[0, 1]])
         properties = np.array([[0, 3]])

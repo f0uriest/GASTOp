@@ -7,7 +7,6 @@ Licensed under GNU GPLv3.
 import argparse
 import sys
 from gastop import GenAlg, utilities
-import imageio
 
 
 def parse_args(args):
@@ -27,6 +26,8 @@ def parse_args(args):
                                      Optimization. See full documentation at
                                      gastop.readthedocs.io""")
     parser.add_argument("config_path", help="file path to gastop config file")
+    parser.add_argument("-o", "--output", help="path to save progress history file",
+                        metavar='')
     parser.add_argument("-p", "--pop_size", type=int,
                         help="""population size. If not specified, defaults to
                         what is in config.""", metavar='')
@@ -89,6 +90,9 @@ def main(args=sys.argv[1:]):
                                     num_threads=num_threads)
 
     print(best)
+    if args.output:
+        utilities.save_progress_history(
+            progress_history, path_progress_history=args.output)
 
     if progress_fitness or progress_truss:
         best.plot(domain=config['random_params']['domain'],

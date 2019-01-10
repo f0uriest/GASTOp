@@ -49,7 +49,7 @@ class TestMain(unittest.TestCase):
     def test_single_threaded_display(self):
         """Tests single threaded with graphical display"""
 
-        clargs4 = '-d -t 1 -p 50 -g 10 gastop-config/struct_making_test_init.txt'.split()
+        clargs4 = '-o output.json -d -t 1 -p 50 -g 10 gastop-config/struct_making_test_init.txt'.split()
         gastop.__main__.main(clargs4)
 
 

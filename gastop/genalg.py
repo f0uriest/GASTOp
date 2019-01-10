@@ -107,14 +107,16 @@ class GenAlg():
         return Truss(user_spec_nodes, new_nodes, new_edges, new_properties)
 
     def initialize_population(self, pop_size=None):
-        '''Initializes population with randomly creates Truss objects
+        '''Initializes population with randomly creates Truss objects.
+
+        Population is stored in instance of GenAlg object as population attribute.
 
         Args:
             pop_size (int): size of the population. If not specified, it
-                            defaults to whatever was in the init file
+                defaults to what is in the config dict.
 
         Returns:
-            Updated self.population
+            None
         '''
         if pop_size:
             self.ga_params['pop_size'] = pop_size
@@ -129,20 +131,20 @@ class GenAlg():
         '''Runs the genetic algorithm over all populations and generations
 
         Args:
-            num_generations (int): number of generations to be performed
-            progress_display (1,2,or 3): Determines what the progress monitor should display
-            num_threads (int): number of threads the multiprocessing should employ
+            num_generations (int): number of generations to be performed.
+            progress_fitness (bool): Whether to show display window showing fitness score vs generation.
+            progress_truss (bool): Whether to show display window showing truss evolution.
+            num_threads (int): number of threads the multiprocessing should employ. If zero
+                or None, it will use the number returned by ``os.cpu_count()``.
 
         Returns:
             2-element tuple containing:
 
-            - **self.population[0]** *(Truss)*: The Truss with the best Factor
-              of safety.
+            - **best** *(Truss)*: The Truss with the best fitness score after elapsed generations.
+            - **pop_progress** (dict): Dictionary of dictionaries containing:
 
-            - **propgress.pop_progress** (dict): Dictionary containing:
-
-                - ``'Item 1'`` *(blah)*: blah
-                - ``'Item 2'`` *(blah)*: blah
+                - ``'Generation 1'`` *(blah)*: blah
+                - ``'Generation 2'`` *(blah)*: blah
         '''
         if num_threads is None:
             if self.ga_params['num_threads'] is None:
@@ -159,32 +161,27 @@ class GenAlg():
         if progress_truss is None:
             progress_truss = self.config['monitor_params']['progress_truss']
 
-        # ***
-        # if progress_display == 2:  # check if figure method of progress monitoring is requested
-            # initialize plot:
-        #    fig = plt.figure()
-        #    ax1 = fig.add_subplot(1, 1, 1)
-        #    plt.ylabel('fos')
-        #    plt.xlabel('iteration')
-        # initialize progress monitor object
-        progress = ProgMon(progress_fitness, progress_truss, num_generations, domain = self.random_params['domain'],
-                           loads = self.config['evaluator_params']['boundary_conditions']['loads'],
-                           fixtures = self.config['evaluator_params']['boundary_conditions']['fixtures'])
-        # ***
+        # Initialize progress monitor object
+        progress = ProgMon(progress_fitness, progress_truss, num_generations, domain=self.random_params['domain'],
+                           loads=self.config['evaluator_params']['boundary_conditions']['loads'],
+                           fixtures=self.config['evaluator_params']['boundary_conditions']['fixtures'])
+
+        # Set chunksize used in multithreading based on size of population
         if self.ga_params['pop_size'] < 1e4:
             chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))
         else:
             chunksize = int(np.sqrt(self.ga_params['pop_size']))
-        # Loop over all generations:
 
+        # Loop over all generations, updating progress bar with tqdm:
         for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
             self.ga_params['current_generation'] = current_gen
-            # no parallelization
+            # No parallelization
             if num_threads == 1:
                 for current_truss in tqdm(self.population, desc='Evaluating', position=1):
                     self.evaluator(current_truss)
                 for current_truss in tqdm(self.population, desc='Scoring', position=1):
                     self.fitness_function(current_truss)
+            # With multithreading
             else:
                 with Pool(num_threads) as pool:
                     self.population = list(tqdm(pool.imap(
@@ -194,19 +191,21 @@ class GenAlg():
                         self.fitness_function, self.population, chunksize),
                         total=self.ga_params['pop_size'], desc='Scoring', position=1))
 
+            # Sort population by fitness score (lowest score = most fit)
             self.population.sort(key=lambda x: x.fitness_score)
 
+            # Update progress monitor plots
             progress.progress_monitor(current_gen, self.population)
 
+            # Create next generation
             self.update_population()
 
+            # Periodically save config and population to JSON files
             if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
                 self.save_state(
                     dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])
 
-        # call gif maker
         return self.population[0], progress.pop_progress
-
 
     def save_state(self, dest_config='config.json',
                    dest_pop='population.json'):  # Cristian
@@ -272,6 +271,12 @@ class GenAlg():
         Creates selector object from population and method. Calls selector to
         get list of parents for crossover and mutation. Performs crossover and
         mutation.
+
+        Args:
+            None
+
+        Returns:
+            None
         '''
 
         # Store parameters for readability
