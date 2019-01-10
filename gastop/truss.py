@@ -210,6 +210,13 @@ class Truss():
             load_scale (float): Size load vector arrows should be scaled by.
             def_scale (float): Scaling for deflections. *def_scale*=1
                 means actual size, larger than 1 magnifies.
+            ax (axis): Axis to plot truss on, if an axis is passed to the
+                function, the function is being called by ProgMon and *prog* is
+                set to 1.  If axis is none, a new one is created.
+            fig (fig): Figure belonging to the axis.
+            setup_only (boolean): If true, only the loads and fixtures are
+                plotted.
+
 
         Returns:
             None

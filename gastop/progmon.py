@@ -7,9 +7,7 @@ This module implements the ProgMon class.
 """
 
 import matplotlib.pyplot as plt
-from matplotlib import style
 import numpy as np
-from matplotlib.animation import FuncAnimation
 import collections
 
 
@@ -33,18 +31,18 @@ class ProgMon():
         object instatiation.
 
         Args:
-            progress_fitness: boolean argument, if true the minimum fitness
-            score of the population is plotted each iteration
-            progress_truss: boolean argument, if true the truss corresponding to
-            the minimum fitness score is displayed each iteration
-            num_generations: integer, indicates the number of generations, used
-            when initializing the progress_fitness figure
-            domain: numpy array, indicates bounds of design area, used when
-            progress_truss is true
-            loads: numpy array, indicates magnitude and direction of loads
-            applied to user_spec_nodes, used when progress_truss is true
-            fixtures: numpy array, indicates fixed DOFs of user_spec_nodes, used
-            when progress_truss is true
+            progress_fitness (boolean): if true the minimum fitness score of the
+                population is plotted each iteration
+            progress_truss (boolean): if true the truss corresponding to the
+                minimum fitness score is displayed each iteration
+            num_generations (integer): indicates the number of generations, used
+                when initializing the fitness figure
+            domain (numpy array): indicates bounds of design area, used when
+                *progress_truss* is true
+            loads (numpy array): indicates magnitude and direction of loads
+                applied to *user_spec_nodes*, used when *progress_truss* is true
+            fixtures (numpy array): indicates fixed DOFs of *user_spec_nodes*,
+                used when *progress_truss* is true
 
         Returns:
             Nothing
@@ -54,7 +52,6 @@ class ProgMon():
         self.progress_truss = progress_truss
         self.num_gens = num_generations
         self.pop_progress = collections.defaultdict(dict)
-        #self.dict_headings = ['Generation','Best Truss','Best Fitness Score','Population Median Fitness Score','Population Fitness Score Range']
 
         self.pop_start = []
         self.box_size = []
@@ -89,6 +86,30 @@ class ProgMon():
 
     def progress_monitor(self, current_gen, population):
 
+        """Updates progress monitor plots
+
+        Function is passed the sorted population and plots either the current
+        generation's best fitness score, best truss, or both.  If the truss is
+        displayed, the plot method of the truss object is called but passed the
+        figure instantiated in the init method.
+
+        Args:
+            progress_fitness (boolean): if true the minimum fitness score of the
+                population is plotted each iteration
+            progress_truss (boolean): if true the truss corresponding to the
+                minimum fitness score is displayed each iteration
+            num_generations (integer): indicates the number of generations, used
+                when initializing the *progress_fitness* figure
+            domain (numpy array): indicates bounds of design area, used when
+                *progress_truss* is true
+            loads (numpy array): indicates magnitude and direction of loads
+                applied to *user_spec_nodes*, used when *progress_truss* is true
+            fixtures (numpy array): indicates fixed DOFs of *user_spec_nodes*,
+                used when *progress_truss* is true
+
+        Returns:
+            Nothing
+        """
         try: #if being called by utilities you dont want to do this block
 
             fitscore = [i.fitness_score for i in population]

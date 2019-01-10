@@ -29,7 +29,7 @@ def save_gif(progress_history, progress_fitness, progress_truss, animation_path,
 
     Args:
         progress_history (dictionary of dictionaries): population statistics and
-        best truss from each generation.
+            best truss from each generation.
         progress_fitness (boolean): indicates whether to plot the fitness score.
         progress_truss (boolean): indicates whether to plot the current truss.
         animation_path (string): path to the file where the gif should be created.
