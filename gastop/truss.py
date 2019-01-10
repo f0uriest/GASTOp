@@ -114,9 +114,10 @@ class Truss():
 
         Returns:
             3-element tuple containing:
-            -**nodes** *(ndarray)*: Concatenation of user_spec_nodes and rand_nodes.
-            -**edges** *(ndarray)*: Edges array after removing rows with -1 values.
-            -**properties** *(ndarray)*: Properties corresponding to remaining edges.
+
+            - **nodes** *(ndarray)*: Concatenation of user_spec_nodes and rand_nodes.
+            - **edges** *(ndarray)*: Edges array after removing rows with -1 values.
+            - **properties** *(ndarray)*: Properties corresponding to remaining edges.
 
         """
         # make local copies of arrays in case something breaks

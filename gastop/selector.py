@@ -15,18 +15,21 @@ class Selector():  # Cristian
     sel_params (containing selection method). Object can then be used as a
     function that selects parents according to the specified method.
 
-    Attributes:
-        sel_params(dict of str): Dictionary of parameters required by selector
-                                    objects.
-        sel_params['method'](str): Name of chosen selection methodself.
-        sel_params['tourn_size'](int): Number of indices in each tournament.
-                                    Only needed for tournament method.
-        sel_params['tourn_prob'](int): Probability of selecting first index in
-                                    each tournament. Only needed for tournament
-                                    method.
-    '''
+   '''
 
     def __init__(self, sel_params):
+        """Creates a Selector object.
+
+        Args:
+            sel_params(dict): Dictionary containing:
+
+                - ``'method'`` *(str)*: Name of chosen selection method.
+                - ``'method_params'`` *(dict)*: Dictionary of parameters required by chosen method.
+
+        Returns:
+            Selector callable object
+
+        """
         self.sel_params = sel_params
         self.method = getattr(self, sel_params['method'])
 
@@ -86,6 +89,10 @@ class Selector():  # Cristian
             num_parents (int): The number of parents to select.
             population (list): List of Truss objects that constitutes the
                 current generation.
+            tourn_size (int): Number of trusses to include in a given tournament.
+                Must be <= 31.
+            tourn_prob (float): Probability of selecting first index in each tournament.
+                Must be between 0 and 1.
 
         Returns:
             parents (ndarray): Numpy array of indices in population
@@ -119,6 +126,17 @@ class Selector():  # Cristian
         return parents
 
     def __call__(self, num_parents, population):
+        """Calls selector object on a population to get parent indices.
+
+        Args:
+            num_parents (int): Number of parents to select.
+            population (list): Population of trusses to select from,
+                must be sorted by fitness score in ascending order.
+
+        Returns:
+            parents (ndarray): Array of indices of parents in population list.
+        """
+
         parents = self.method(num_parents, population, **
                               self.sel_params['method_params'])
         return parents

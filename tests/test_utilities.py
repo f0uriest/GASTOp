@@ -45,7 +45,6 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
         init_file_path = 'gastop-config/foo'
         self.assertRaises(IOError, utilities.init_file_parser, init_file_path)
 
-
     def testSaveLoadPopProgress(self):
         '''Tests that the pop_progress dictionary is correctly saved to and
         loaded from a JSON file.
@@ -74,11 +73,16 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
         print(loaded_progress_history)
 
         for gen in loaded_progress_history.keys():
-            self.assertTrue(isinstance(loaded_progress_history[gen]['Generation'],int))
-            self.assertTrue(isinstance(loaded_progress_history[gen]['Best Truss'],Truss))
-            self.assertTrue(isinstance(loaded_progress_history[gen]['Best Fitness Score'],float))
-            self.assertTrue(isinstance(loaded_progress_history[gen]['Population Median Fitness Score'],float))
-            self.assertTrue(isinstance(loaded_progress_history[gen]['Population Fitness Score Range'],float))
+            self.assertTrue(isinstance(
+                loaded_progress_history[gen]['Generation'], int))
+            self.assertTrue(isinstance(
+                loaded_progress_history[gen]['Best Truss'], Truss))
+            self.assertTrue(isinstance(
+                loaded_progress_history[gen]['Best Fitness Score'], float))
+            self.assertTrue(isinstance(
+                loaded_progress_history[gen]['Population Median Fitness Score'], float))
+            self.assertTrue(isinstance(
+                loaded_progress_history[gen]['Population Fitness Score Range'], float))
 
 
 class TestTrussPlot(unittest.TestCase):

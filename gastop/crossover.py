@@ -42,6 +42,9 @@ class Crossover():
                 - ``'user_spec_nodes'`` *(ndarray)*: Array of user specified nodes
                   that should be passed on unaltered.
 
+        Returns:
+            Crossover callable object.
+
         """
         self.params = crossover_params
         self.node_method = getattr(self, self.params['node_crossover_method'])
@@ -154,9 +157,9 @@ class Crossover():
         return child_1, child_2
 
     def __call__(self, truss_1, truss_2):
-        """Calls a mutator object on two trusses to combine them.
+        """Calls a crossover object on two trusses to combine them.
 
-        Mutator object must have been instantiated specifying which
+        Crossover object must have been instantiated specifying which
         methods to use.
 
         Args:

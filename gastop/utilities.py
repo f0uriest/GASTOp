@@ -14,6 +14,7 @@ import os
 import imageio
 import matplotlib.pyplot as plt
 import shutil
+import copy
 
 from gastop import Truss, ProgMon, encoders
 
@@ -301,7 +302,7 @@ def save_progress_history(progress_history, path_progress_history='progress_hist
     # Save pop_progress data
     with open(path_progress_history, 'w') as f:
         progress_history_dumped = json.dumps(
-            progress_history, cls=encoders.PopulationEncoder)
+            copy.deepcopy(progress_history), cls=encoders.PopulationEncoder)
         json.dump(progress_history_dumped, f)
 
 

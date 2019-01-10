@@ -17,12 +17,35 @@ class Mutator():
     mutator_params (containing mutation method). Object can then be used as a
     function that mutates parents according to the specified method.
 
-    Attributes:
-        mutator_params(dict of str): Dictionary of parameters required by mutator objects.
-        mutator_params['method'](str): Name of chosen mutation method.
     '''
 
     def __init__(self, mutator_params):
+        """Creates Mutator object. 
+
+        Args:
+            mutator_params (dict): Dictionary containing:
+
+                - ``'node_mutator_method'`` *(str)*: Name of method to use for
+                  node mutation.
+                - ``'edge_mutator_method'`` *(str)*: Name of method to use for
+                  edge mutation.
+                - ``'property_mutator_method'`` *(str)*: Name of method to use
+                  for property mutation.
+                - ``'node_mutator_params'`` *(dict)*: Dictionary of parameters 
+                  for node method.
+                - ``'edge_mutator_params'`` *(dict)*: Dictionary of parameters 
+                  for edge method.
+                - ``'property_mutator_params'`` *(dict)*: Dictionary of parameters 
+                  for property method.
+                - ``'user_spec_nodes'`` *(ndarray)*: Array of user specified nodes
+                  that should be passed on unaltered.
+
+        Returns:
+            Mutator callable object.
+
+
+        """
+
         self.params = mutator_params
         self.node_method = getattr(self, self.params['node_mutator_method'])
         self.edge_method = getattr(self, self.params['edge_mutator_method'])
@@ -126,8 +149,6 @@ class Mutator():
 
         Args:
             parent (numpy array): the parent array.
-            shuffle_index_params (dictionary): Parameters containing information needed for
-            the method.
 
         Returns:
             child (numpy array):  Numpy array containing characteristics mutated
@@ -147,7 +168,18 @@ class Mutator():
         return child
 
     def __call__(self, truss):
+        """Calls a mutator object on a truss to change it.
 
+        Mutator object must have been instantiated specifying which
+        methods to use.
+
+        Args:
+            truss (Truss object): Truss to be mutated.
+
+        Returns:
+            child (Truss object): Child truss produced by mutation.
+
+        """
         user_spec_nodes = self.params['user_spec_nodes']
         child = Truss(user_spec_nodes, 0, 0, 0)
         child.rand_nodes = self.node_method(
