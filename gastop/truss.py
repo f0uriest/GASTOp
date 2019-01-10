@@ -86,6 +86,12 @@ class Truss():
 
         Any edge that connects a node to itself, or any duplicate edges are
         changed to -1.
+
+        Args:
+            None
+
+        Returns:
+            None
         """
 
         orig_num_edges = self.edges.shape[0]
@@ -108,7 +114,6 @@ class Truss():
 
         Returns:
             3-element tuple containing:
-
             -**nodes** *(ndarray)*: Concatenation of user_spec_nodes and rand_nodes.
             -**edges** *(ndarray)*: Edges array after removing rows with -1 values.
             -**properties** *(ndarray)*: Properties corresponding to remaining edges.
@@ -187,7 +192,7 @@ class Truss():
         return s
 
     def plot(self, domain=None, loads=None, fixtures=None,
-             deflection=False, load_scale=None, def_scale=100, ax=None, fig=None,setup_only = False):
+             deflection=False, load_scale=None, def_scale=100, ax=None, fig=None, setup_only=False):
         """Plots a truss object as a 3D wireframe
 
         Args:
@@ -210,6 +215,10 @@ class Truss():
             load_scale (float): Size load vector arrows should be scaled by.
             def_scale (float): Scaling for deflections. *def_scale*=1
                 means actual size, larger than 1 magnifies.
+            ax (axes object): Axes to plot in. If not supplied, one will be created.
+            fig (figure object): Figure window to plot in. If not supplied, one will
+                be created.
+            setup_only (bool): If True, only plot loads and fixtures, not truss.
 
         Returns:
             None
@@ -259,8 +268,8 @@ class Truss():
             for i in range(num_con):
                 ax.plot([def_edge_vec_start[i, 0], def_edge_vec_end[i, 0]],
                         [def_edge_vec_start[i, 1], def_edge_vec_end[i, 1]],
-                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-',alpha=0.5)#,label='Displaced Truss')
-            #ax.legend()
+                        [def_edge_vec_start[i, 2], def_edge_vec_end[i, 2]], 'b-', alpha=0.5)  # ,label='Displaced Truss')
+            # ax.legend()
 
         if loads is not None:
             ax.quiver(nodes[:, 0], nodes[:, 1], nodes[:, 2],

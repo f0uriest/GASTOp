@@ -60,13 +60,28 @@ Truss
 encoders
 ********
 
-.. automodule:: gastop.encoders
+.. autoclass:: gastop.encoders.ConfigEncoder
     :members:
     :undoc-members:
+
+.. autoclass:: gastop.encoders.PopulationEncoder
+    :members:
+    :undoc-members:
+
+.. autofunction:: gastop.encoders.numpy_decoder
 
 utilities
 *********
 
-.. automodule:: gastop.utilities
-    :members:
-    :undoc-members:
+.. autofunction:: gastop.utilities.beam_file_parser
+
+.. autofunction:: gastop.utilities.init_file_parser
+
+.. autofunction:: gastop.utilities.load_progress_history
+
+.. autofunction:: gastop.utilities.save_gif
+
+.. autofunction:: gastop.utilities.save_progress_history
+
+
+		  

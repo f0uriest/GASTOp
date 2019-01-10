@@ -107,14 +107,16 @@ class GenAlg():
         return Truss(user_spec_nodes, new_nodes, new_edges, new_properties)
 
     def initialize_population(self, pop_size=None):
-        '''Initializes population with randomly creates Truss objects
+        '''Initializes population with randomly creates Truss objects.
+
+        Population is stored in instance of GenAlg object as population attribute.
 
         Args:
             pop_size (int): size of the population. If not specified, it
-                            defaults to whatever was in the init file
+                defaults to what is in the config dict.
 
         Returns:
-            Updated self.population
+            None
         '''
         if pop_size:
             self.ga_params['pop_size'] = pop_size
@@ -129,16 +131,16 @@ class GenAlg():
         '''Runs the genetic algorithm over all populations and generations
 
         Args:
-            num_generations (int): number of generations to be performed
-            progress_display (1,2,or 3): Determines what the progress monitor should display
-            num_threads (int): number of threads the multiprocessing should employ
+            num_generations (int): number of generations to be performed.
+            progress_fitness (bool): Whether to show display window showing fitness score vs generation.
+            progress_truss (bool): Whether to show display window showing truss evolution.
+            num_threads (int): number of threads the multiprocessing should employ. If zero
+                or None, it will use the number returned by ``os.cpu_count()``.
 
         Returns:
             2-element tuple containing:
 
-            - **self.population[0]** *(Truss)*: The Truss with the best Factor
-              of safety.
-
+            - **best** *(Truss)*: The Truss with the best fitness score after elapsed generations.
             - **propgress.pop_progress** (dict): Dictionary containing:
 
                 - ``'Item 1'`` *(blah)*: blah
@@ -167,9 +169,9 @@ class GenAlg():
         #    plt.ylabel('fos')
         #    plt.xlabel('iteration')
         # initialize progress monitor object
-        progress = ProgMon(progress_fitness, progress_truss, num_generations, domain = self.random_params['domain'],
-                           loads = self.config['evaluator_params']['boundary_conditions']['loads'],
-                           fixtures = self.config['evaluator_params']['boundary_conditions']['fixtures'])
+        progress = ProgMon(progress_fitness, progress_truss, num_generations, domain=self.random_params['domain'],
+                           loads=self.config['evaluator_params']['boundary_conditions']['loads'],
+                           fixtures=self.config['evaluator_params']['boundary_conditions']['fixtures'])
         # ***
         if self.ga_params['pop_size'] < 1e4:
             chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))
@@ -206,7 +208,6 @@ class GenAlg():
 
         # call gif maker
         return self.population[0], progress.pop_progress
-
 
     def save_state(self, dest_config='config.json',
                    dest_pop='population.json'):  # Cristian
@@ -272,6 +273,12 @@ class GenAlg():
         Creates selector object from population and method. Calls selector to
         get list of parents for crossover and mutation. Performs crossover and
         mutation.
+
+        Args:
+            None
+
+        Returns:
+            None
         '''
 
         # Store parameters for readability

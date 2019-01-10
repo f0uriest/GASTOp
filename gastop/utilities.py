@@ -33,8 +33,6 @@ def save_gif(progress_history, progress_fitness, progress_truss, animation_path,
                             config['evaluator_params']['boundary_conditions']['loads'],
                             config['evaluator_params']['boundary_conditions']['fixtures'])
 
-
-
         images = []
         for current_gen in range(num_gens):
             progress_truss = progress_history['Generation ' +
@@ -56,7 +54,7 @@ def save_gif(progress_history, progress_fitness, progress_truss, animation_path,
         #            deflection=False,setup_only=True)
         #fig2= plt.gcf()
         #fig2.savefig(animation_path + '/simulation_setup.png')
-        #plt.close()
+        # plt.close()
 
 
 def beam_file_parser(properties_path):
@@ -67,7 +65,7 @@ def beam_file_parser(properties_path):
 
     Property entries should be formatted as:
     beam #, material name, OD (m), ID (m), elastic_modulus (Pa),
-    yield_strength (Pa), density (kg/m^3), poisson_ratio, cost
+    yield_strength (Pa), density (kg/m^3), poisson_ratio, cost ($)
 
     Args:
         properties_path (str): Path to the properties csv file, relative to
@@ -75,8 +73,8 @@ def beam_file_parser(properties_path):
 
     Returns:
         properties_dict (dict): Dictionary of property values.
-        Each entry is an ndarray of the key property of each beam. For example,
-        properties_dict['dens'] is an ndarray of the density of each beam.
+        Each entry is an ndarray of the keyed property of each beam. For example,
+        properties_dict['dens'] is an ndarray of the density of each beam type.
 
     """
 
@@ -305,7 +303,7 @@ def load_progress_history(path_progress_history='progress_history.json'):
 
     Returns:
         progress_history (dict): History of each generation, including generation
-            number, fittest truss, etc.
+        number, fittest truss, etc.
     '''
     # Load pop_progress data
     with open(path_progress_history, 'r') as f:
