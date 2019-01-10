@@ -110,8 +110,12 @@ class TestGenAlg_Dan(unittest.TestCase):
 
 
 class TestGenAlg_SFR(unittest.TestCase):
-
+    """Tests user updating aspects of GenAlg class.  This includes the ProgMon
+    class and progress bars used in genalg.
+    """
     def testProgressPlotClass(self):
+        """Tests fitness plot for progmon
+        """
         user_spec_nodes = np.array([[]]).reshape(0, 3)
         nodes = np.array([[1, 2, 3], [2, 3, 4]])
         edges = np.array([[0, 1]])
@@ -147,7 +151,8 @@ class TestGenAlg_SFR(unittest.TestCase):
         return GA.population[0], GA.pop_progress
 
     def testProgressBar2(self):
-        # this doesnt quite work yet, showing all progress bars at the end instead of iteratively
+        """Tests nested progess bars for genalg
+        """
         user_spec_nodes = np.array([[]]).reshape(0, 3)
 
         nodes = np.array([[1, 2, 3], [2, 3, 4]])
@@ -162,7 +167,6 @@ class TestGenAlg_SFR(unittest.TestCase):
             truss.fitness_score = np.random.random()
 
         population.sort(key=lambda x: x.fitness_score)
-        # print([x.fitness_score for x in population])
 
         GA = GenAlg(config)
 
@@ -170,24 +174,21 @@ class TestGenAlg_SFR(unittest.TestCase):
         progress_fitness = False
         progress_truss = False
 
-        ax1 = []
         num_generations = 20
         progress = ProgMon(progress_fitness, progress_truss, num_generations)
 
-        #t = tqdm(total=num_generations,leave=False)
         # Loop over all generations:
         for current_gen in tqdm(range(num_generations), desc='Generation', position=0):
             progress.progress_monitor(current_gen, population)
-            # t.update(current_gen)
             time.sleep(0.05)
             for truss in tqdm(GA.population, desc='truss', position=1):
                 #truss.fos = np.random.random()
                 truss.fitness_score = truss.fitness_score + 5.0
-        # t.close()
         return GA.population[0], GA.pop_progress
 
     def testProgressBar(self):
-        # this doesnt quite work yet, showing all progress bars at the end instead of iteratively
+        """Tests single progress bar for genalg.
+        """
         user_spec_nodes = np.array([[]]).reshape(0, 3)
 
         nodes = np.array([[1, 2, 3], [2, 3, 4]])
@@ -202,7 +203,6 @@ class TestGenAlg_SFR(unittest.TestCase):
             truss.fitness_score = np.random.random()
 
         population.sort(key=lambda x: x.fitness_score)
-        # print([x.fitness_score for x in population])
 
         GA = GenAlg(config)
 
@@ -211,65 +211,14 @@ class TestGenAlg_SFR(unittest.TestCase):
         progress_fitness = False
         # dumb GA run
         num_generations = 20
-        progress = ProgMonprogress = ProgMon(
-            progress_fitness, progress_truss, num_generations)
-        #t = tqdm(total=num_generations,leave=False)
+        progress = ProgMon(progress_fitness, progress_truss, num_generations)
         # Loop over all generations:
         for current_gen in tqdm(range(num_generations)):
             progress.progress_monitor(current_gen, population)
-            # t.update(current_gen)
             time.sleep(0.05)
             for truss in GA.population:
-                #truss.fos = np.random.random()
                 truss.fitness_score = truss.fitness_score + 5.0
-        # t.close()
         return GA.population[0], GA.pop_progress
-
-    # def testProgressPlot(self):
-    #     user_spec_nodes = np.array([[]]).reshape(0, 3)
-    #     nodes = np.array([[1, 2, 3], [2, 3, 4]])
-    #     edges = np.array([[0, 1]])
-    #     properties = np.array([[0, 3]])
-    #
-    #     pop_size = 10
-    #     population = [Truss(
-    #         user_spec_nodes, nodes, edges, properties) for i in range(pop_size)]
-    #
-    #     for truss in population:
-    #         truss.fitness_score = np.random.random()
-    #
-    #     population.sort(key=lambda x: x.fitness_score)
-    #     # print([x.fitness_score for x in population])
-    #
-    #     GA = GenAlg(config)
-    #
-    #     GA.population = population
-    #     progress_display = 2
-    #     num_generations = 20
-    #     # dumb GA run
-    #     fig = plt.figure()
-    #     ax1 = fig.add_subplot(1, 1, 1)
-    #     plt.ylabel('fitscore')
-    #     plt.xlabel('iteration')
-    #     plt.xlim(0,num_generations)
-    #
-    #     #
-    #
-    #     # Loop over all generations:
-    #     for current_gen in range(num_generations):
-    #         GA.progress_monitor(current_gen, progress_display, ax1)
-    #         for truss in GA.population:
-    #             #truss.fos = np.random.random()
-    #             truss.fitness_score = truss.fitness_score + 5.0
-    #     plt.show()  # sfr, keep plot from closing right after this completes, terminal will hang until this is closed
-    #     return GA.population[0], GA.pop_progress
-    #
-    #     #GA = GenAlg()
-    #     #pop_test = GA.initialize_population(10)
-    #
-    #     # fos = [i.fos for i in population] #extracts fos for each truss object in population
-    #
-    #     # note to susan: look up map() and filter()
 
 
 class TestGenAlgRC(unittest.TestCase):
