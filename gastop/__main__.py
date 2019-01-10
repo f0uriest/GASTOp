@@ -7,7 +7,6 @@ Licensed under GNU GPLv3.
 import argparse
 import sys
 from gastop import GenAlg, utilities
-import imageio
 
 
 def parse_args(args):
