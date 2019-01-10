@@ -76,14 +76,13 @@ class Selector():  # Cristian
     def tournament(num_parents, population, tourn_size, tourn_prob):
         ''' Selects parents according to tournament method.
 
-        (ASSUMES POPULATION IS SORTED BY FITNESS) Randomly selects truss
-        indices from population in groups called tournaments according to
-        "tourn_size." Each tournament is then sorted by index (lower means
-        more fit) in ascending order and a single index from each tournament
-        is selected. The selection from each tournament is chosen
-        probabilistically, assigning the first, most fit, index with probability
-        p = tourn_prob, and then subsequent indices by p*(1-p)^n. The winners
-        of each tournament are then returned as the parents array.
+        Randomly selects truss indices from population in groups called
+        tournaments according to "tourn_size." Each tournament is then sorted
+        by index (lower means more fit) in ascending order and a single index
+        from each tournament is selected. The selection from each tournament is
+        chosen probabilistically, assigning the first, most fit, index with
+        probability p = tourn_prob, and then subsequent indices by p*(1-p)^n.
+        The winners of each tournament are then returned as the parents array.
 
         Args:
             num_parents (int): The number of parents to select.

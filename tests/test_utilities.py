@@ -20,9 +20,7 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
 
         init_file_path = 'gastop-config/boolean_parse_test_init.txt'
         config = utilities.init_file_parser(init_file_path)
-        # for key in config:
-        #     print(key)
-        #     print(config[key])
+
         self.assertTrue(isinstance(config['ga_params']['num_elite'], int))
         self.assertTrue(
             isinstance(config['ga_params']['percent_crossover'], float))
@@ -40,7 +38,7 @@ class TestUtilities_Cristian(unittest.TestCase):  # Cristian
         self.assertEqual(config['ga_params']['save_frequency'], 0)
 
     def testInitFileParser2(self):
-        """tests edge cases for invalid file path"""
+        """Tests edge cases for invalid file path"""
 
         init_file_path = 'gastop-config/foo'
         self.assertRaises(IOError, utilities.init_file_parser, init_file_path)

@@ -161,25 +161,27 @@ class GenAlg():
         if progress_truss is None:
             progress_truss = self.config['monitor_params']['progress_truss']
 
-        # initialize progress monitor object
+        # Initialize progress monitor object
         progress = ProgMon(progress_fitness, progress_truss, num_generations, domain=self.random_params['domain'],
                            loads=self.config['evaluator_params']['boundary_conditions']['loads'],
                            fixtures=self.config['evaluator_params']['boundary_conditions']['fixtures'])
 
+        # Set chunksize used in multithreading based on size of population
         if self.ga_params['pop_size'] < 1e4:
             chunksize = int(np.amax((self.ga_params['pop_size']/100, 1)))
         else:
             chunksize = int(np.sqrt(self.ga_params['pop_size']))
-        # Loop over all generations:
 
+        # Loop over all generations, updating progress bar with tqdm:
         for current_gen in tqdm(range(num_generations), desc='Overall', position=0):
             self.ga_params['current_generation'] = current_gen
-            # no parallelization
+            # No parallelization
             if num_threads == 1:
                 for current_truss in tqdm(self.population, desc='Evaluating', position=1):
                     self.evaluator(current_truss)
                 for current_truss in tqdm(self.population, desc='Scoring', position=1):
                     self.fitness_function(current_truss)
+            # With multithreading
             else:
                 with Pool(num_threads) as pool:
                     self.population = list(tqdm(pool.imap(
@@ -189,12 +191,16 @@ class GenAlg():
                         self.fitness_function, self.population, chunksize),
                         total=self.ga_params['pop_size'], desc='Scoring', position=1))
 
+            # Sort population by fitness score (lowest score = most fit)
             self.population.sort(key=lambda x: x.fitness_score)
 
+            # Update progress monitor plots
             progress.progress_monitor(current_gen, self.population)
 
+            # Create next generation
             self.update_population()
 
+            # Periodically save config and population to JSON files
             if self.ga_params['save_frequency'] != 0 and (current_gen % self.ga_params['save_frequency']) == 0:
                 self.save_state(
                     dest_config=self.ga_params['config_save_name'], dest_pop=self.ga_params['pop_save_name'])

@@ -123,7 +123,8 @@ def init_file_parser(init_file_path):  # Cristian
 
     Creates ConfigObj object, which reads input parameters as a nested
     dictionary of strings. The string are then converted to their correct types
-    using the ConfigObj walk method and a transform function.
+    using the ConfigObj walk method and a transform function. Defaults are then
+    set with if statements.
 
     Args:
         init_file_path (string): Path to the init file, relative to
@@ -178,7 +179,10 @@ def init_file_parser(init_file_path):  # Cristian
     # transform function.
     config.walk(transform)
 
+    # Parse 'properties' CSV file
     properties_dict = beam_file_parser(config['general']['properties_path'])
+
+    # ---------------------------Set Defaults---------------------------------
     user_spec_nodes = config['general']['user_spec_nodes']
     num_user_nodes = user_spec_nodes.shape[0]
     num_rand_nodes = config['general']['num_rand_nodes']
@@ -187,9 +191,6 @@ def init_file_parser(init_file_path):  # Cristian
     num_matl = properties_dict['elastic_modulus'].shape[0]
     loads = config['general']['loads']
     fixtures = config['general']['fixtures']
-
-    # progress_fitness = config['monitor_params']['progress_fitness']  # sfr
-    # progress_truss = config['monitor_params']['progress_truss']  # sfr
 
     if loads.ndim < 3:
         loads = np.reshape(loads, (loads.shape + (1,)))
@@ -299,7 +300,7 @@ def save_progress_history(progress_history, path_progress_history='progress_hist
     Returns:
         Nothing
     '''
-    # Save pop_progress data
+    # Save progress_history data
     with open(path_progress_history, 'w') as f:
         progress_history_dumped = json.dumps(
             copy.deepcopy(progress_history), cls=encoders.PopulationEncoder)
@@ -316,7 +317,7 @@ def load_progress_history(path_progress_history='progress_history.json'):
         progress_history (dict): History of each generation, including generation
         number, fittest truss, etc.
     '''
-    # Load pop_progress data
+    # Load progress_history data
     with open(path_progress_history, 'r') as f:
         progress_history_loaded = json.load(f)
     progress_history = json.loads(
