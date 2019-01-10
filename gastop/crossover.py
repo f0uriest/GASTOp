@@ -11,9 +11,7 @@ from gastop import Truss
 
 class Crossover():
 
-    '''
-
-    Mixes attributes belonging to two different parents to produce two children with
+    '''Mixes attributes belonging to two different parents to produce two children with
     specific characteristics from both parents.
 
     When creating a new Crossover() obejct, must be initialized with dictionary
@@ -53,7 +51,7 @@ class Crossover():
             child1 (ndarray): Numpy array containing information for child 1.
 
             child2 (ndarray): Numpy array containing information for child 2.
-        
+
         '''
         # find the shape of the parents
         nn = np.shape(truss_1)
@@ -75,8 +73,7 @@ class Crossover():
 
     @staticmethod
     def single_point_split(array_1, array_2):  # Amlan
-        '''
-        Performs a single point split crossover between two parents
+        '''Performs a single point split crossover between two parents
 
         It takes specific information from two parents and returns two children
         containing characteristics from both parents. In order to achieve this,
@@ -105,9 +102,7 @@ class Crossover():
 
     @staticmethod
     def two_points_split(array_1, array_2):  # Amlan
-        '''
-
-        Takes specific values of two parents and return two children containing
+        '''Takes specific values of two parents and return two children containing
         characteristics from both parents.
 
         Chooses two random points and splits the two parents into three different parts.
