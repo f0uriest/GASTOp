@@ -218,7 +218,7 @@ class GenAlg():
                 doesn't exist, creates it.
 
         Returns:
-            Nothing
+            None
         '''
         # Save rng_seed for reloading
         self.config['random_params']['rng_seed'] = np.random.get_state()
@@ -246,7 +246,7 @@ class GenAlg():
             dest_pop (string): Path to population data file.
 
         Returns:
-            GenAlg Object
+            ga (GenAlg object)
         '''
         # Load config data
         with open(dest_config, 'r') as f:

@@ -298,7 +298,7 @@ def save_progress_history(progress_history, path_progress_history='progress_hist
             doesn't exist, creates it.
 
     Returns:
-        Nothing
+        None
     '''
     # Save progress_history data
     with open(path_progress_history, 'w') as f:

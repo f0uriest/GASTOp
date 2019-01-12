@@ -27,7 +27,7 @@ class Selector():  # Cristian
                 - ``'method_params'`` *(dict)*: Dictionary of parameters required by chosen method.
 
         Returns:
-            Selector callable object
+            selector (Selector object)
 
         """
         self.sel_params = sel_params

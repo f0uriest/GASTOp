@@ -50,6 +50,11 @@ def numpy_decoder(dct):
     ''' Decodes JSON files to config and population.
 
     If the object is has '__numpy__' metadata, converts it to a numpy array.
+
+    Args:
+        dct (dict): Dictionary in JSON file.
+    Returns:
+        dct (dict): Dictionary with numpy arrays decoded.
     '''
     if '__numpy__' in dct:
         return np.array(dct['data'])
