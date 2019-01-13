@@ -3,7 +3,7 @@ Future Work
 ===========
 
 One of the main work that remains is fixing how classes are set up in the program.
-Currently, the methods that updates the population (Mutator, Crossover, and
+Currently, the methods that update the population (Mutator, Crossover, and
 Selector) are base classes that contain multiple methods within each. Users
 can specify which method within these classes they want to use for a specific
 action such as for updating edges, nodes, or properties, for a specific run
