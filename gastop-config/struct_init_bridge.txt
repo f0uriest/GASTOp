@@ -1,0 +1,72 @@
+[general]
+user_spec_nodes = '[[0,0,0],[0,0.001,1],[0,1.5,0],[0,1.5001,1],[0,3,0],[0,3.001,1],[3,0,0],[3,0.001,1],[3,1.5,0],[3,1.5001,1],[3,3,0],[3,3.001,1],[1.5,0,1],[1.5,1.5,1],[1.5,3,1]]'
+loads = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-1000,0,0,0],[0,0,-1000,0,0,0],[0,0,-1000,0,0,0]]'
+fixtures = '[[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]'
+num_rand_nodes = 24 # int
+num_rand_edges = 36 # int
+properties_path = 'gastop-config/properties.csv'
+domain = '[[0, 0, 0], [3, 3, 1]]'
+
+[fitness_params]
+equation = weighted_sum
+       [[parameters]]
+       goal_fos = 4
+       critical_nodes = '[13]'
+       w_fos = 10000
+       w_mass = 1
+       w_deflection = 100
+
+[evaluator_params]
+struct_solver = mat_struct_analysis_DSM
+mass_solver = mass_basic
+interferences_solver = blank_test
+cost_solver = cost_calc
+
+[ga_params]
+num_threads = 4
+pop_size = 1000
+
+num_generations = 2
+num_elite =
+percent_mutation = 0.5
+percent_crossover =
+save_frequency = 5
+save_filename_prefix = Recorded_States_
+
+[monitor_params]
+progress_fitness = True
+progress_truss = True
+
+
+
+
+# optional stuff
+
+[random_params]
+rng_seed =
+
+[crossover_params]
+node_crossover_method =
+edge_crossover_method =
+property_crossover_method =
+      [[node_crossover_params]]
+      [[edge_crossover_params]]
+      [[property_crossover_params]]
+
+
+[mutator_params]
+node_mutator_method =
+edge_mutator_method =
+property_mutator_method =
+      [[node_mutator_params]]
+      std =
+      [[edge_mutator_params]]
+      proportions =
+      [[property_mutator_params]]
+      proportions =
+
+[selector_params]
+method =
+       [[method_params]]
+       tourn_size =
+       tourn_prob =

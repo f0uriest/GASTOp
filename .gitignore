@@ -3,6 +3,13 @@
 *.png
 *.xlsx
 __pycache__/
+*.pyc
 *#
 .coverage
-state_*.txt
+*.json
+docs/_build
+docs/_static
+.DS_Store
+.cache/
+*.egg-info
+*.gif

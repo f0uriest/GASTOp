@@ -1,40 +1,42 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import GenAlg
-import Eval
-import FitnessFunction
-import utilities
+"""GASTOp.py
+This file runs the gastop program
+Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
+Licensed under GNU GPLv3.
+This module implements the GenAlg class.
 
+"""
+from gastop import GenAlg, utilities
+
+
+# needs to be full path
+animation_path = '/Users/susanredmond/Desktop/APC524_FinalProject/animation'
 # Parse input paramters from init.txt file
-init_file_path = 'struct_making_test_init.txt'
+#init_file_path = 'gastop-config/struct_making_test_init2.txt'
+init_file_path = 'gastop-config/struct_making_test_init_sfr.txt'
+
 config = utilities.init_file_parser(init_file_path)
 
-ga_params = config['ga_params']
-random_params = config['random_params']
-crossover_params = config['crossover_params']
-mutator_params = config['mutator_params']
-selector_params = config['selector_params']
-evaluator_params = config['evaluator_params']
-fitness_params = config['fitness_params']
-
-
-pop_size = ga_params['pop_size']
-num_gens = ga_params['num_generations']
-
-
-# Create the Evaluator Object
-evaluator = Eval.Eval(**evaluator_params)
-
-# Create a Fitness Function Object
-fitness_function = FitnessFunction.FitnessFunction(**fitness_params)
+pop_size = config['ga_params']['pop_size']
+num_gens = config['ga_params']['num_generations']
+progress_fitness = config['monitor_params']['progress_fitness']
+progress_truss = config['monitor_params']['progress_truss']
 
 # Create the Genetic Algorithm Object
-ga = GenAlg.GenAlg(ga_params, mutator_params, random_params, crossover_params, selector_params,
-                   evaluator, fitness_function)
+ga = GenAlg(config)
 ga.initialize_population(pop_size)
-best, progress_history = ga.run(num_gens, 2)
+best, progress_history = ga.run(
+    num_generations=num_gens, progress_fitness=progress_fitness,
+    progress_truss=progress_truss, num_threads=8)
 
 
-print(best.rand_nodes)
-print(best.fitness_score)
-utilities.truss_plot(best, random_params['domain'].T)
+print(best)
+
+best.plot(domain=config['random_params']['domain'],
+          loads=config['evaluator_params']['boundary_conditions']['loads'],
+          fixtures=config['evaluator_params']['boundary_conditions']['fixtures'],
+          deflection=True, load_scale=.0002, def_scale=50)
+
+#progress_fitness = True
+#progress_truss = True
+utilities.save_gif(progress_history, progress_fitness, progress_truss,
+                   animation_path, num_gens, config, gif_pause=0.5)
