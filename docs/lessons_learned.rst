@@ -105,4 +105,17 @@ problems. Of the four methods in the FitnessFunction class, three were implement
 could solve general optimization problems before specializing it for structural design. The structural fitness function allows the user
 to optimize for several different factors in different degrees of importance by merely changing the weight factors.
 
-
+Mutator
+*******
+We wrote a __call__ method for the mutator class, allowing us to *call* the mutator object
+on a truss. Multiple mutation methods were written so that the user can apply
+different mutator methods for different components of the truss - for example, the
+user may choose to apply a *gaussian* mutation for the nodes but a *pseudo_bit_flip*
+mutation for the edges. Another issue with the mutator class, more specifically with
+the gaussian method, was the some elements were being mutated out of the user specified domain.
+In order to fix this issue, we incorporated a periodic boundary condition which means the
+values that went out of the boundary are going to be wrapped around into the domain
+on the other side by the same amount that it went out of the boundary. In order to improve
+run-times,  we found any particular method which was taking up more time than other function calls
+and made the code more efficient by using logical indexing and vector expressions instead of
+loops.
