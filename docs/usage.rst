@@ -71,7 +71,7 @@ the command is as shown below:
 The results of this simulation are:
 
 .. image:: images/example1_structandprint.png
-	Simple Truss Optimization Result and Command Line Printout
+    :alt: Simple Truss Optimization Result and Command Line Printout
 
 Here the fixed nodes are shown in green, the loads are shown in red, and the
 truss is shown in black.  The blue lines show how the truss deforms under the
@@ -79,4 +79,4 @@ load magnified by a factor of 50 to be visible.  The evolution of the
 optimization algorithm is shown here:
 
 .. figure:: /images/example1_sim.gif
-	Simple Truss Optimization Evolution
+    :alt: Simple Truss Optimization Evolution

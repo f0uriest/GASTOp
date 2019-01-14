@@ -24,8 +24,6 @@ Install gastop by running:
 		
     $ pip install gastop
 	
-hopefully, if we ever get that working.
-Or, just clone the repo and throw together a random collection of virtualenvs and package interdepencies until it runs without errors.
 
 Usage
 *****
@@ -40,9 +38,6 @@ Look how easy it is to use:
    ga.initialize_population(pop_size=1e4)
    best_truss, history = ga.run(num_generations=100, progress_display=1, num_threads=4)
 
-oh if only it were that easy
-
-
 
 Contribute
 **********
@@ -51,11 +46,6 @@ Contribute
 - Source Code: `<https://github.com/f0uriest/GASTOp/>`_
 - Documentation: `<https://gastop.readthedocs.io/>`_
   
-Support
-*******
-
-If you are having issues, please go away and figure it out yourself, that's what we're doing.
-
 License
 *******
 
