@@ -170,7 +170,7 @@ Selector Parameters
 
 Properties Parsing
 ******************
-While parsing the config file, GASTOp will read the path to a file that contains the user-specified property information from a CSV file. The file exists by default as `properties.csv` with a few available material options:
+While parsing the config file, GASTOp will read the path to a file that contains the user-specified property information from a CSV file. The file exists by default as :code:`properties.csv` with a few available material options:
 
 .. code-block:: 
 
