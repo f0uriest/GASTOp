@@ -69,12 +69,14 @@ the command is as shown below:
 	$ gastop gastop-config/struct_making_test_init2.txt
 
 The results of this simulation are:
-.. figure:: /images/example1_structandprint.png
+
+.. image:: images/example1_structandprint.png
 	Simple Truss Optimization Result and Command Line Printout
 
 Here the fixed nodes are shown in green, the loads are shown in red, and the
 truss is shown in black.  The blue lines show how the truss deforms under the
 load magnified by a factor of 50 to be visible.  The evolution of the
 optimization algorithm is shown here:
+
 .. figure:: /images/example1_sim.gif
 	Simple Truss Optimization Evolution
