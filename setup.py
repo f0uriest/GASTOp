@@ -69,7 +69,7 @@ setup(
     #
     # This field corresponds to the "Description-Content-Type" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#description-content-type-optional
-    long_description_content_type='text/x-rest',  # Optional (see note above)
+    long_description_content_type='text/x-rst',  # Optional (see note above)
 
     # This should be a valid link to your project's main homepage.
     #
@@ -100,14 +100,14 @@ setup(
         'Intended Audience :: End Users/Desktop',
         'Intended Audience :: Manufacturing',
         'Intended Audience :: Science/Research',
-        'Topic :: Education :: Computer Aided Instruction (CAI)'
-        'Topic :: Scientific/Engineering :: Artificial Intelligence'
-        'Topic :: Scientific/Engineering'
+        'Topic :: Education :: Computer Aided Instruction (CAI)',
+        'Topic :: Scientific/Engineering :: Artificial Intelligence',
+        'Topic :: Scientific/Engineering',
 
         # Pick your license as you wish
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
 
-        'Natural Language :: English'
+        'Natural Language :: English',
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3',

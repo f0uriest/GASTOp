@@ -2,6 +2,8 @@
 GASTOp
 ######
 
+|PyPI-Version| |Python-Version|
+
 |Build-Status| |Coveralls| |Codacy|
 
 |Doc-Status| |License|
@@ -52,11 +54,11 @@ License
 The project is licensed under the GNU GPLv3 license.
 
 
-.. |Build-Status| image:: https://travis-ci.org/f0uriest/GASTOp.svg?branch=dev
+.. |Build-Status| image:: https://travis-ci.org/f0uriest/GASTOp.svg?branch=master
     :target: https://travis-ci.org/f0uriest/GASTOp
     :alt: Build Status
-.. |Coveralls| image:: https://coveralls.io/repos/github/f0uriest/GASTOp/badge.svg?branch=dev
-    :target: https://coveralls.io/github/f0uriest/GASTOp?branch=dev
+.. |Coveralls| image:: https://coveralls.io/repos/github/f0uriest/GASTOp/badge.svg?branch=master
+    :target: https://coveralls.io/github/f0uriest/GASTOp?branch=master
     :alt: Code Coverage
 .. |Codacy| image:: https://api.codacy.com/project/badge/Grade/a0d2ec5d32e948db8076596c7af69995
     :target: https://www.codacy.com/app/f0uriest/GASTOp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=f0uriest/GASTOp&amp;utm_campaign=Badge_Grade   
@@ -67,4 +69,9 @@ The project is licensed under the GNU GPLv3 license.
 .. |License| image:: https://img.shields.io/badge/License-GPLv3-blue.svg
     :target: https://github.com/f0uriest/GASTOp/blob/master/LICENSE
     :alt: License: GPL v3
-
+.. |Python-Version| image:: https://img.shields.io/pypi/pyversions/gastop.svg
+    :target: https://pypi.org/project/gastop
+    :alt: Python versions supported
+.. |PyPI-Version| image:: https://img.shields.io/pypi/v/gastop.svg
+    :target: https://pypi.org/project/gastop/
+    :alt: Current Release
