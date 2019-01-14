@@ -119,3 +119,7 @@ on the other side by the same amount that it went out of the boundary. In order 
 run-times,  we found any particular method which was taking up more time than other function calls
 and made the code more efficient by using logical indexing and vector expressions instead of
 loops.
+
+Selector
+********
+Much like the Mutator, Crossover, and FitnessFunction classes, the Selector class was structured to contain multiple methods of selecting parents for crossover and mutation. The idea was to modularize the selection process, allowing new selection methods to easily be added as additional methods of the class. Selector objects return numpy arrays of indices of trusses in the current population. Alternatively, we could have decided to have the selector objects return the actual parent trusses, but this would require more memory than a simple index. Instead, the trusses are extracted from the population with the index when needed, upon performing crossover and mutation. Both currently implemented methods of performing selection make use of numpy arrays and built-in vectorized numpy functions. Initial for-loop implementations of the methods were significantly slower.
