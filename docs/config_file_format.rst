@@ -172,7 +172,7 @@ Properties Parsing
 ******************
 While parsing the config file, GASTOp will read the path to a file that contains the user-specified property information from a CSV file. The file exists by default as :code:`properties.csv` with a few available material options:
 
-..
+Grid table:
 
 +------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
 | beam | material    | OD (m) | ID (m) | elastic_modulus (Pa) | yield_strength (Pa) | dens (kg/m^3) | poisson_ratio | cost |
