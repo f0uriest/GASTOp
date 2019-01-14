@@ -143,8 +143,8 @@ class GenAlg():
             - **best** *(Truss)*: The Truss with the best fitness score after elapsed generations.
             - **pop_progress** (dict): Dictionary of dictionaries containing:
 
-                - ``'Generation 1'`` *(blah)*: blah
-                - ``'Generation 2'`` *(blah)*: blah
+                - ``'Generation 1'`` *(dict)*: Dictionary of info about generation 1.
+                - ``'Generation 2'`` *(dict)*: Dictionary of info about generation 2, etc.
         '''
         if num_threads is None:
             if self.ga_params['num_threads'] is None:

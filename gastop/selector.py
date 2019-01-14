@@ -50,7 +50,7 @@ class Selector():  # Cristian
 
         Returns:
             parents (ndarray): Numpy array of indices in population
-                corresponding to selected parents.
+            corresponding to selected parents.
         '''
 
         pop_size = len(population)
@@ -95,7 +95,7 @@ class Selector():  # Cristian
 
         Returns:
             parents (ndarray): Numpy array of indices in population
-                corresponding to selected parents.
+            corresponding to selected parents.
         '''
 
         pop_size = len(population)
