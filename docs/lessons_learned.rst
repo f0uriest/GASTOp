@@ -26,3 +26,21 @@ begin with the highest level of software architecture. After identifying
 hotspots (i.e. functions where the code spent most of the time), it is
 important to check which lines in the function call require the most time.
 In this way, the bottleneck can be easily found and fixed.
+
+We also learned a little about programming in parallel. Initially, we wrote the
+whole project to run in serial, and while it ran in a reasonable amount of time
+for our purposes, it was not very scalable. As a result, we looked into
+re-writing elements of the architecture to be performed in parallel. Because we
+wrote the application in python, there are already many libraries written to
+parallelize *for* loops and other code structures that can be easily parallelized,
+but as a result many of the design decisions about what's going on behind the
+scenes at the system levels are not made by the user. In the end, we decided to
+implement a multithreading design for the program (where functional) python's
+pool module from the multithreading library. In addition to learning about how
+to break apart different operations in a multithreading environment, there were
+also some unexpected issues that arose regarding random number generation seed.
+In order to produce repeatable results during the design process, the random
+number generator seed number was specified. But when threads that created random
+numbers were created, the random number generator seed was not carried through
+to the individual threads. Issues such as this were identified by implementing
+well-designed unit tests from the beginning of the design creation.
