@@ -19,7 +19,7 @@ quotes, like :code:`key: '[[3.14 3.14],[3.14 3.14]]'`.
 For instance, the config file:
 
 .. code-block:: python
-       
+
        [dict1]
        key1: 3
        key2: 3.14
@@ -29,7 +29,7 @@ For instance, the config file:
        sub_key2: None
        [dict2]
        key3: '[[3.14 12.8],[6.7 88.9999]]'
-       
+
 
 would be parsed, forming the dictionary:
 
@@ -114,7 +114,8 @@ Progress Monitor Parameters
 
 .. _progress_monitor: https://gastop.readthedocs.io/en/latest/api.html#progress-monitor
 
-:progress_display: **(str)** Progress monitor display mode. *Options: ...*
+:progress_fitness: **(bool)** Progress monitor display mode, if true displays best fitness score of the population each generation.
+:progress_truss: **(bool)** Progress monitor display mode, if true displays the truss with the best fitness score each generation.  
 
 
 
@@ -129,7 +130,7 @@ Random Generation Parameters
 
 Crossover Parameters
 ====================
-:code:`[crossover_params]` contains the following parameters (see crossover_): 
+:code:`[crossover_params]` contains the following parameters (see crossover_):
 
 .. _crossover: https://gastop.readthedocs.io/en/latest/api.html#crossover
 
@@ -156,7 +157,7 @@ Mutator Parameters
 :edge_mutator_params['proportions']: **(float)** Probability of a given entry being mutated.
 :property_mutator_params: **(dict)** Additional property mutator parameters.
 :property_mutator_params['proportions']: **(float)** Probability of a given entry being mutated.
-      
+
 Selector Parameters
 ===================
 :code:`[selector_params]` contains the following parameters (see selector_):
