@@ -13,3 +13,5 @@ docs/_static
 .cache/
 *.egg-info
 *.gif
+build/
+dist/

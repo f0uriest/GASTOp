@@ -2,6 +2,8 @@
 GASTOp
 ######
 
+|PyPI-Version| |Python-Version|
+
 |Build-Status| |Coveralls| |Codacy|
 
 |Doc-Status| |License|
@@ -67,4 +69,9 @@ The project is licensed under the GNU GPLv3 license.
 .. |License| image:: https://img.shields.io/badge/License-GPLv3-blue.svg
     :target: https://github.com/f0uriest/GASTOp/blob/master/LICENSE
     :alt: License: GPL v3
-
+.. |Python-Version| image:: https://img.shields.io/pypi/pyversions/gastop.svg
+    :target: https://pypi.org/project/gastop
+    :alt: Python versions supported
+.. |PyPI-Version| image:: https://img.shields.io/pypi/v/gastop.svg
+    :target: https://pypi.org/project/gastop/
+    :alt: Current Release
