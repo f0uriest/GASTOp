@@ -107,18 +107,20 @@ to optimize for several different factors in different degrees of importance by 
 
 Mutator
 *******
-We wrote a __call__ method for the mutator class, allowing us to *call* the mutator object
-on a truss. Multiple mutation methods were written so that the user can apply
-different mutator methods for different components of the truss - for example, the
+The mutator class contains multiple methods so that the user can apply different
+mutator methods to mutate different components of the truss - for example, the
 user may choose to apply a *gaussian* mutation for the nodes but a *pseudo_bit_flip*
-mutation for the edges. Another issue with the mutator class, more specifically with
-the gaussian method, was the some elements were being mutated out of the user specified domain.
-In order to fix this issue, we incorporated a periodic boundary condition which means the
-values that went out of the boundary are going to be wrapped around into the domain
-on the other side by the same amount that it went out of the boundary. In order to improve
-run-times,  we found any particular method which was taking up more time than other function calls
-and made the code more efficient by using logical indexing and vector expressions instead of
-loops.
+mutation for the edges. We wrote a __call__ method for the mutator class, allowing
+us to *call* the mutator object on a truss. All of the methods in the mutator class
+take in one parent numpy array and return one child numpy array. An issue with the
+mutator class, more specifically with the gaussian method, was the some elements
+were being mutated out of the user specified domain. In order to fix this issue,
+we incorporated a periodic boundary condition which means the values that went
+out of the boundary are going to be wrapped around into the domain on the other side
+by the same amount that it went out of the boundary. In order to improve run-times,
+we found any particular method which was taking up more time than other function calls
+and made the code more efficient by using logical indexing and vector expressions
+instead of the initial 'for' loop implementations.
 
 Selector
 ********
@@ -128,7 +130,7 @@ Much like the Mutator, Crossover, and FitnessFunction classes, the Selector clas
 Crossover
 *********
 The crossover class contains multiple methods that can be used to perform crossover.
-All of the crossover methods takes in one parent numpy array and returns two child
+All of the crossover methods takes in two parent numpy arrays and returns two child
 arrays. The decision to return two child arrays instead of one was made to ensure
 that all possible "solutions" are explored. The reason it's possible to create two
 child arrays is due to the dual nature of the crossover methods. For example, a one
