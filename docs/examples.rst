@@ -15,7 +15,9 @@ Pyramid Example Configuration File
   num_rand_edges = 10 # int
   properties_path = 'gastop-config/properties.csv'
   domain = '[[-1, -1, -1], [5, 1, 2]]'
+
 ::
+
   [fitness_params]
   equation = weighted_sum
          [[parameters]]
@@ -25,12 +27,15 @@ Pyramid Example Configuration File
          w_mass = 1
          w_deflection = 100
 ::
+
   [evaluator_params]
   struct_solver = mat_struct_analysis_DSM
   mass_solver = mass_basic
   interferences_solver = blank_test
   cost_solver = cost_calc
+
 ::
+
   [ga_params]
   num_threads = 1
   pop_size = 1500
@@ -40,17 +45,24 @@ Pyramid Example Configuration File
   percent_crossover =
   save_frequency = 5
   save_filename_prefix = Recorded_States_
+
 ::
+
   [monitor_params]
   progress_fitness = True
   progress_truss = True
 
 ::
+
   # optional stuff
+
 ::
+
   [random_params]
   rng_seed =
+
 ::
+
   [crossover_params]
   node_crossover_method =
   edge_crossover_method =
@@ -60,6 +72,7 @@ Pyramid Example Configuration File
         [[property_crossover_params]]
 
 ::
+
   [mutator_params]
   node_mutator_method =
   edge_mutator_method =
@@ -70,7 +83,9 @@ Pyramid Example Configuration File
         proportions =
         [[property_mutator_params]]
         proportions =
+
 ::
+
   [selector_params]
   method =
          [[method_params]]
