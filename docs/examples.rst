@@ -4,7 +4,7 @@ Examples
 
 Pyramid Example Configuration File
 ***********************************
-.. codeblock::
+.. codeblock:: python3
   [general]
   user_spec_nodes = '[[0,-.5,0],[0,.5,0],[0,0,1],[2,0,0]]'
   loads = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-10000,0,0,0]]'
