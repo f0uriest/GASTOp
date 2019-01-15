@@ -4,7 +4,7 @@ loads = '[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],
 fixtures = '[[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]'
 num_rand_nodes = 10 # int
 num_rand_edges = 30 # int
-properties_path = 'gastop-config/properties.csv'
+properties_path = 'properties.csv'
 domain = '[[0, 0, 0], [3, 3, 1]]'
 
 [fitness_params]

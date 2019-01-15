@@ -15,6 +15,7 @@ import imageio
 import matplotlib.pyplot as plt
 import shutil
 import copy
+from pathlib import Path
 
 from gastop import Truss, ProgMon, encoders
 
@@ -134,9 +135,10 @@ def init_file_parser(init_file_path):  # Cristian
         config (ConfigObj object): Nested dicitonary of input parameters.
 
     """
+    abs_path = Path(init_file_path).resolve()
     # Extract inputs from the file as strings, if path exists
-    if os.path.isfile(init_file_path):
-        config = configobj.ConfigObj(init_file_path)
+    if os.path.isfile(abs_path):
+        config = configobj.ConfigObj(str(abs_path))
     else:
         raise IOError("No such path to init file.")
 
@@ -180,7 +182,9 @@ def init_file_parser(init_file_path):  # Cristian
     config.walk(transform)
 
     # Parse 'properties' CSV file
-    properties_dict = beam_file_parser(config['general']['properties_path'])
+    properties_path = abs_path.parent.joinpath(
+        config['general']['properties_path'])
+    properties_dict = beam_file_parser(properties_path)
 
     # ---------------------------Set Defaults---------------------------------
     user_spec_nodes = config['general']['user_spec_nodes']
