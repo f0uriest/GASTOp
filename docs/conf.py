@@ -24,9 +24,9 @@ copyright = '2018, Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Da
 author = 'Rory Conlin, Paul Kaneelil, Cristian Lacey, Susan Redmond, Dan Shaw, Amlan Sinha'
 
 # The short X.Y version
-version = '0.1'
+version = '1.0.2'
 # The full version, including alpha/beta/rc tags
-release = 'beta'
+release = 'Release Version'
 
 
 # -- General configuration ---------------------------------------------------
@@ -278,7 +278,7 @@ latex_elements = {
         
         \begin{figure}[!h]
         \centering
-        \includegraphics[scale=0.3]{logo.jpg}
+        \includegraphics[scale=0.3]{images/logo.jpg}
         \end{figure}
             
         \vspace*{10mm}
