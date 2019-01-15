@@ -137,7 +137,7 @@ def init_file_parser(init_file_path):  # Cristian
     """
     abs_path = Path(init_file_path).resolve()
     # Extract inputs from the file as strings, if path exists
-    if os.path.isfile(abs_path):
+    if abs_path.exists():
         config = configobj.ConfigObj(str(abs_path))
     else:
         raise IOError("No such path to init file.")
