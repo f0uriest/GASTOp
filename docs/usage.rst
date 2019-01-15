@@ -54,4 +54,4 @@ gastop can also be used from within python, either in a script or interactively.
    ga.initialize_population(pop_size=1e4)
    best_truss, history = ga.run(num_generations=100, progress_display=1, num_threads=4)
 
-For a full description of available commands and options, see the :doc:`API DocumentationMonty Python members <api>`
+For a full description of available commands and options, see the :doc:`API Documentation <api>`
