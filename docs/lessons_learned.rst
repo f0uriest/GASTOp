@@ -123,3 +123,15 @@ loops.
 Selector
 ********
 Much like the Mutator, Crossover, and FitnessFunction classes, the Selector class was structured to contain multiple methods of selecting parents for crossover and mutation. The idea was to modularize the selection process, allowing new selection methods to easily be added as additional methods of the class. Selector objects return numpy arrays of indices of trusses in the current population. Alternatively, we could have decided to have the selector objects return the actual parent trusses, but this would require more memory than a simple index. Instead, the trusses are extracted from the population with the index when needed, upon performing crossover and mutation. Both currently implemented methods of performing selection make use of numpy arrays and built-in vectorized numpy functions. Initial for-loop implementations of the methods were significantly slower.
+
+
+Crossover
+*********
+The crossover class contains multiple methods that can be used to perform crossover.
+All of the crossover methods takes in one parent numpy array and returns two child
+arrays. The decision to return two child arrays instead of one was made to ensure
+that all possible "solutions" are explored. The reason it's possible to create two
+child arrays is due to the dual nature of the crossover methods. For example, a one
+point split can be done by splitting the parent arrays at a certain point and by
+combining the first half of parent A with the second half of parent B or vice versa.
+Thus, two children are possible.
