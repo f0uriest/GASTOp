@@ -51,19 +51,17 @@ General Parameters
 ==================
 :code:`[general]` contains the following parameters:
 
-:user_spec_nodes: **(nx3 numpy array of floats)** User-specified nodes (nodes with provided loads and displacement boundary conditions) in the format :code:`'[[x1 y1 z1],[x2 y2 z2],...,[xn yn zn]]'`.
+.. |br| raw:: html
 
-:loads: **(nx6 numpy array of floats)** The forces and moments acting on each user-specified node in the format :code:`'[[Fx1,Fy1,Fz1,Mx1,My1,Mz1][Fx2,Fy2,Fz2,Mx2,My2,Mz2],...,[Fxn,Fyn,Fzn,Mxn,Myn,Mzn]]'`.
+   <br />
 
-:fixtures: **(nx6 numpy array of ints)** The translational and rotational displacements for each user-specified node in the format :code:`'[[transx1,transy1,transz1,rotx1,roty1,rotz1],[transx2,transy2,transz2,rotx2,roty2,rotz2],...,[transxn,transyn,transzn,rotxn,rotyn,rotzn]]'`. Here :code:`transx1` is the translational degree of freedom in the x direction of the first user-specified node, and :code:`rotx1` is the rotational degree of freedom about the x-axis of the first user-specified node. A :code:`1` indicates fixed, while a :code:`0` indicates the node is free to move along or about the corresponding degree of freedom.
-
+:user_spec_nodes: **(nx3 numpy array of floats)** User-specified nodes (nodes with provided loads and |br| displacement boundary conditions) in the format :code:`'[[x1 y1 z1],[x2 y2 z2],...,[xn yn zn]]'`.
+:loads: **(nx6 numpy array of floats)** The forces and moments acting on each user-specified |br| node in the format |br| :code:`'[[Fx1,Fy1,Fz1,Mx1,My1,Mz1][Fx2,Fy2,Fz2,Mx2,My2,Mz2],...,[Fxn,Fyn,Fzn,Mxn,Myn,Mzn]]'`.
+:fixtures: **(nx6 numpy array of ints)** The translational and rotational displacements for each |br| user-specified node in the format :code:`'[[tx1,ty1,tz1,rx1,ry1,rz1],[tx2,ty2,tz2,rx2,ry2,rz2],...,[txn,tyn,tzn,rxn,ryn,rzn]]'`. |br| Here :code:`tx1` is the translational degree of freedom in the x direction of the first |br| user-specified node, and :code:`rx1` is the rotational degree of freedom about the x-axis |br| of the first user-specified node. A :code:`1` indicates fixed, while a :code:`0` indicates |br| the node is free to move along or about the corresponding degree of freedom.
 :num_rand_nodes: **(int)** Maximum number of random nodes.
-
 :num_rand_edges: **(int)** Maximum number of random edges.
-
 :properties_path: **(str)** Path to the properties CSV. For example, :code:`gastop-config/properties.csv`.
-
-:domain: **(3x2 numpy array of floats)** Allowable domain in the format :code:`'[[xmin xmax],[ymin ymax],[zmin zmax]]'`.
+:domain: **(3x2 numpy array of floats)** Allowable domain in the format |br| :code:`'[[xmin xmax],[ymin ymax],[zmin zmax]]'`.
 
 Fitness Function Parameters
 ===========================
@@ -167,3 +165,34 @@ Selector Parameters
 :method: **(str)** Method for performing selection. *Options: inverse_square_rank_probability, tournament* *Default: inverse_square_rank_probability*
 :tourn_size: **(int)** The number of truss indices in each tournament. Must be less than 32.
 :tourn_prob: **(float)** The probability of the fittest truss in a tournament to be selected.
+
+Properties Parsing
+******************
+While parsing the config file, GASTOp will read the path to a file that contains the user-specified property information from a CSV file. The file exists by default as :code:`properties.csv` with a few available material options:
+
+.. csv-table:: 
+   :header: "beam","material","OD (m)","ID (m)","elastic_modulus (Pa)","yield_strength (Pa)","dens (kg/m^3)","poisson_ratio","cost"
+   :widths: 15, 10, 30, 15, 10, 30, 15, 10, 30
+
+       0,steel,0.025,0.02,200000000000,250000000,8050,0.3,1
+       1,steel,0.012,0.01,200000000000,250000000,8050,0.3,0.75
+       2,aluminum,0.025,0.02,69000000000,95000000,2700,0.32,2
+       3,aluminum,0.012,0.01,69000000000,95000000,2700,0.32,1.5
+       4,2024 aluminum,0.042,0.032,69000000000,276000000,2700,0.32,3
+
++------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
+| beam | material    | OD (m) | ID (m) | elastic_modulus (Pa) | yield_strength (Pa) | dens (kg/m^3) | poisson_ratio | cost |
++======+=============+========+========+======================+=====================+===============+===============+======+
+| 0	| steel       | 0.025  | 0.02   |     200000000000     | 250000000	       | 8050	         | 0.3	    | 1    |
++------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
+| 1	| steel	| 0.012  | 0.01   |     200000000000     | 250000000	       | 8050	         | 0.3	    | 0.75 |
++------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
+| 2	| aluminum	| 0.025  | 0.02   |     69000000000      | 95000000	       | 2700	         | 0.32	    | 2    |
++------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
+| 3	| aluminum	| 0.012  | 0.01   |     69000000000      | 95000000	       | 2700	         | 0.32	    | 1.5  |
++------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
+| 4	| 2024 alum	| 0.042  | 0.032  |     69000000000      | 276000000	       | 2700	         | 0.32	    | 3    |
++------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
+
+              
+Adding additional materials is as simple as adding a row to the default file, with all values separated by commas. One could also alternatively create a new properties file, duplicating the format of the default, replacing all material data, and specifying the path to the new properties file in the config file.
