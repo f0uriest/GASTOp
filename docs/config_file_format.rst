@@ -56,12 +56,12 @@ General Parameters
    <br />
 
 :user_spec_nodes: **(nx3 numpy array of floats)** User-specified nodes (nodes with provided loads and |br| displacement boundary conditions) in the format :code:`'[[x1 y1 z1],[x2 y2 z2],...,[xn yn zn]]'`.
-:loads: **(nx6 numpy array of floats)** The forces and moments acting on each user-specified node in the format :code:`'[[Fx1,Fy1,Fz1,Mx1,My1,Mz1][Fx2,Fy2,Fz2,Mx2,My2,Mz2],...,[Fxn,Fyn,Fzn,Mxn,Myn,Mzn]]'`.
-:fixtures: **(nx6 numpy array of ints)** The translational and rotational displacements for each user-specified node in the format :code:`'[[transx1,transy1,transz1,rotx1,roty1,rotz1],[transx2,transy2,transz2,rotx2,roty2,rotz2],...,[transxn,transyn,transzn,rotxn,rotyn,rotzn]]'`. Here :code:`transx1` is the translational degree of freedom in the x direction of the first user-specified node, and :code:`rotx1` is the rotational degree of freedom about the x-axis of the first user-specified node. A :code:`1` indicates fixed, while a :code:`0` indicates the node is free to move along or about the corresponding degree of freedom.
+:loads: **(nx6 numpy array of floats)** The forces and moments acting on each user-specified |br| node in the format |br| :code:`'[[Fx1,Fy1,Fz1,Mx1,My1,Mz1][Fx2,Fy2,Fz2,Mx2,My2,Mz2],...,[Fxn,Fyn,Fzn,Mxn,Myn,Mzn]]'`.
+:fixtures: **(nx6 numpy array of ints)** The translational and rotational displacements for each |br| user-specified node in the format :code:`'[[tx1,ty1,tz1,rotx1,roty1,rotz1],[tx2,ty2,tz2,rotx2,roty2,rotz2],...,[txn,tyn,tzn,rotxn,rotyn,rotzn]]'`.|br| Here :code:`tx1` is the translational degree of freedom in the x direction of the first |br| user-specified node, and :code:`rotx1` is the rotational degree of freedom about the x-axis of the first user-specified node. A :code:`1` indicates fixed, while a :code:`0` indicates the node is free to |br| move along or about the corresponding degree of freedom.
 :num_rand_nodes: **(int)** Maximum number of random nodes.
 :num_rand_edges: **(int)** Maximum number of random edges.
 :properties_path: **(str)** Path to the properties CSV. For example, :code:`gastop-config/properties.csv`.
-:domain: **(3x2 numpy array of floats)** Allowable domain in the format :code:`'[[xmin xmax],[ymin ymax],[zmin zmax]]'`.
+:domain: **(3x2 numpy array of floats)** Allowable domain in the format |br| :code:`'[[xmin xmax],[ymin ymax],[zmin zmax]]'`.
 
 Fitness Function Parameters
 ===========================
