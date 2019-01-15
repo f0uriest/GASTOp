@@ -172,7 +172,7 @@ While parsing the config file, GASTOp will read the path to a file that contains
 
 .. csv-table:: 
    :header: "beam","material","OD (m)","ID (m)","elastic_modulus (Pa)","yield_strength (Pa)","dens (kg/m^3)","poisson_ratio","cost ($/m)"
-   :widths: 15, 10, 30, 15, 10, 30, 15, 10, 30
+   :widths: auto
 
        0,steel,0.025,0.02,200000000000,250000000,8050,0.3,1
        1,steel,0.012,0.01,200000000000,250000000,8050,0.3,0.75
