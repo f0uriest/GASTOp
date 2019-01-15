@@ -51,7 +51,7 @@ General Parameters
 ==================
 :code:`[general]` contains the following parameters:
 
-:user_spec_nodes: **(nx3 numpy array of floats)** User-specified nodes (nodes with provided loads and displacement boundary conditions) in the format :code:`'[[x1 y1 z1],[x2 y2 z2],...,[xn yn zn]]'`.
+:user_spec_nodes: `**(nx3 numpy array of floats)** User-specified nodes (nodes with provided loads and displacement boundary conditions) in the format :code:`'[[x1 y1 z1],[x2 y2 z2],...,[xn yn zn]]'`.`
 
 :loads: **(nx6 numpy array of floats)** The forces and moments acting on each user-specified node in the format :code:`'[[Fx1,Fy1,Fz1,Mx1,My1,Mz1][Fx2,Fy2,Fz2,Mx2,My2,Mz2],...,[Fxn,Fyn,Fzn,Mxn,Myn,Mzn]]'`.
 
