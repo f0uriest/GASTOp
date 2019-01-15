@@ -60,7 +60,7 @@ General Parameters
 :fixtures: **(nx6 numpy array of ints)** The translational and rotational displacements for each |br| user-specified node in the format :code:`'[[tx1,ty1,tz1,rx1,ry1,rz1],[tx2,ty2,tz2,rx2,ry2,rz2],...,[txn,tyn,tzn,rxn,ryn,rzn]]'`. |br| Here :code:`tx1` is the translational degree of freedom in the x direction of the first |br| user-specified node, and :code:`rx1` is the rotational degree of freedom about the x-axis |br| of the first user-specified node. A :code:`1` indicates fixed, while a :code:`0` indicates |br| the node is free to move along or about the corresponding degree of freedom.
 :num_rand_nodes: **(int)** Maximum number of random nodes.
 :num_rand_edges: **(int)** Maximum number of random edges.
-:properties_path: **(str)** Path to the properties CSV. For example, :code:`gastop-config/properties.csv`.
+:properties_path: **(str)** Path to the properties CSV, relative to the location of the config file. For example, :code:`../properties.csv`.
 :domain: **(3x2 numpy array of floats)** Allowable domain in the format |br| :code:`'[[xmin xmax],[ymin ymax],[zmin zmax]]'`.
 
 Fitness Function Parameters
@@ -171,7 +171,7 @@ Properties Parsing
 While parsing the config file, GASTOp will read the path to a file that contains the user-specified property information from a CSV file. The file exists by default as :code:`properties.csv` with a few available material options:
 
 .. csv-table:: 
-   :header: "beam","material","OD (m)","ID (m)","elastic_modulus (Pa)","yield_strength (Pa)","dens (kg/m^3)","poisson_ratio","cost"
+   :header: "beam","material","OD (m)","ID (m)","elastic_modulus (Pa)","yield_strength (Pa)","dens (kg/m^3)","poisson_ratio","cost ($/m)"
    :widths: 15, 10, 30, 15, 10, 30, 15, 10, 30
 
        0,steel,0.025,0.02,200000000000,250000000,8050,0.3,1
@@ -183,15 +183,15 @@ While parsing the config file, GASTOp will read the path to a file that contains
 +------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
 | beam | material    | OD (m) | ID (m) | elastic_modulus (Pa) | yield_strength (Pa) | dens (kg/m^3) | poisson_ratio | cost |
 +======+=============+========+========+======================+=====================+===============+===============+======+
-| 0	| steel       | 0.025  | 0.02   |     200000000000     | 250000000	       | 8050	         | 0.3	    | 1    |
+| 0    | steel       | 0.025  | 0.02   |     200000000000     | 250000000           | 8050          | 0.3           | 1.00 |
 +------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
-| 1	| steel	| 0.012  | 0.01   |     200000000000     | 250000000	       | 8050	         | 0.3	    | 0.75 |
+| 1    | steel       | 0.012  | 0.01   |     200000000000     | 250000000           | 8050          | 0.3           | 0.75 |
 +------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
-| 2	| aluminum	| 0.025  | 0.02   |     69000000000      | 95000000	       | 2700	         | 0.32	    | 2    |
+| 2    | aluminum    | 0.025  | 0.02   |     69000000000      | 95000000            | 2700          | 0.32          | 2.00 |
 +------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
-| 3	| aluminum	| 0.012  | 0.01   |     69000000000      | 95000000	       | 2700	         | 0.32	    | 1.5  |
+| 3    | aluminum    | 0.012  | 0.01   |     69000000000      | 95000000            | 2700          | 0.32          | 1.50 |
 +------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
-| 4	| 2024 alum	| 0.042  | 0.032  |     69000000000      | 276000000	       | 2700	         | 0.32	    | 3    |
+| 4    | 2024 alum   | 0.042  | 0.032  |     69000000000      | 276000000           | 2700          | 0.32          | 3.00 |
 +------+-------------+--------+--------+----------------------+---------------------+---------------+---------------+------+
 
               
