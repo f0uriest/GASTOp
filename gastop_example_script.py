@@ -10,15 +10,14 @@ from gastop import GenAlg, utilities
 # needs to be full path
 animation_path = '/Users/susanredmond/Desktop/APC524_FinalProject/animation'
 # Parse input paramters from init.txt file
-#init_file_path = 'gastop-config/struct_making_test_init2.txt'
-init_file_path = 'gastop-config/struct_making_test_init_sfr.txt'
+init_file_path = 'gastop-config/struct_making_test_init2.txt'
 
 config = utilities.init_file_parser(init_file_path)
 
-pop_size = config['ga_params']['pop_size']
-num_gens = config['ga_params']['num_generations']
-progress_fitness = config['monitor_params']['progress_fitness']
-progress_truss = config['monitor_params']['progress_truss']
+pop_size = 1000
+num_gens = 50
+progress_fitness = True
+progress_truss = True
 
 # Create the Genetic Algorithm Object
 ga = GenAlg(config)
