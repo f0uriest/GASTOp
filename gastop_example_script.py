@@ -1,8 +1,7 @@
-"""GASTOp.py
+"""gastop_example_script.py
 This file runs the gastop program
 Authors: Amlan Sinha, Cristian Lacey, Daniel Shaw, Paul Kaneelil, Rory Conlin, Susan Redmond
 Licensed under GNU GPLv3.
-This module implements the GenAlg class.
 
 """
 from gastop import GenAlg, utilities
